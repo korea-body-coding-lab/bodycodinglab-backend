@@ -1,4 +1,4 @@
-package com.example.bcl_back;
+package com.project.bcl_back;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
