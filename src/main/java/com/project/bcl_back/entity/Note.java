@@ -18,17 +18,17 @@ public class Note {
     private Long id;
 
     @Column(nullable = false)
-    private String note_text;
+    private String noteText;
     
     @Column(nullable = false)
-    private Long note_writer;
+    private Long noteWriter;
     
     @Column(nullable = false)
-    private Long note_receiver;
+    private Long noteReceiver;
     
     @Column
-    private boolean is_read;
+    private boolean isRead;
 
     @Column
-    private LocalDateTime note_write_datetime;
+    private LocalDateTime noteWriteDatetime;
 }

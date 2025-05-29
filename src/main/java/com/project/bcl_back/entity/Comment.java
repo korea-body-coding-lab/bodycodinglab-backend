@@ -1,4 +1,4 @@
-package com.project.board_back.entity;
+package com.project.bcl_back.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,11 +23,11 @@ public class Comment {
     private Board board;
 
     @Column(nullable = false)
-    private Long commenter_id;
+    private Long commenterId;
 
     @Column(nullable = false)
-    private String comment_content;
+    private String commentContent;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

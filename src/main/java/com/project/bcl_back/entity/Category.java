@@ -1,5 +1,6 @@
-package com.project.board_back.entity;
+package com.project.bcl_back.entity;
 
+import com.project.bcl_back.common.enums.categoryEnums.Categories;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String category_name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category_name", nullable = false)
+    private Categories categoryName;
 
 }
