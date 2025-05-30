@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.couponEnums.Status;
+import com.project.bcl_back.common.enums.coupon.Status;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.project.bcl_back.common.enums.memberFromEnums;
+package com.project.bcl_back.common.enums.memberFrom;
 
 public enum InvestableTime {
     MIN30,

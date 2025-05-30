@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.memberFromEnums.*;
+import com.project.bcl_back.common.enums.memberFrom.*;
 import jakarta.persistence.*;
 import lombok.*;
 
