@@ -22,12 +22,12 @@ public class Comment {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @Column(nullable = false)
+    @Column(name = "commenter_id",nullable = false)
     private Long commenterId;
 
-    @Column(nullable = false)
+    @Column(name = "comment_content ", nullable = false)
     private String commentContent;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

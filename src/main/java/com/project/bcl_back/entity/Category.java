@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.categoryEnums.Categories;
+import com.project.bcl_back.common.enums.category.Categories;
 import jakarta.persistence.*;
 import lombok.*;
 

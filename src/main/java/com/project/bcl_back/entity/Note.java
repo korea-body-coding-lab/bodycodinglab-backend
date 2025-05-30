@@ -17,18 +17,18 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "note_text ", nullable = false)
     private String noteText;
     
-    @Column(nullable = false)
+    @Column(name = "note_writer",nullable = false)
     private Long noteWriter;
     
-    @Column(nullable = false)
+    @Column(name = "note_receiver", nullable = false)
     private Long noteReceiver;
     
-    @Column
+    @Column(name = "is_read")
     private boolean isRead;
 
-    @Column
-    private LocalDateTime noteWriteDatetime;
+    @Column(name = "created_at")
+    private LocalDateTime noteCreateTime;
 }
