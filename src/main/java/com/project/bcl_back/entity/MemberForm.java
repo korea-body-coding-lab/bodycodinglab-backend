@@ -20,18 +20,18 @@ public class MemberForm {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(nullable = false)
+    @Column(name = "age", nullable = false)
     private Byte age;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(name = " bodyform",nullable = false, length = 10)
     private Bodyfrom bodyForm;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "goal",nullable = false, length = 20)
     private Goal goal;
 
-    @Column(nullable = false)
+    @Column(name = "bmi", nullable = false)
     private Short bmi; // UNSIGNED TINYINT → 0~255까지, Java에는 unsigned 없음 → short
 
     @Enumerated(EnumType.STRING)
@@ -50,10 +50,10 @@ public class MemberForm {
     @Column(name = "water_intake", nullable = false, length = 20)
     private WaterIntake waterIntake;
 
-    @Column(nullable = false)
+    @Column(name = "height", nullable = false)
     private Short height;
 
-    @Column(nullable = false)
+    @Column(name = "weight", nullable = false)
     private Short weight;
 
     @Column(name = "weight_goal", nullable = false)
