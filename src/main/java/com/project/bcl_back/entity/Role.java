@@ -1,5 +1,6 @@
 package com.project.bcl_back.entity;
 
+import com.project.bcl_back.common.enums.user.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,9 +18,9 @@ public class Role implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private UserRole name;
 
     @OneToMany
     private Set<User> users;

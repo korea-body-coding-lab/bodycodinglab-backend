@@ -1,4 +1,4 @@
-package com.project.bcl_back.dto.auth.request;
+package com.project.bcl_back.dto.user.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

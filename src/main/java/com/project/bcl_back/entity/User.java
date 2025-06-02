@@ -1,5 +1,6 @@
 package com.project.bcl_back.entity;
 
+import com.project.bcl_back.common.enums.user.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private String gender;
+    private Gender gender;
 
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
