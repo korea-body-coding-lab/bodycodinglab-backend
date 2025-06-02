@@ -1,6 +1,6 @@
 package com.project.bcl_back.common.enums.user;
 
-public enum gender {
+public enum Gender {
     MAN,
     WOMAN
 }

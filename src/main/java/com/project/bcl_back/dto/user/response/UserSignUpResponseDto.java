@@ -1,4 +1,4 @@
-package com.project.bcl_back.dto.auth.response;
+package com.project.bcl_back.dto.user.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
