@@ -27,7 +27,7 @@ public class TrainerLicenseController {
     private static final String PUT_TRAINER_LICENSE = "/me/information/license/{id}";
     private static final String DELETE_TRAINER_LICENSE = "/me/information/license/{id}";
 
-    // 트레이너 경력 생성
+    // 트레이너 자격증 생성
     @PostMapping(POST_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerLicenseResponseDto>> postTrainerLicense(
             @Valid @RequestBody TrainerLicenseRequestDto dto
@@ -36,7 +36,7 @@ public class TrainerLicenseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // 트레이너 경력 조회(단건)
+    // 트레이너 자격증 조회(단건)
     @GetMapping(GET_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<List<TrainerLicenseResponseDto>>> getTrainerLicense(
             @PathVariable Long id
@@ -44,7 +44,7 @@ public class TrainerLicenseController {
         ResponseDto<List<TrainerLicenseResponseDto>> response = trainerLicenseService.getTrainerLicense(id);
         return ResponseEntity.ok(response);
     }
-    // 트레이너 경력 수정
+    // 트레이너 자격증 수정
     @PutMapping(PUT_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerLicenseResponseDto>> updateTrainerLicense(
             @PathVariable Long id,
@@ -54,10 +54,17 @@ public class TrainerLicenseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 트레이너 경력 삭제
+    // 트레이너 자격증 삭제
     @DeleteMapping(DELETE_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<Void>> deleteTrainerLicense(@PathVariable Long id) {
         ResponseDto<Void> response = trainerLicenseService.deleteTrainerLicense(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 가장 최근 경력 조회
+    @GetMapping
+    public ResponseEntity<ResponseDto<TrainerRecentLicenseResponseDto>> getRecentLicense(){
+        ResponseDto<TrainerRecentLicenseResponseDto> response = trainerLicenseService.getRecentLicense();
+        return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
