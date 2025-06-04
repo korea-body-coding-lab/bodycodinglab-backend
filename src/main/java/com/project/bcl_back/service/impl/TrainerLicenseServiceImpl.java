@@ -3,6 +3,7 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
+import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import com.project.bcl_back.entity.TrainerLicense;
 import com.project.bcl_back.service.TrainerLicenseService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,11 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
 
     @Override
     public ResponseDto<Void> deleteTrainerLicense(Long id) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto<TrainerRecentLicenseResponseDto> getRecentLicense() {
         return null;
     }
 }

@@ -6,6 +6,7 @@ import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
+import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import com.project.bcl_back.service.TrainerCareerService;
 import com.project.bcl_back.service.TrainerLicenseService;
 import jakarta.validation.Valid;
@@ -23,9 +24,10 @@ public class TrainerLicenseController {
     private final TrainerLicenseService trainerLicenseService;
 
     private static final String POST_TRAINER_LICENSE = "/me/information/license";
-    private static final String GET_TRAINER_LICENSE = "/me/information/license/{id}";
-    private static final String PUT_TRAINER_LICENSE = "/me/information/license/{id}";
-    private static final String DELETE_TRAINER_LICENSE = "/me/information/license/{id}";
+    private static final String GET_TRAINER_LICENSE = "/me/information/license";
+    private static final String PUT_TRAINER_LICENSE = "/me/information/license";
+    private static final String DELETE_TRAINER_LICENSE = "/me/information/license";
+    private static final String GER_RECENT_TRAINER_LICENSE = "/me/information/license/recent";
 
     // 트레이너 자격증 생성
     @PostMapping(POST_TRAINER_LICENSE)
@@ -61,8 +63,8 @@ public class TrainerLicenseController {
         return ResponseEntity.noContent().build();
     }
 
-    // 가장 최근 경력 조회
-    @GetMapping
+    // 트레이너 최근 자격증 조회
+    @GetMapping(GER_RECENT_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerRecentLicenseResponseDto>> getRecentLicense(){
         ResponseDto<TrainerRecentLicenseResponseDto> response = trainerLicenseService.getRecentLicense();
         return  ResponseEntity.status(HttpStatus.OK).body(response);
