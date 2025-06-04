@@ -26,9 +26,6 @@ public class Coupon {
     @Column(name = "trainer_id", nullable = false)
     private Long trainerId;
 
-    @Lob
-    @Column(name = "coupon_image", columnDefinition = "LONGBLOB")
-    private byte[] couponImage; // 질문 대기
 
     @Column(name = "expiration_period", nullable = false)
     private LocalDate expirationPeriod;

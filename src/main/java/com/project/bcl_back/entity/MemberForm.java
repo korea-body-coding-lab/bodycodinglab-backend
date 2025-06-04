@@ -25,14 +25,14 @@ public class MemberForm {
 
     @Enumerated(EnumType.STRING)
     @Column(name = " bodyform",nullable = false, length = 10)
-    private Bodyfrom bodyForm;
+    private BodyForm bodyForm;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "goal",nullable = false, length = 20)
     private Goal goal;
 
     @Column(name = "bmi", nullable = false)
-    private Short bmi; // UNSIGNED TINYINT → 0~255까지, Java에는 unsigned 없음 → short
+    private short bmi; // UNSIGNED TINYINT → 0~255까지, Java에는 unsigned 없음 → short
 
     @Enumerated(EnumType.STRING)
     @Column(name = "improved_part", nullable = false, length = 20)
@@ -51,16 +51,16 @@ public class MemberForm {
     private WaterIntake waterIntake;
 
     @Column(name = "height", nullable = false)
-    private Short height;
+    private short height;
 
     @Column(name = "weight", nullable = false)
-    private Short weight;
+    private short weight;
 
     @Column(name = "weight_goal", nullable = false)
-    private Short weightGoal;
+    private short weightGoal;
 
     @Column(name = "physical_level", nullable = false)
-    private Short physicalLevel;
+    private short physicalLevel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "exercising_problem", nullable = false, length = 20)

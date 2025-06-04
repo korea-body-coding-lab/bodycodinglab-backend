@@ -29,4 +29,8 @@ public class ReviewComment {
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToOne
+    @JoinColumn(name = "id", unique = true)
+    private Review review;
 }

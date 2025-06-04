@@ -25,16 +25,17 @@ public class Review {
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "cotent_image")
-    private List<String> contentImages;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at", insertable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "review_score", nullable = false)
-    private short reviewScore;
+    private Short reviewScore;
 
     @Column(name = "recommend_count", nullable = false)
-    private int recommendCount;
+    private Integer recommendCount;
+
+    @OneToOne(mappedBy = "reviews", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private ReviewComment reviewComment;
 
 }
