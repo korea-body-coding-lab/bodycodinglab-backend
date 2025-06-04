@@ -3,6 +3,7 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
+import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
 import com.project.bcl_back.service.TrainerCareerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,11 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
 
     @Override
     public ResponseDto<Void> deleteTrainerCareer(Long id) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto<TrainerRecentCareerResponseDto> getRecentCareer() {
         return null;
     }
 }

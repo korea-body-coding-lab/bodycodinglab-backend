@@ -6,6 +6,8 @@ import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.request.TrainerInfoRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerInfoResponseDto;
+import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
+import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import com.project.bcl_back.entity.TrainerCareer;
 import com.project.bcl_back.service.TrainerCareerService;
 import com.project.bcl_back.service.TrainerInfoService;
@@ -24,9 +26,10 @@ public class TrainerCareerController {
     private final TrainerCareerService trainerCareerService;
 
     private static final String POST_TRAINER_CAREER = "/me/information/career";
-    private static final String GET_TRAINER_CAREER = "/me/information/career/{id}";
-    private static final String PUT_TRAINER_CAREER = "/me/information/career/{id}";
-    private static final String DELETE_TRAINER_CAREER = "/me/information/career/{id}";
+    private static final String GET_TRAINER_CAREER = "/me/information/career";
+    private static final String PUT_TRAINER_CAREER = "/me/information/career";
+    private static final String DELETE_TRAINER_CAREER = "/me/information/career";
+    private static final String GER_RECENT_TRAINER_CAREER = "/me/information/career/recent";
 
     // 트레이너 경력 생성
     @PostMapping(POST_TRAINER_CAREER)
@@ -60,6 +63,13 @@ public class TrainerCareerController {
     public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(@PathVariable Long id) {
         ResponseDto<Void> response = trainerCareerService.deleteTrainerCareer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 트레이너 최근 경력 조회
+    @GetMapping(GER_RECENT_TRAINER_CAREER)
+    public ResponseEntity<ResponseDto<TrainerRecentCareerResponseDto>> getRecentCareer(){
+        ResponseDto<TrainerRecentCareerResponseDto> response = trainerCareerService.getRecentCareer();
+        return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

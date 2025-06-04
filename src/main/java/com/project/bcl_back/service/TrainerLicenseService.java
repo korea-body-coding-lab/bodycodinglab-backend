@@ -3,6 +3,7 @@ package com.project.bcl_back.service;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
+import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,6 @@ public interface TrainerLicenseService {
     ResponseDto<TrainerLicenseResponseDto> updateTrainerLicense(Long id, @Valid TrainerLicenseRequestDto dto);
 
     ResponseDto<Void> deleteTrainerLicense(Long id);
+
+    ResponseDto<TrainerRecentLicenseResponseDto> getRecentLicense();
 }
