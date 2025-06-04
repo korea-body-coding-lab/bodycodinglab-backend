@@ -3,57 +3,57 @@ package com.project.bcl_back.common.constants;
 public interface ResponseMessage {
 
     // 공통
-    String SUCCESS = "Success.";
-    String FAILED = "Failed.";
-    String DATABASE_ERROR = "Database error.";
+    String SUCCESS = "요청이 성공적으로 처리되었습니다.";
+    String FAILED = "요청이 실패했습니다.";
+    String DATABASE_ERROR = "데이터베이스 오류가 발생했습니다.";
 
-    // 인증/인가 관련
-    String SIGN_IN_FAIL = "Sign in failed.";
-    String AUTHENTICATION_FAIL = "Authentication failed.";
-    String AUTHORIZATION_FAIL = "Authorization failed.";
-    String NO_PERMISSION = "No permission.";
-    String TOKEN_CREATE_FAIL = "Token creation failed.";
-    String TOKEN_EXPIRED = "Token has expired.";
-    String INVALID_TOKEN = "Invalid token.";
+    // 인증/인가
+    String SIGN_IN_FAIL = "로그인에 실패했습니다.";
+    String AUTHENTICATION_FAIL = "인증에 실패했습니다.";
+    String AUTHORIZATION_FAIL = "인가에 실패했습니다.";
+    String NO_PERMISSION = "권한이 없습니다.";
+    String TOKEN_CREATE_FAIL = "토큰 생성에 실패했습니다.";
+    String TOKEN_EXPIRED = "토큰이 만료되었습니다.";
+    String INVALID_TOKEN = "유효하지 않은 토큰입니다.";
 
-    // 유효성 검사 관련
-    String VALIDATION_FAIL = "Validation failed.";
-    String INVALID_INPUT = "Invalid input value.";
-    String REQUIRED_FIELD_MISSING = "Required field is missing.";
-    String FORMAT_ERROR = "Input format is incorrect.";
+    // 유효성 검사
+    String VALIDATION_FAIL = "입력값이 유효하지 않습니다.";
+    String INVALID_INPUT = "잘못된 입력값입니다.";
+    String REQUIRED_FIELD_MISSING = "필수 입력값이 누락되었습니다.";
+    String FORMAT_ERROR = "입력 형식이 올바르지 않습니다.";
+    String NOT_MATCH_PASSWORD = "비밀번호가 서로 일치하지 않습니다.";
 
     // 사용자 관련
-    String DUPLICATED_USER_ID = "Duplicated user ID.";
-    String DUPLICATED_EMAIL = "Duplicated email.";
-    String DUPLICATED_TEL_NUMBER = "Duplicated user phone number.";
-    String NO_EXIST_USER_ID = "User ID does not exist.";
-    String USER_NOT_FOUND = "User not found.";
-    String USER_ALREADY_EXISTS = "User already exists.";
+    String DUPLICATED_USER_ID = "이미 사용 중인 사용자 ID입니다.";
+    String DUPLICATED_EMAIL = "이미 사용 중인 이메일입니다.";
+    String DUPLICATED_TEL_NUMBER = "이미 등록된 전화번호입니다.";
+    String NO_EXIST_USER_ID = "존재하지 않는 사용자 ID입니다.";
+    String USER_NOT_FOUND = "사용자를 찾을 수 없습니다.";
+    String USER_ALREADY_EXISTS = "이미 가입된 사용자입니다.";
 
     // 리소스 관련
-    String NO_EXIST_TOOL = "Tool does not exist.";
-    String NO_EXIST_CUSTOMER = "Customer does not exist.";
-    String RESOURCE_NOT_FOUND = "Requested resource not found.";
-    String TOOL_INSUFFICIENT = "This tool is insufficient in number.";
+    String NO_EXIST_TOOL = "존재하지 않는 도구입니다.";
+    String NO_EXIST_CUSTOMER = "존재하지 않는 고객입니다.";
+    String RESOURCE_NOT_FOUND = "요청한 리소스를 찾을 수 없습니다.";
+    String TOOL_INSUFFICIENT = "도구 수량이 부족합니다.";
 
-    // 인증번호 / 메시지 관련
-    String TEL_AUTH_FAIL = "Phone number authentication failed.";
-    String MESSAGE_SEND_FAIL = "Failed to send message.";
-    String VERIFICATION_CODE_INVALID = "Invalid verification code.";
-    String VERIFICATION_CODE_EXPIRED = "Verification code expired.";
+    // 인증번호 / 메시지
+    String TEL_AUTH_FAIL = "전화번호 인증에 실패했습니다.";
+    String MESSAGE_SEND_FAIL = "메시지 전송에 실패했습니다.";
+    String VERIFICATION_CODE_INVALID = "유효하지 않은 인증 코드입니다.";
+    String VERIFICATION_CODE_EXPIRED = "인증 코드가 만료되었습니다.";
 
     // 서버 오류
-    String INTERNAL_SERVER_ERROR = "Internal server error occurred.";
-    String SERVICE_UNAVAILABLE = "Service is temporarily unavailable.";
-    String REQUEST_TIMEOUT = "Request timeout.";
+    String INTERNAL_SERVER_ERROR = "서버 내부 오류가 발생했습니다.";
+    String SERVICE_UNAVAILABLE = "현재 서비스 이용이 불가능합니다.";
+    String REQUEST_TIMEOUT = "요청 시간이 초과되었습니다.";
 
     // 데이터 관련
-    String DATA_INTEGRITY_VIOLATION = "Data integrity violation.";
-    String CONSTRAINT_VIOLATION = "Constraint violation.";
-    String DUPLICATE_ENTRY = "Duplicate entry.";
+    String DATA_INTEGRITY_VIOLATION = "데이터 무결성 오류가 발생했습니다.";
+    String CONSTRAINT_VIOLATION = "제약 조건 위반입니다.";
+    String DUPLICATE_ENTRY = "중복된 데이터가 존재합니다.";
 
     // 파일 관련
-    String FILE_UPLOAD_FAIL = "File upload failed.";
-    String FILE_NOT_FOUND = "File not found.";
+    String FILE_UPLOAD_FAIL = "파일 업로드에 실패했습니다.";
+    String FILE_NOT_FOUND = "파일을 찾을 수 없습니다.";
 }
-
