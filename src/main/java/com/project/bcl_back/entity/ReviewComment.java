@@ -18,19 +18,23 @@ public class ReviewComment {
     @Column(name = "id")
     private Long commentId;
 
-    @Column(name = "review_id", nullable = false)
-    private Long reviewId;
+    @OneToOne
+    @JoinColumn(name = "id", nullable = false)
+    private Review review;
 
-    @Column(name = "match_id", nullable = false)
-    private Long matchId;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private Match match;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToOne
-    @JoinColumn(name = "id", unique = true)
-    private Review review;
+    @Column(name = "updated_at", insertable = false, updatable = false)
+    private LocalDateTime updatedAt;
+
+
+
 }

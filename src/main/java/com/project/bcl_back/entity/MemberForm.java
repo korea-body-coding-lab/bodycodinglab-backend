@@ -17,8 +17,9 @@ public class MemberForm {
     @Column(name = "id")
     private Long fromId;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @OneToOne
+    @JoinColumn(name = "id", nullable = false)
+    private User user;
 
     @Column(name = "age", nullable = false)
     private Byte age;

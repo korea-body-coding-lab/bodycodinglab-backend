@@ -14,8 +14,12 @@ import lombok.*;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
+    @Column(name = "id")
     private Long memberId;
+
+    @OneToOne
+    @JoinColumn(name = "id", nullable = false)
+    private User user;
 
     @Column(name = "member_address", nullable = false)
     private String memberAddress;
@@ -26,4 +30,5 @@ public class Member {
 
     @Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isApproved;
+
 }
