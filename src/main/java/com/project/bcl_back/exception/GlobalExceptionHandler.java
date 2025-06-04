@@ -15,7 +15,6 @@ import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler({ IllegalArgumentException.class, IllegalStateException.class })
     public ResponseEntity<ResponseDto<?>> handleBadRequest(RuntimeException e) {
         return logAndRespond(ResponseCode.INVALID_INPUT, ResponseMessage.INVALID_INPUT, HttpStatus.BAD_REQUEST, e);
@@ -51,6 +50,7 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ResponseDto<?>> logAndRespond(String code, String message, HttpStatus status, Exception e) {
         e.printStackTrace();
-        return ResponseDto.fail(code, message, status);
+        return ResponseDto.failWithStatus(code, message, status);
+
     }
 }

@@ -24,5 +24,4 @@ public class Role implements Serializable {
 
     @OneToMany
     private Set<User> users;
-
 }
