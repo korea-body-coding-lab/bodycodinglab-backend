@@ -1,4 +1,4 @@
-package com.project.board_back.entity;
+package com.project.bcl_back.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

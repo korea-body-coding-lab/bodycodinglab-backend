@@ -24,8 +24,9 @@ public class Board {
     @JoinColumn(name = "match_id")
     private Long matchId;
 
-    @OneToMany(mappedBy = "personal_community_board_categories", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Category> category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "writer_id",nullable = false)
     private Long writerId;
@@ -36,10 +37,6 @@ public class Board {
     @Column(name = "post_content",nullable = false)
     private String content;
 
-    @Lob
-    @Column(name = "post_image", columnDefinition = "LONGBLOB")
-    private byte[] postImage;
-
     @Column(name = "created_at",nullable = false)
     private LocalDateTime createdAt;
 
@@ -49,5 +46,11 @@ public class Board {
     @OneToMany(mappedBy = "personal_community_board_post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "personal_community_board_post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UploadFile> images = new ArrayList<>();
 
+    public void addImage(UploadFile file){
+        images.add(file);
+        file.assignToBoard(this);
+    }
 }
