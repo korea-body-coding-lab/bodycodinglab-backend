@@ -1,6 +1,6 @@
 package com.project.bcl_back.common.enums.memberFrom;
 
-public enum Bodyfrom {
+public enum BodyForm {
     SLIM,
     NORMAL,
     FAT
