@@ -26,7 +26,7 @@ public class TrainerLicense {
     private LicenseType licenseType;
 
     @Column(nullable = false, name = "license_name")
-    private Date licenseName;
+    private String licenseName;
 
     @ManyToOne
     @JoinColumn(name = "id")
