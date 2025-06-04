@@ -21,6 +21,7 @@ public interface ResponseCode {
     String INVALID_INPUT = "IV"; // Invalid input
     String REQUIRED_FIELD_MISSING = "RM"; // 필수값 누락
     String FORMAT_ERROR = "FE"; // 형식 오류
+    String NOT_MATCH_PASSWORD = "NMP"; // 비밀번호 일치 오류
 
     // 사용자 관련
     String DUPLICATED_USER_ID = "DI"; // 중복된 아이디

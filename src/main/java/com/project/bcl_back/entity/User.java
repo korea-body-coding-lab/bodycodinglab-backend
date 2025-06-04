@@ -2,10 +2,7 @@ package com.project.bcl_back.entity;
 
 import com.project.bcl_back.common.enums.user.Gender;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,6 +45,18 @@ public class User implements UserDetails {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Builder
+    public User(Role role, String username, String password, String name, Date birthdate, Gender gender, String phone, String email) {
+        this.role = role;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.birthdate = birthdate;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+    }
     // === FK 변수 선언 === //
 
 
