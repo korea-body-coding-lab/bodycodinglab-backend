@@ -17,14 +17,15 @@ public class Subscription {
     @Column(name = "id")
     private Long paymentId;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @OneToOne
+    @JoinColumn(name = "id", nullable = false)
+    private Member member;
 
     @Column(name = "subscription_name", nullable = false, length = 50)
     private String subscriptionName;
 
     @Column(name = "price", nullable = false)
-    private int price;
+    private Integer price;
 
     @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;

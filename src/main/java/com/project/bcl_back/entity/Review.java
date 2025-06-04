@@ -19,8 +19,9 @@ public class Review {
     @Column(name = "id")
     private Long reviewId;
 
-    @Column(name = "match_id", nullable = false)
-    private Long matchId;
+    @ManyToOne
+    @JoinColumn (name = "id", nullable = false)
+    private Match match;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;

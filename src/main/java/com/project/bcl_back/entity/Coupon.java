@@ -20,11 +20,13 @@ public class Coupon {
     @Column(name = "id")
     private Long couponId;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private User user;
 
-    @Column(name = "trainer_id", nullable = false)
-    private Long trainerId;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private User trainerId;
 
 
     @Column(name = "expiration_period", nullable = false)
