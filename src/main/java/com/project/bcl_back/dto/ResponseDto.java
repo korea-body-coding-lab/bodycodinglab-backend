@@ -1,5 +1,6 @@
 package com.project.bcl_back.dto;
 
+import com.project.bcl_back.dto.board.response.BoardResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class ResponseDto<T> {
     }
 
     // 성공 응답 (데이터 없음)
-    public static <T> ResponseEntity<ResponseDto<T>> success(String code, String message) {
+    public static <T> ResponseEntity<ResponseDto<T>> success(String code, String message, BoardResponseDto data) {
         ResponseDto<T> response = new ResponseDto<>(code, message, null);
         return ResponseEntity.ok(response);
     }

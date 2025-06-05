@@ -3,4 +3,8 @@ package com.project.bcl_back.common.constants;
 public interface ApiMappingPattern {
     public static final String USER_API = "/api/v1/users";
     public static final String TRAINER_API = "/api/v1/trainers";
+
+
+    public static final String MEMBER_COUPON_API = "api/v1/members/me/coupons";
+    public static final String TRAINER_COUPON_API = "api/v1/trainers/me/coupons";
 }
