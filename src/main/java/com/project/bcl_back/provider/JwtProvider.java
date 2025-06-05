@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Component
 public class JwtProvider {
@@ -35,19 +32,19 @@ public class JwtProvider {
         this.jwtEmailExpirationMs = jwtEmailExpirationMs;
     }
 
-    public String generateJwtToken(String username, Set<String> roles) {
+    public String generateJwtToken(Long userId, String role) {
         return Jwts.builder()
-                .claim("username", username)
-                .claim("roles", roles)
+                .claim("userId", userId)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateEmailValidToken(String username) {
+    public String generateEmailValidToken(Long userId) {
         return Jwts.builder()
-                .claim("username", username)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtEmailExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -77,13 +74,13 @@ public class JwtProvider {
         return jwtParser.parseClaimsJws(token).getBody();
     }
 
-    public String getUsernameFromJwt(String token) {
+    public Long getUserIdFromJwt(String token) {
         Claims claims = getClaims(token);
-        return claims.get("username", String.class);
+        return claims.get("userId", Long.class);
     }
 
-    public Set<String> getRolesFromJwt(String token) {
+    public String getRoleFromJwt(String token) {
         Claims claims = getClaims(token);
-        return new HashSet<>((List<String>) claims.get("roles"));
+        return claims.get("role", String.class);
     }
 }

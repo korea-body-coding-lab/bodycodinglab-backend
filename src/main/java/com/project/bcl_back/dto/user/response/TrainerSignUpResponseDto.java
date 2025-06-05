@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-
-public class MemberSignUpResponseDto {
+public class TrainerSignUpResponseDto {
     private Long id;
     private String username;
     private String role;
+    private String status;
     private String profileImageUrl;
 }
