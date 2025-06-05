@@ -4,7 +4,7 @@ import com.project.bcl_back.common.enums.memberFrom.*;
 import lombok.Getter;
 
 @Getter
-public class MemberFromCreateRequestDto {
+public class MemberFormCreateRequestDto {
     private Byte age;
     private BodyForm bodyForm;
     private Goal goal;
