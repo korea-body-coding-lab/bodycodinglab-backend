@@ -8,8 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -20,8 +20,8 @@ public class User implements UserDetails {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "role_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -46,8 +46,12 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_image_id")
+    private UploadFile profileImage;
+
     @Builder
-    public User(Role role, String username, String password, String name, Date birthdate, Gender gender, String phone, String email) {
+    public User(Role role, String username, String password, String name, Date birthdate, Gender gender, String phone, String email, UploadFile profileImage) {
         this.role = role;
         this.username = username;
         this.password = password;
@@ -56,6 +60,7 @@ public class User implements UserDetails {
         this.gender = gender;
         this.phone = phone;
         this.email = email;
+        this.profileImage = profileImage;
     }
     // === FK 변수 선언 === //
 
@@ -65,7 +70,7 @@ public class User implements UserDetails {
     // =============================================================== //
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.getName()));
     }
 
     @Override

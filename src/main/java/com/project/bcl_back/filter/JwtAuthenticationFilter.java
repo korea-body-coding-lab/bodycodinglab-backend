@@ -17,9 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -44,24 +43,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String username = jwtProvider.getUsernameFromJwt(token);
-            Set<String> roles = jwtProvider.getRolesFromJwt(token);
+            Long userId = jwtProvider.getUserIdFromJwt(token);
+            String role = jwtProvider.getRoleFromJwt(token);
 
-            setAuthenticationContext(request, username, roles);
+            setAuthenticationContext(request, userId, role);
         } catch (Exception e) {
             e.printStackTrace();
         }
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthenticationContext(HttpServletRequest request, String username, Set<String> roles) {
+    private void setAuthenticationContext(HttpServletRequest request, Long userId, String role) {
 
-        List<GrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toList());
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
 
         AbstractAuthenticationToken authenticationToken
-            = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            = new UsernamePasswordAuthenticationToken(userId, null, authorities);
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
