@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Valid
-public class PostRequestDto {
+public class BoardRequestDto {
     @NotBlank(message = "제목은 필수 입력 값입니다.")
     private String title;
 

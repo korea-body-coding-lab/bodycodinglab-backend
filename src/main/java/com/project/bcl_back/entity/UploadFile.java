@@ -1,6 +1,5 @@
 package com.project.bcl_back.entity;
 
-
 import com.project.bcl_back.common.enums.TargetType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UploadFile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,7 @@ public class UploadFile {
     private TargetType targetType;// 커몬 > 이넘 > 타겟타입에 파일저장소와 연결할 부분 추가
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "board_id")
     private Board board;
 
     @Builder
