@@ -1,6 +1,5 @@
 package com.project.bcl_back.dto.board.response;
 
-import com.project.bcl_back.dto.FileResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostDetailResponseDto {
+public class BoardDetailResponseDto {
     private Long id;
 
     private Long writerId;
