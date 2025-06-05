@@ -3,9 +3,7 @@ package com.project.bcl_back.common.util;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * 날짜 및 시간 관련 유틸리티 클래스
- */
+
 public class DateUtils {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
