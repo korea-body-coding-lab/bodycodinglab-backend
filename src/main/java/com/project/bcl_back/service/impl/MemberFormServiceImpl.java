@@ -8,7 +8,6 @@ import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
 import com.project.bcl_back.entity.MemberForm;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.MemberFormRepository;
-import com.project.bcl_back.repository.MemberRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.MemberFormService;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,7 +49,7 @@ public class MemberFormServiceImpl implements MemberFormService {
         );
 
         memberFormRepository.save(memberForm);
-        return null;
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class MemberFormServiceImpl implements MemberFormService {
                 memberForm.getInvestableTime()
         );
 
-        return null;
-        //return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
     }
 }

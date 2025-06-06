@@ -3,17 +3,16 @@ package com.project.bcl_back.dto.coupon.response;
 import com.project.bcl_back.common.enums.coupon.Status;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-public class MemberCouponResponseDto {
+public class TrainerCompleteCouponResponseDto {
     private Long couponId;
     private String trainerName;
     private LocalDate expirationPeriod;
+    private LocalDateTime usedDate;
     private Status status;
 }
