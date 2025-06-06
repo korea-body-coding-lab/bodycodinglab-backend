@@ -4,8 +4,10 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.auth.request.SignInUserRequestDto;
 import com.project.bcl_back.dto.auth.request.SignUpMemberRequestDto;
+import com.project.bcl_back.dto.auth.request.SignUpTrainerRequestDto;
 import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
 import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
+import com.project.bcl_back.dto.auth.response.SignUpTrainerResponseDto;
 import com.project.bcl_back.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +29,22 @@ public class AuthController {
 
     // 일반회원 회원가입
     @PostMapping(POST_SIGN_UP + "/member")
-    public ResponseEntity<ResponseDto<SignUpMemberResponseDto>> memberSignup(@Valid @RequestBody SignUpMemberRequestDto dto, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<ResponseDto<SignUpMemberResponseDto>> memberSignup(
+            @Valid @RequestPart(value = "data") SignUpMemberRequestDto dto,
+            @RequestPart(value = "profile", required = false) MultipartFile file
+    ) throws IOException {
         ResponseDto<SignUpMemberResponseDto> response = authService.memberSignup(dto, file);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
+    }
+
+    // 트레이너 회원가입
+    @PostMapping(POST_SIGN_UP + "/trainer")
+    public ResponseEntity<ResponseDto<SignUpTrainerResponseDto>> trainerSignup(
+            @Valid @RequestPart(value = "data") SignUpTrainerRequestDto dto,
+            @RequestPart(value = "attachmentFile") MultipartFile attachmentFile,
+            @RequestPart(value = "profile", required = false) MultipartFile profile
+    ) throws IOException {
+        ResponseDto<SignUpTrainerResponseDto> response = authService.trainerSignup(dto, attachmentFile, profile);
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 

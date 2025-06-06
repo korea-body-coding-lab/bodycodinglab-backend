@@ -10,7 +10,4 @@ import lombok.Getter;
 public class SignUpTrainerResponseDto {
     private Long id;
     private String username;
-    private String role;
-    private String status;
-    private String profileImageUrl;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "trainer_infos")
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -19,11 +19,16 @@ public class TrainerInfo {
     @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, name = "user_id")
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false, name = "job_address")
     private String jobAddress;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attachment_file_id")
+    private UploadFile attachmentFile;
 
     @Column(name = "short_introduce")
     private String shortIntroduce;
@@ -44,10 +49,6 @@ public class TrainerInfo {
     @Column(name = "education_graduate")
     private Date educationGraduate;
 
-    @OneToOne
-    @JoinColumn(name = "id")
-    private User user;
-
     // user 테이블에 넣어야 할 것
 //    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 //    private TrainerInfo trainerInfo;
@@ -57,4 +58,11 @@ public class TrainerInfo {
 
     @OneToMany(mappedBy = "trainer_infos", cascade = CascadeType.ALL)
     private List<TrainerLicense> trainerLicense = new ArrayList<>();
+
+    @Builder
+    public TrainerInfo (User user, String jobAddress, Status status) {
+        this.user = user;
+        this.jobAddress = jobAddress;
+        this.status = status;
+    }
 }

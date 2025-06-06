@@ -3,12 +3,14 @@ package com.project.bcl_back.dto.auth.request;
 import com.project.bcl_back.common.constants.Regex;
 import com.project.bcl_back.common.enums.user.Gender;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,11 +31,11 @@ public class SignUpMemberRequestDto {
     @Pattern(regexp = Regex.NAME_KOREAN, message = "이름은 2~10자의 한글만 사용 가능합니다.")
     private String name;
 
-    @NotBlank(message = "생년월일은 필수 항목입니다.")
-    @Pattern(regexp = Regex.BIRTHDATE, message = "생년월일은 YYYY-MM-DD 형식이여야 합니다.")
-    private Date birthdate;
+    @NotNull(message = "생년월일은 필수 항목입니다.")
+    @Past(message = "생년월일은 YYYY-MM-DD 형식이여야 합니다.")
+    private LocalDate birthdate;
 
-    @NotBlank(message = "성별은 필수 항목입니다.")
+    @NotNull(message = "성별은 필수 항목입니다.")
     private Gender gender;
 
     @NotBlank(message = "휴대폰 번호는 필수 항목입니다.")

@@ -8,9 +8,9 @@ import lombok.*;
 @Table(name = "members")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
+@Builder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public class Member {
     private Long memberId;
 
     @OneToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "member_address", nullable = false)
@@ -30,5 +30,12 @@ public class Member {
 
     @Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isApproved;
+
+    @Builder
+    public Member(User user, String memberAddress, Status status) {
+        this.user = user;
+        this.memberAddress = memberAddress;
+        this.status = status;
+    }
 
 }
