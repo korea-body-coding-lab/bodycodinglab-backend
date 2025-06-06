@@ -1,4 +1,4 @@
-package com.project.bcl_back.dto.user.request;
+package com.project.bcl_back.dto.auth.request;
 
 import com.project.bcl_back.common.constants.Regex;
 import com.project.bcl_back.common.enums.user.Gender;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class MemberSignUpRequestDto {
+public class SignUpTrainerRequestDto {
     @NotBlank(message = "아이디는 필수 항목입니다.")
     @Pattern(regexp = Regex.USER_NAME, message = "아이디는 5~12자의 영문/숫자만 사용 가능하며, 영문으로 시작하여야 합니다.")
     private String username;
@@ -42,8 +42,11 @@ public class MemberSignUpRequestDto {
     @Pattern(regexp = Regex.EMAIL, message = "이메일은 abc@example.com 형식이어야 합니다.")
     private String email;
 
-    @NotBlank(message = "주소는 필수 항목입니다.")
-    private String address;
+    @NotBlank(message = "근무지 주소는 필수 항목입니다.")
+    private String jobAddress;
+
+    @NotBlank(message = "첨부파일은 필수 항목입니다.")
+    private Long attachmentFileId;
 
     private Long profileImageId;
 }

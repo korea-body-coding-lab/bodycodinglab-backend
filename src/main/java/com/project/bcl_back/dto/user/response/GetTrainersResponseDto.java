@@ -3,17 +3,13 @@ package com.project.bcl_back.dto.user.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Date;
-
 @AllArgsConstructor
 @Getter
-public class GetMemberResponseDto {
+public class GetTrainersResponseDto {
     private String username;
     private String name;
-    private Date birthdate;
+    private int age;
     private String gender;
-    private String phone;
-    private String email;
-    private String memberAddress;
-    private String profileImageUrl;
+    private String trainerJobAddress;
+    private String status;
 }

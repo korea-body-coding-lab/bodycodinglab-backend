@@ -3,10 +3,10 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.user.request.UserSignInRequestDto;
-import com.project.bcl_back.dto.user.request.MemberSignUpRequestDto;
-import com.project.bcl_back.dto.user.response.UserSignInResponseDto;
-import com.project.bcl_back.dto.user.response.MemberSignUpResponseDto;
+import com.project.bcl_back.dto.auth.request.SignInUserRequestDto;
+import com.project.bcl_back.dto.auth.request.SignUpMemberRequestDto;
+import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
+import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
 import com.project.bcl_back.repository.RoleRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.UserService;
@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     @Override
-    public ResponseDto<MemberSignUpResponseDto> memberSignup(MemberSignUpRequestDto dto) {
-        MemberSignUpResponseDto data = null;
+    public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto) {
+        SignUpMemberResponseDto data = null;
 
         if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
             return ResponseDto.fail(ResponseCode.DUPLICATED_USER_ID, ResponseMessage.DUPLICATED_USER_ID);
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseDto<UserSignInResponseDto> login(UserSignInRequestDto dto) {
+    public ResponseDto<SignInUserResponseDto> login(SignInUserRequestDto dto) {
         return null;
     }
 }

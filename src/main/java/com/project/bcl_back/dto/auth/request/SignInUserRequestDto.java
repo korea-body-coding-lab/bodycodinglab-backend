@@ -1,4 +1,4 @@
-package com.project.bcl_back.dto.user.request;
+package com.project.bcl_back.dto.auth.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class UserSignInRequestDto {
+public class SignInUserRequestDto {
     @NotBlank(message = "아이디는 필수 항목입니다.")
     private String username;
 

@@ -7,14 +7,13 @@ import java.util.Date;
 
 @AllArgsConstructor
 @Getter
-public class GetTrainerResponseDto {
+public class GetMemberInfoResponseDto {
     private String username;
     private String name;
     private Date birthdate;
     private String gender;
     private String phone;
     private String email;
-    private String jobAddress;
-    private String attachmentFileUrl;
+    private String memberAddress;
     private String profileImageUrl;
 }
