@@ -15,7 +15,7 @@ public class MemberForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long fromId;
+    private Long formId;
 
     @OneToOne
     @JoinColumn(name = "id", nullable = false)

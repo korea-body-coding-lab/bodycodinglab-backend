@@ -4,7 +4,8 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
-import com.project.bcl_back.dto.coupon.response.TrainerCouponResponseDto;
+import com.project.bcl_back.dto.coupon.response.TrainerApplicationCouponResponseDto;
+import com.project.bcl_back.dto.coupon.response.TrainerCompleteCouponResponseDto;
 import com.project.bcl_back.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,14 +26,14 @@ public class CouponController {
     }
 
     @GetMapping(ApiMappingPattern.TRAINER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<TrainerCouponResponseDto>>> findApplicationCoupon(@RequestParam String status){
-        ResponseDto<List<TrainerCouponResponseDto>> response = couponService.findApplicationCoupon(status);
+    public ResponseEntity<ResponseDto<List<TrainerApplicationCouponResponseDto>>> findApplicationCoupon(@RequestParam String status){
+        ResponseDto<List<TrainerApplicationCouponResponseDto>> response = couponService.findApplicationCoupon(status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(ApiMappingPattern.TRAINER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<TrainerCouponResponseDto>>> findCompleteCoupon(@RequestParam String status){
-        ResponseDto<List<TrainerCouponResponseDto>> response = couponService.findCompleteCoupon(status);
+    public ResponseEntity<ResponseDto<List<TrainerCompleteCouponResponseDto>>> findCompleteCoupon(@RequestParam String status){
+        ResponseDto<List<TrainerCompleteCouponResponseDto>> response = couponService.findCompleteCoupon(status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
