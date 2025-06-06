@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class MemberUpdateRequestDto {
+public class UpdateTrainerRequestDto {
     @Pattern(regexp = Regex.NAME_KOREAN, message = "이름은 2~10자의 한글만 사용 가능합니다.")
     private String name;
-    private String memberAddress;
     private Long profileImageId;
 }

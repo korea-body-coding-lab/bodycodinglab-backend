@@ -1,13 +1,13 @@
 package com.project.bcl_back.service;
 
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.user.request.UserSignInRequestDto;
-import com.project.bcl_back.dto.user.request.MemberSignUpRequestDto;
-import com.project.bcl_back.dto.user.response.UserSignInResponseDto;
-import com.project.bcl_back.dto.user.response.MemberSignUpResponseDto;
+import com.project.bcl_back.dto.auth.request.SignInUserRequestDto;
+import com.project.bcl_back.dto.auth.request.SignUpMemberRequestDto;
+import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
+import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
 import jakarta.validation.Valid;
 
 public interface UserService {
-    ResponseDto<MemberSignUpResponseDto> memberSignup(@Valid MemberSignUpRequestDto dto);
-    ResponseDto<UserSignInResponseDto> login(@Valid UserSignInRequestDto dto);
+    ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto);
+    ResponseDto<SignInUserResponseDto> login(@Valid SignInUserRequestDto dto);
 }

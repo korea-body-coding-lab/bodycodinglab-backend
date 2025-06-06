@@ -1,11 +1,11 @@
-package com.project.bcl_back.dto.user.response;
+package com.project.bcl_back.dto.auth.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class UserSignInResponseDto {
+public class SignInUserResponseDto {
     private String token;
     private Long userId;
     private String role;
