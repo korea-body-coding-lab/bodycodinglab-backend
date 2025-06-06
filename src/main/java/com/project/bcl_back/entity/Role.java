@@ -3,6 +3,7 @@ package com.project.bcl_back.entity;
 import com.project.bcl_back.common.enums.user.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +19,9 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true)
     private UserRole name;
+
+    @Builder
+    public Role(UserRole name) {
+        this.name = name;
+    }
 }

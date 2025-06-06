@@ -6,8 +6,11 @@ import com.project.bcl_back.dto.auth.request.SignUpMemberRequestDto;
 import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
 import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
-public interface UserService {
-    ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto);
+import java.io.IOException;
+
+public interface AuthService {
+    ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto, MultipartFile file) throws IOException;
     ResponseDto<SignInUserResponseDto> login(@Valid SignInUserRequestDto dto);
 }

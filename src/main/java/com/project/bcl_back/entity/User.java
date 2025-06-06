@@ -51,7 +51,7 @@ public class User implements UserDetails {
     private UploadFile profileImage;
 
     @Builder
-    public User(Role role, String username, String password, String name, Date birthdate, Gender gender, String phone, String email, UploadFile profileImage) {
+    public User(Role role, String username, String password, String name, Date birthdate, Gender gender, String phone, String email) {
         this.role = role;
         this.username = username;
         this.password = password;
@@ -60,7 +60,6 @@ public class User implements UserDetails {
         this.gender = gender;
         this.phone = phone;
         this.email = email;
-        this.profileImage = profileImage;
     }
     // === FK 변수 선언 === //
 

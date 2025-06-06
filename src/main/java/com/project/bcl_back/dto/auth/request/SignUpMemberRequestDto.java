@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -29,7 +31,7 @@ public class SignUpMemberRequestDto {
 
     @NotBlank(message = "생년월일은 필수 항목입니다.")
     @Pattern(regexp = Regex.BIRTHDATE, message = "생년월일은 YYYY-MM-DD 형식이여야 합니다.")
-    private String birthdate;
+    private Date birthdate;
 
     @NotBlank(message = "성별은 필수 항목입니다.")
     private Gender gender;
@@ -44,6 +46,4 @@ public class SignUpMemberRequestDto {
 
     @NotBlank(message = "주소는 필수 항목입니다.")
     private String address;
-
-    private Long profileImageId;
 }
