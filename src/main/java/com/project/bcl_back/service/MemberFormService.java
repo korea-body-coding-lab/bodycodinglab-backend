@@ -9,5 +9,5 @@ import org.springframework.stereotype.Service;
 public interface MemberFormService {
     ResponseDto<Void> createMemberForm(MemberFormCreateRequestDto dto);
 
-    ResponseDto<MemberFormResponseDto> findByFromIdMemberForm(String formId);
+    ResponseDto<MemberFormResponseDto> findByFromIdMemberForm(Long formId);
 }
