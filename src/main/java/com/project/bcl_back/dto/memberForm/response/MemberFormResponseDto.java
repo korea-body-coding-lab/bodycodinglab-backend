@@ -1,9 +1,11 @@
 package com.project.bcl_back.dto.memberForm.response;
 
 import com.project.bcl_back.common.enums.memberFrom.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class MemberFormResponseDto {
     private Long MemberId;
     private String memberName;

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class MemberFormCreateRequestDto {
+    private Long MemberId;
     private Byte age;
     private BodyForm bodyForm;
     private Goal goal;
