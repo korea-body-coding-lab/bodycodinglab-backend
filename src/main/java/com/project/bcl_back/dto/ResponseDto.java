@@ -1,6 +1,5 @@
 package com.project.bcl_back.dto;
 
-import com.project.bcl_back.dto.board.response.BoardResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

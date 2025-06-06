@@ -7,9 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -34,7 +34,7 @@ public class User implements UserDetails {
     private String name;
 
     @Column(name = "birthdate", nullable = false)
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
@@ -51,7 +51,7 @@ public class User implements UserDetails {
     private UploadFile profileImage;
 
     @Builder
-    public User(Role role, String username, String password, String name, Date birthdate, Gender gender, String phone, String email) {
+    public User(Role role, String username, String password, String name, LocalDate birthdate, Gender gender, String phone, String email) {
         this.role = role;
         this.username = username;
         this.password = password;
