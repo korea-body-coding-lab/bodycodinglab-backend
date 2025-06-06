@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberFormController {
     private MemberFormService memberFormService;
 
-    private static final String POST_MEMBER_FORMS = "api/v1/members/forms";
+    private static final String POST_MEMBER_FORMS = "api/v1/members/subscriptions/forms";
     private static final String GET_MEMBER_FORMS = "api/v1/trainers/me/match-waiting-list/{form-id}";
 
     @PostMapping(POST_MEMBER_FORMS)
@@ -25,7 +25,7 @@ public class MemberFormController {
     }
 
     @GetMapping(GET_MEMBER_FORMS)
-    public ResponseEntity<ResponseDto<MemberFormResponseDto>> findByFormIdMemberForm(@PathVariable String formId){
+    public ResponseEntity<ResponseDto<MemberFormResponseDto>> findByFormIdMemberForm(@PathVariable Long formId){
         ResponseDto<MemberFormResponseDto> response = memberFormService.findByFromIdMemberForm(formId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
