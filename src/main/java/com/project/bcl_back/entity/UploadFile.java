@@ -21,7 +21,8 @@ public class UploadFile {
     private String fileName;
     private String filePath;
     private String fileType;
-    private long fileSize;
+    private Long fileSize;
+    private Long targetId;
 
     @Enumerated(EnumType.STRING)
     private TargetType targetType;// 커몬 > 이넘 > 타겟타입에 파일저장소와 연결할 부분 추가
@@ -31,12 +32,13 @@ public class UploadFile {
     private Board board;
 
     @Builder
-    public UploadFile(String originalName, String fileName, String filePath, String fileType, long fileSize, TargetType targetType){
+    public UploadFile(String originalName, String fileName, String filePath, String fileType, Long fileSize, Long targetId, TargetType targetType){
         this.originalName = originalName;
         this.fileName = fileName;
         this.filePath = filePath;
         this.fileType = fileType;
         this.fileSize = fileSize;
+        this.targetId = targetId;
         this.targetType = targetType;
     }
     public void assignToBoard(Board board){

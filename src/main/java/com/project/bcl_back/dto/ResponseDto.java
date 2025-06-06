@@ -15,15 +15,13 @@ public class ResponseDto<T> {
     private T data;          // 응답 데이터
 
     // 성공 응답 (데이터 포함)
-    public static <T> ResponseEntity<ResponseDto<T>> success(String code, String message, T data) {
-        ResponseDto<T> response = new ResponseDto<>(code, message, data);
-        return ResponseEntity.ok(response);
+    public static <T> ResponseDto<T> success(String code, String message, T data) {
+        return new ResponseDto<>(code, message, data);
     }
 
     // 성공 응답 (데이터 없음)
-    public static <T> ResponseEntity<ResponseDto<T>> success(String code, String message, BoardResponseDto data) {
-        ResponseDto<T> response = new ResponseDto<>(code, message, null);
-        return ResponseEntity.ok(response);
+    public static <T> ResponseDto<T> success(String code, String message) {
+        return new ResponseDto<>(code, message, null);
     }
 
     // 실패 응답 (제네릭)
