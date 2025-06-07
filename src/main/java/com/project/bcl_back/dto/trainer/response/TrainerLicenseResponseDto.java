@@ -9,6 +9,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class TrainerLicenseResponseDto {
+    private Long id;
+    private Long trainerId;
     private LicenseType licenseType;
     private String licenseName;
 }
