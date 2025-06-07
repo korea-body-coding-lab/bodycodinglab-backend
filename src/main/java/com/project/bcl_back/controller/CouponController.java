@@ -20,8 +20,8 @@ public class CouponController {
     private final CouponService couponService;
 
     @GetMapping(ApiMappingPattern.MEMBER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<MemberCouponResponseDto>>> findNotUsedCoupon(@RequestParam String status){
-        ResponseDto<List<MemberCouponResponseDto>> response = couponService.findNotUsedCoupon(status);
+    public ResponseEntity<ResponseDto<List<MemberCouponResponseDto>>> findNotUsedOrExpiredCCoupon(@RequestParam String status){
+        ResponseDto<List<MemberCouponResponseDto>> response = couponService.findNotUsedOrExpiredCoupon(status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -38,14 +38,10 @@ public class CouponController {
     }
 
     @PutMapping(ApiMappingPattern.TRAINER_COUPON_API + "/{coupon-id}")
-    public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable String couponId, @RequestBody PutCouponRequsetDto dto){
+    public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable Long couponId, @RequestBody PutCouponRequsetDto dto){
         ResponseDto<Void> response = couponService.putCoupon(couponId, dto);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(ApiMappingPattern.MEMBER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<MemberCouponResponseDto>>> findExpiredCoupon(@RequestParam String status){
-        ResponseDto<List<MemberCouponResponseDto>> response = couponService.findExpiredCoupon(status);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+
 }
