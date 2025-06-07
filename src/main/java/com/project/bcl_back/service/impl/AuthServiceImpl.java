@@ -15,30 +15,50 @@ import com.project.bcl_back.dto.auth.response.SignUpTrainerResponseDto;
 import com.project.bcl_back.entity.*;
 import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.AuthService;
+import com.project.bcl_back.service.UploadFileService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl implements AuthService, UserDetailsService {
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final TrainerInfoRepository trainerInfoRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final UploadFileRepository uploadFileRepository;
+    private final UploadFileService uploadFileService;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
+    @Value("${jwt.expiration}")
+    private String jwtExpirationMs;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    private AuthenticationManager authenticationManager;
+
+    @Lazy
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    
 
     @Override
     public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile file) throws IOException {
@@ -83,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.save(member);
 
         if (file != null && !file.isEmpty()) {
-            user.setProfileImage(saveFile(file, user.getId(), TargetType.PROFILE));
+            user.setProfileImage(uploadFileService.saveFile(file, user.getId(), TargetType.PROFILE));
             userRepository.save(user);
         }
 
@@ -135,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         if (profile != null && !profile.isEmpty()) {
-            user.setProfileImage(saveFile(profile, user.getId(), TargetType.PROFILE));
+            user.setProfileImage(uploadFileService.saveFile(profile, user.getId(), TargetType.PROFILE));
             userRepository.save(user);
         }
 
@@ -146,7 +166,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         trainerInfoRepository.save(trainerInfo);
 
-        trainerInfo.setAttachmentFile(saveFile(attachmentFile, trainerInfo.getId(), TargetType.ATTACHMENT));
+        trainerInfo.setAttachmentFile(uploadFileService.saveFile(attachmentFile, trainerInfo.getId(), TargetType.ATTACHMENT));
         trainerInfoRepository.save(trainerInfo);
 
         data = SignUpTrainerResponseDto.builder()
@@ -158,30 +178,32 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<SignInUserResponseDto> login(SignInUserRequestDto dto) {
-        return null;
+    public ResponseDto<SignInUserResponseDto> login(SignInUserRequestDto dto) throws IOException {
+        SignInUserResponseDto data = null;
+
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+        User user = (User) auth.getPrincipal();
+
+        String token = Jwts.builder()
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationMs)))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
+                .compact();
+
+        data = SignInUserResponseDto.builder()
+                .token(token)
+                .userId(user.getId())
+                .name(user.getName())
+                .profileImage(uploadFileService.getProfileImage(user.getId(), TargetType.PROFILE))
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }
 
-    private UploadFile saveFile(MultipartFile file, Long targetId, TargetType targetType) throws IOException {
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
-
-        String original = file.getOriginalFilename();
-        String uuidName = UUID.randomUUID() + "_" + original;
-        String fullPath = uploadDir + "/" + uuidName;
-        file.transferTo(new File(fullPath));
-
-        UploadFile uf = UploadFile.builder()
-                .originalName(original)
-                .fileName(uuidName)
-                .filePath("/files/" + uuidName)
-                .fileSize(file.getSize())
-                .fileType(file.getContentType())
-                .targetId(targetId)
-                .targetType(targetType)
-                .build();
-        uploadFileRepository.save(uf);
-
-        return uf;
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }
