@@ -56,4 +56,9 @@ public interface ResponseMessage {
     // 파일 관련
     String FILE_UPLOAD_FAIL = "파일 업로드에 실패했습니다.";
     String FILE_NOT_FOUND = "파일을 찾을 수 없습니다.";
+
+    // 트레이너 관련
+    String NOT_EXISTS_LICENSE = "해당 사용자의 자격증을 찾을 수 없습니다.";
+    String NOT_EXISTS_CAREER = "해당 사용자의 경력을 찾을 수 없습니다.";
+
 }
