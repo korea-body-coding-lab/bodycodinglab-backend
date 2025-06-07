@@ -2,6 +2,8 @@ package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.coupon.Status;
+import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
@@ -9,8 +11,8 @@ import com.project.bcl_back.dto.coupon.response.TrainerApplicationCouponResponse
 import com.project.bcl_back.dto.coupon.response.TrainerCompleteCouponResponseDto;
 import com.project.bcl_back.entity.Coupon;
 import com.project.bcl_back.repository.CouponRepository;
-import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.CouponService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
 
     @Override
-    public ResponseDto<List<MemberCouponResponseDto>> findNotUsedCoupon(String status) {
+    public ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(String status) {
         List<MemberCouponResponseDto> coupons = null;
 
         List<Coupon> notUsedCoupon = couponRepository.findByStatus(status);
@@ -78,25 +80,17 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<Void> putCoupon(String couponId, PutCouponRequsetDto dto) {
-        return null;
+    public ResponseDto<Void> putCoupon(Long couponId, PutCouponRequsetDto dto) {
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
+
+        coupon.setUsedDate(DateUtils.parse(dto.getUsedDate()));
+        coupon.setStatus(Status.COMPLETE);
+
+        couponRepository.save(coupon);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
     }
 
-    @Override
-    public ResponseDto<List<MemberCouponResponseDto>> findExpiredCoupon(String status) {
-        List<MemberCouponResponseDto> coupons = null;
 
-        List<Coupon> notUsedCoupon = couponRepository.findByStatus(status);
-
-        coupons = notUsedCoupon.stream()
-                .map(coupon -> new MemberCouponResponseDto(
-                        coupon.getCouponId(),
-                        coupon.getUser().getUsername(),
-                        coupon.getExpirationPeriod(),
-                        coupon.getStatus()
-                )).collect(Collectors.toList());
-
-
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, coupons);
-    }
 }
