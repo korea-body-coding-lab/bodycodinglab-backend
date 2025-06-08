@@ -25,7 +25,7 @@ public class Subscription {
     private String subscriptionName;
 
     @Column(name = "price", nullable = false)
-    private int price;
+    private Integer price;
 
     @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;

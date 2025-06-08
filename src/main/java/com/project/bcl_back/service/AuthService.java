@@ -15,5 +15,5 @@ import java.io.IOException;
 public interface AuthService {
     ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto, MultipartFile profile) throws IOException;
     ResponseDto<SignUpTrainerResponseDto> trainerSignup(@Valid SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException;
-    ResponseDto<SignInUserResponseDto> login(@Valid SignInUserRequestDto dto) throws IOException;
+    ResponseDto<SignInUserResponseDto> login(@Valid SignInUserRequestDto dto);
 }

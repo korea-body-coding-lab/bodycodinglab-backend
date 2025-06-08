@@ -21,11 +21,11 @@ public class Coupon {
     private Long couponId;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "trainer_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     private User trainerId;
 
 

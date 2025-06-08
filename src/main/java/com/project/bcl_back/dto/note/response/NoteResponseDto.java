@@ -11,5 +11,5 @@ public class NoteResponseDto {
     private String noteText;
     private Long noteWriter;
     private Long noteReceiver;
-    private LocalDateTime noteCreateTime;
+    private String noteCreateTime;
 }

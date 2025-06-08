@@ -10,8 +10,8 @@ public interface CommentService {
     ResponseDto<CommentResponseDto> createComment(Long boardId, @Valid CommentRequestDto dto);
 
     // 댓글 수정
-    ResponseDto<CommentResponseDto> updateComment(Long boardId, Long commentId ,CommentResponseDto dto);
+    ResponseDto<CommentResponseDto> updateComment(Long boardId, Long commentId ,CommentRequestDto dto);
 
     // 댓글 삭제
-    ResponseDto<CommentResponseDto> deleteComment(Long boardId, Long commentId);
+    ResponseDto<Void> deleteComment(Long boardId, Long commentId);
 }

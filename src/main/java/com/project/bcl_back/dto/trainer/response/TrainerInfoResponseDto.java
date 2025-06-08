@@ -11,7 +11,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class TrainerInfoResponseDto {
-    private Long id;
     private String jobAddress;
     private String shortIntroduce;
     private String longIntroduce;

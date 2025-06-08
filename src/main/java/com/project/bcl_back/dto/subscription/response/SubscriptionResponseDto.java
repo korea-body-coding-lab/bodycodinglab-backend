@@ -1,16 +1,12 @@
 package com.project.bcl_back.dto.subscription.response;
 
 import com.project.bcl_back.common.enums.member.Status;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
 public class SubscriptionResponseDto {
     private String memberName;
-    private int price;
+    private Integer price;
     private String subscriptionName;
     private LocalDateTime paymentDate;
     private LocalDateTime memberSubscriptionDate;
