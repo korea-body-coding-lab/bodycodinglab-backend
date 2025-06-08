@@ -11,13 +11,13 @@ import java.util.List;
 
 @Service
 public interface CouponService {
-    ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(String status);
+    ResponseDto<List<MemberCouponResponseDto>> findNotUsedCoupon(String status);
 
     ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationCoupon(String status);
 
     ResponseDto<List<TrainerCompleteCouponResponseDto>> findCompleteCoupon(String status);
 
-    ResponseDto<Void> putCoupon(Long couponId, PutCouponRequsetDto dto);
+    ResponseDto<Void> putCoupon(String couponId, PutCouponRequsetDto dto);
 
-
+    ResponseDto<List<MemberCouponResponseDto>> findExpiredCoupon(String status);
 }

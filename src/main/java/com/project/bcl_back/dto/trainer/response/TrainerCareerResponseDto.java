@@ -9,8 +9,6 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 public class TrainerCareerResponseDto {
-    private Long id;
-    private Long trainerId;
     private String companyName;
     private Date companyJoin;
     private Date companyQuit;

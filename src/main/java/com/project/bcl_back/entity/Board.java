@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "personal_community_board_categories")
 public class Board {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -52,5 +53,13 @@ public class Board {
     public void addImage(UploadFile file){
         images.add(file);
         file.assignToBoard(this);
+    }
+    public void addComment(Comment comment){
+        this.comments.add(comment);
+        comment.setBoard(this);
+    }
+    public void removeComment(Comment comment){
+        this.comments.remove(comment);
+        comment.setBoard(null);
     }
 }
