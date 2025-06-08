@@ -8,6 +8,7 @@ import java.util.Date;
 @Entity
 @Table(name = "trainer_careers")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder

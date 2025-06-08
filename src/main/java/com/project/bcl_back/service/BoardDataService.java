@@ -19,7 +19,7 @@ public interface BoardDataService {
     ResponseDto<BoardResponseDto> getPostById(Long id);
 
     // 게시글 수정
-    ResponseDto<BoardResponseDto> updatePost(Long id, BoardRequestDto dto, MultipartFile file) throws IOException;
+    ResponseDto<BoardResponseDto> updatePost(BoardRequestDto dto, MultipartFile file);
 
     // 게시글 삭제
     ResponseDto<?> deletePost(Long id);

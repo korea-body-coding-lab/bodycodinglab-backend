@@ -8,6 +8,5 @@ public enum TargetType {
     INFOS,
     LICENSE,
     ATTACHMENT,
-    REVIEW,
-    BOARD
+    REVIEW
 }

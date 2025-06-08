@@ -18,7 +18,7 @@ public class MemberForm {
     private Long formId;
 
     @OneToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private User member;
 
     @Column(name = "age", nullable = false)

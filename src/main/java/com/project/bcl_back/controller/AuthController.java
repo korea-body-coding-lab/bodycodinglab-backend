@@ -50,8 +50,8 @@ public class AuthController {
 
     // 로그인
     @PostMapping(POST_SIGN_IN)
-    public ResponseEntity<ResponseDto<SignInUserResponseDto>> login(@Valid @RequestBody SignInUserRequestDto dto) {
+    public ResponseEntity<ResponseDto<SignInUserResponseDto>> login(@Valid @RequestBody SignInUserRequestDto dto) throws IOException {
         ResponseDto<SignInUserResponseDto> response = authService.login(dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }
