@@ -26,7 +26,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status;
+    private Status status = Status.NOT_PAYMENT;
 
     @Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isApproved;

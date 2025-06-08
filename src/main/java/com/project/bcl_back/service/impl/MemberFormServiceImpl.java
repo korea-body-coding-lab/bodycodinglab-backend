@@ -22,9 +22,9 @@ public class MemberFormServiceImpl implements MemberFormService {
     private final MemberFormRepository memberFormRepository;
 
     @Override
-    public ResponseDto<Void> createMemberForm(MemberFormCreateRequestDto dto) {
-        User user = userRepository.findById(dto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + dto.getMemberId()));
+    public ResponseDto<Void> createMemberForm(Long memberId, MemberFormCreateRequestDto dto) {
+        User user = userRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
 
         MemberForm memberForm = new MemberForm(
               null,
