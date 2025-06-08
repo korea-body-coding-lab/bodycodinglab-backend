@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 public class CommentRequestDto {
     @NotBlank(message = "내용은 필수 입력 값입니다.")
     private String commentContent;
+
+    private Long commenterId;
 }
