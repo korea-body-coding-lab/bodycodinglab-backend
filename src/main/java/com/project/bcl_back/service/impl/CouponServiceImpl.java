@@ -14,9 +14,11 @@ import com.project.bcl_back.repository.CouponRepository;
 import com.project.bcl_back.service.CouponService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,13 @@ import java.util.stream.Collectors;
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void expireCoupons() {
+        LocalDate today = LocalDate.now();
+        couponRepository.expireOldCoupons(today);
+    }
 
     @Override
     public ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(String status) {
