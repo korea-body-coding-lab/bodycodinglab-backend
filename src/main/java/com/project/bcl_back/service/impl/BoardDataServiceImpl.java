@@ -22,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     private final BoardRepository boardRepo;
     private final UploadFileRepository fileRepo;
 
-    @Value("${file.upload-dir}")
+    @Value("${file.upload-dir")
     private String uploadDir;
 
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -39,68 +38,27 @@ public class BoardDataServiceImpl implements BoardDataService {
     @Transactional
     public ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, MultipartFile file) throws IOException {
         // 게시글 저장
-        Board board = Board.builder()
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .build();
-        board = boardRepo.save(board);
-
-        // 첨부파일 저장
-        if (file != null && !file.isEmpty()) {
-            saveFile(file, board.getId(), "Board");
-        }
-
-        BoardResponseDto data = toDto(board);
-        return ResponseDto.success(ResponseMessage.SUCCESS, "", data);
+        return null;
     }
 
     @Override
     public ResponseDto<List<BoardResponseDto>> getAllPosts() {
-        List<BoardResponseDto> list = boardRepo.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-        return ResponseDto.success(ResponseMessage.SUCCESS, "", list);
+        return null;
     }
 
     @Override
     public ResponseDto<BoardResponseDto> getPostById(Long id) {
-        Board board = boardRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
-        return ResponseDto.success(ResponseMessage.SUCCESS, "", toDto(board));
+        return null;
     }
 
     @Override
-    @Transactional
-    public ResponseDto<BoardResponseDto> updatePost(Long id, BoardRequestDto dto, MultipartFile file) throws IOException {
-        Board board = boardRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
-        board.setTitle(dto.getTitle());
-        board.setContent(dto.getContent());
-        boardRepo.save(board);
-
-        List<UploadFile> existing = fileRepo.findByTargetTypeAndBoard_Id("BOARD", id);
-        for (UploadFile uploadFile : existing) {
-            new File(uploadDir + "/" + uploadFile.getFileName()).delete();
-            fileRepo.delete(uploadFile);
-        }
-
-        if(file != null && !file.isEmpty()) {
-            saveFile(file, id, "BOARD");
-        }
-
-        return ResponseDto.success(ResponseMessage.SUCCESS, "", toDto(board));
+    public ResponseDto<BoardResponseDto> updatePost(BoardRequestDto dto, MultipartFile file) {
+        return null;
     }
 
     @Override
-    @Transactional
     public ResponseDto<?> deletePost(Long id) {
-        List<UploadFile> files = fileRepo.findByTargetTypeAndBoard_Id("BOARD", id);
-        for (UploadFile uploadFile : files) {
-            new File(uploadDir + "/" + uploadFile.getFileName()).delete();
-            fileRepo.delete(uploadFile);
-        }
-        boardRepo.deleteById(id);
-        return ResponseDto.success(ResponseMessage.SUCCESS, null);
+        return null;
     }
 
     // Post -> DTO 변환
@@ -116,7 +74,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     // 파일 저장 및 메타데이터 기록
     private void saveFile(MultipartFile file, Long targetId, String type)throws IOException{
         File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
+        if(!dir.exists()) dir.mkdirs();
 
         String original = file.getOriginalFilename();
         String uuid = UUID.randomUUID() + "_" + original;
@@ -124,7 +82,7 @@ public class BoardDataServiceImpl implements BoardDataService {
 
         TargetType targetType = TargetType.valueOf(type.toUpperCase());
 
-        UploadFile uploadFile = UploadFile.builder()
+        UploadFile uf = UploadFile.builder()
                 .originalName(original)
                 .fileName(uuid)
                 .filePath("/files/" + uuid)
@@ -132,6 +90,6 @@ public class BoardDataServiceImpl implements BoardDataService {
                 .fileSize(file.getSize())
                 .targetType(targetType)
                 .build();
-        fileRepo.save(uploadFile);
+        fileRepo.save(uf);
     }
 }

@@ -65,4 +65,24 @@ public class TrainerInfo {
         this.jobAddress = jobAddress;
         this.status = status;
     }
+
+    public void addCareer(TrainerCareer career) {
+        this.trainerCareer.add(career);
+        career.setTrainerInfo(this);
+    }
+
+    public void removeCareer(TrainerCareer career) {
+        this.trainerCareer.add(career);
+        career.setTrainerInfo(null);
+    }
+
+    public void addLicense(TrainerLicense license) {
+        this.trainerLicense.add(license);
+        license.setTrainerInfo(this);
+    }
+
+    public void removeLicense(TrainerLicense license) {
+        this.trainerLicense.add(license);
+        license.setTrainerInfo(null);
+    }
 }
