@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.onedayTicket.Status;
+import com.project.bcl_back.common.enums.onedayTicket.OnedayTicketStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,7 +38,7 @@ public class OnedayTicket {
 
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private OnedayTicketStatus onedayTicketStatus;
 
     @ManyToOne
     @JoinColumn(name = "id")

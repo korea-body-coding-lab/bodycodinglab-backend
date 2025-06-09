@@ -61,12 +61,14 @@ public class User implements UserDetails {
         this.phone = phone;
         this.email = email;
     }
-    // === FK 변수 선언 === //
+
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private TrainerInfo trainerInfo;
+
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private Member member;
 
 
-
-
-    // =============================================================== //
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.getName()));

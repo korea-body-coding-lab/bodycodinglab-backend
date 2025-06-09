@@ -42,15 +42,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateEmailValidToken(Long userId) {
-        return Jwts.builder()
-                .claim("userId", userId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtEmailExpirationMs))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     public String removeBearer(String bearerToken) {
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid JWT token format");

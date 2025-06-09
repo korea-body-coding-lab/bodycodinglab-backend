@@ -1,6 +1,6 @@
 package com.project.bcl_back.common.enums.onedayTicket;
 
-public enum Status {
+public enum OnedayTicketStatus {
     NOT_USED,
     APPLICATION,
     ISSUANCE,

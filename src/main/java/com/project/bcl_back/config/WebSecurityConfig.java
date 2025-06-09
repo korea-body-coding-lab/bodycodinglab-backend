@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/personal-community-boards/**").permitAll()
                         .requestMatchers("/api/v1/notes/**").permitAll()
                         .requestMatchers("/api/v1/users/members/**").hasRole("MEMBER")
+                        .requestMatchers("/api/v1/users/trainers/**").hasRole("TRAINER")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/common/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
