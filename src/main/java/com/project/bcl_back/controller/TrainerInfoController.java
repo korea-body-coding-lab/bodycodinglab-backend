@@ -34,14 +34,14 @@ public class TrainerInfoController {
             @Valid @RequestBody TrainerInfoRequestDto dto
     ) {
         ResponseDto<TrainerInfoResponseDto> response = trainerInfoService.postTrainerInfo(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 트레이너 조회(전체)
     @GetMapping(GET_ALL_TRAINER_INFO)
     public ResponseEntity<ResponseDto<List<TrainerListResponseDto>>> getAllTrainers() {
         ResponseDto<List<TrainerListResponseDto>> trainers = trainerInfoService.getAllTrainers();
-        return ResponseEntity.status(HttpStatus.OK).body(trainers);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, trainers);
     }
 
     // 트레이너 단건 조회
@@ -50,7 +50,7 @@ public class TrainerInfoController {
             @PathVariable Long id
     ){
         ResponseDto<TrainerInfoResponseDto> trainer = trainerInfoService.getTrainerById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(trainer);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, trainer);
     }
 
     // 트레이너 정보 조회(이름)
@@ -59,7 +59,7 @@ public class TrainerInfoController {
             @RequestParam String trainerName
     ){
         ResponseDto<List<TrainerListResponseDto>> response = trainerInfoService.searchTrainerByName(trainerName);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 트레이너 정보 조회(근무지 주소)
@@ -68,7 +68,7 @@ public class TrainerInfoController {
             @RequestParam String address
     ){
         ResponseDto<List<TrainerListResponseDto>> response = trainerInfoService.searchTrainerByAddress(address);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 트래이너 정보 수정
@@ -78,6 +78,6 @@ public class TrainerInfoController {
             @Valid @RequestBody TrainerInfoRequestDto dto
     ) {
         ResponseDto<TrainerInfoResponseDto> response = trainerInfoService.updateTrainerInfo(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }

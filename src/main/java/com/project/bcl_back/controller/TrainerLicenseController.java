@@ -35,7 +35,7 @@ public class TrainerLicenseController {
             @Valid @RequestBody TrainerLicenseRequestDto dto
     ) {
         ResponseDto<TrainerLicenseResponseDto> response = trainerLicenseService.postTrainerLicense(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 트레이너 자격증 조회(단건)
@@ -44,7 +44,7 @@ public class TrainerLicenseController {
             @PathVariable Long id
     ) {
         ResponseDto<List<TrainerLicenseResponseDto>> response = trainerLicenseService.getTrainerLicense(id);
-        return ResponseEntity.ok(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
     // 트레이너 자격증 수정
     @PutMapping(PUT_TRAINER_LICENSE)
@@ -53,7 +53,7 @@ public class TrainerLicenseController {
             @Valid @RequestBody TrainerLicenseRequestDto dto
     ) {
         ResponseDto<TrainerLicenseResponseDto> response = trainerLicenseService.updateTrainerLicense(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 트레이너 자격증 삭제
@@ -67,6 +67,6 @@ public class TrainerLicenseController {
     @GetMapping(GER_RECENT_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerRecentLicenseResponseDto>> getRecentLicense(){
         ResponseDto<TrainerRecentLicenseResponseDto> response = trainerLicenseService.getRecentLicense();
-        return  ResponseEntity.status(HttpStatus.OK).body(response);
+        return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }
