@@ -1,6 +1,6 @@
 package com.project.bcl_back.common.enums.coupon;
 
-public enum Status {
+public enum CouponStatus {
     NOT_USED,
     APPLICATION,
     COMPLETE,

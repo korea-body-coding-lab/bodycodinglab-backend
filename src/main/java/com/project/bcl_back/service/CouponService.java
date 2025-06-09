@@ -5,6 +5,7 @@ import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.TrainerApplicationCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.TrainerCompleteCouponResponseDto;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface CouponService {
 
     ResponseDto<List<TrainerCompleteCouponResponseDto>> findCompleteCoupon(String status);
 
-    ResponseDto<Void> putCoupon(Long couponId, PutCouponRequsetDto dto);
+    ResponseDto<Void> putCoupon(Long couponId, @Valid PutCouponRequsetDto dto);
 
 
 }

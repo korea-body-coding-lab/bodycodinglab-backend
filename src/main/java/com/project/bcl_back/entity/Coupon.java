@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.coupon.Status;
+import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,5 +37,5 @@ public class Coupon {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private CouponStatus status;
 }

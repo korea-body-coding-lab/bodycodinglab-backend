@@ -3,7 +3,7 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
-import com.project.bcl_back.common.enums.member.Status;
+import com.project.bcl_back.common.enums.member.MemberStatus;
 import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.auth.request.SignInUserRequestDto;
@@ -75,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
         Member member = Member.builder()
                 .user(user)
                 .memberAddress(dto.getAddress())
-                .status(Status.NOT_PAYMENT)
+                .status(MemberStatus.NOT_PAYMENT)
                 .build();
         memberRepository.save(member);
 

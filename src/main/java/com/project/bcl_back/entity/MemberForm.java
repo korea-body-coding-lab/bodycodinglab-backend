@@ -19,7 +19,7 @@ public class MemberForm {
 
     @OneToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private User member;
+    private Member member;
 
     @Column(name = "age", nullable = false)
     private Byte age;

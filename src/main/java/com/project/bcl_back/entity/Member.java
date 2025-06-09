@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.member.Status;
+import com.project.bcl_back.common.enums.member.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,13 +26,16 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.NOT_PAYMENT;
+    private MemberStatus status = MemberStatus.NOT_PAYMENT;
 
     @Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isApproved;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private MemberForm memberFrom;
+
     @Builder
-    public Member(User user, String memberAddress, Status status) {
+    public Member(User user, String memberAddress, MemberStatus status) {
         this.user = user;
         this.memberAddress = memberAddress;
         this.status = status;

@@ -4,6 +4,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.subscription.request.CreateSubscriptionRequestDto;
 import com.project.bcl_back.dto.subscription.response.SubscriptionResponseDto;
 import com.project.bcl_back.service.SubscriptionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class SubscriptionController {
     public ResponseEntity<ResponseDto<Void>> createSubscriptionLog(
             @PathVariable Long trainerId,
             @PathVariable Long memberId,
-            @RequestBody CreateSubscriptionRequestDto dto
+            @Valid @RequestBody CreateSubscriptionRequestDto dto
             ){
         ResponseDto<Void> response = subscriptionService.createSubscriptionLog(trainerId, memberId ,dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
