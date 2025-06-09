@@ -15,7 +15,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long memberI;
+    private Long memberId;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -31,7 +31,7 @@ public class Member {
     @Column(name = "is_approved", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isApproved;
 
-    @OneToOne(mappedBy = "Member", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MemberForm memberFrom;
 
     @Builder
