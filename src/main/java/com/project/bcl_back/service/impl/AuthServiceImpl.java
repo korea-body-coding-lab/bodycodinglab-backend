@@ -13,53 +13,30 @@ import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
 import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
 import com.project.bcl_back.dto.auth.response.SignUpTrainerResponseDto;
 import com.project.bcl_back.entity.*;
+import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.AuthService;
 import com.project.bcl_back.service.UploadFileService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService, UserDetailsService {
+public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final TrainerInfoRepository trainerInfoRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final UploadFileService uploadFileService;
-
-    @Value("${jwt.expiration}")
-    private String jwtExpirationMs;
-
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    private AuthenticationManager authenticationManager;
-
-    @Lazy
-    @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
+    private final JwtProvider jwtProvider;
     
-
+    @Transactional
     @Override
     public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile file) throws IOException {
         SignUpMemberResponseDto data = null;
@@ -115,6 +92,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }
 
+    @Transactional
     @Override
     public ResponseDto<SignUpTrainerResponseDto> trainerSignup(SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException {
         SignUpTrainerResponseDto data = null;
@@ -180,30 +158,28 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     @Override
     public ResponseDto<SignInUserResponseDto> login(SignInUserRequestDto dto) throws IOException {
         SignInUserResponseDto data = null;
+        User user = null;
 
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
-        User user = (User) auth.getPrincipal();
+        user = userRepository.findByUsername(dto.getUsername())
+                .orElse(null);
 
-        String token = Jwts.builder()
-                .setSubject(user.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtExpirationMs)))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
-                .compact();
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.NO_EXIST_USER_ID, ResponseMessage.NO_EXIST_USER_ID);
+        }
+
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            return ResponseDto.fail(ResponseCode.NOT_CORRECT_PASSWORD, ResponseMessage.NOT_CORRECT_PASSWORD);
+        }
+
+        String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName().toString());
 
         data = SignInUserResponseDto.builder()
                 .token(token)
                 .userId(user.getId())
                 .name(user.getName())
-                .profileImage(uploadFileService.getProfileImage(user.getId(), TargetType.PROFILE))
+//                .profileImage(uploadFileService.getProfileImage(user.getId(), TargetType.PROFILE))
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
-    }
-
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }

@@ -25,27 +25,33 @@ public class UploadFileServiceImpl implements UploadFileService {
     private String uploadDir;
 
     @Override
-    public UploadFile saveFile(MultipartFile file, Long targetId, TargetType targetType) throws IOException {
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
+    public UploadFile saveFile(MultipartFile file, Long targetId, TargetType targetType) {
+        try {
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
 
-        String original = file.getOriginalFilename();
-        String uuidName = UUID.randomUUID() + "_" + original;
-        String fullPath = uploadDir + "/" + uuidName;
-        file.transferTo(new File(fullPath));
+            String original = file.getOriginalFilename();
+            String uuidName = UUID.randomUUID() + "_" + original;
+            String fullPath = uploadDir + "/" + uuidName;
+            file.transferTo(new File(fullPath));
 
-        UploadFile uf = UploadFile.builder()
-                .originalName(original)
-                .fileName(uuidName)
-                .filePath("/file/" + uuidName)
-                .fileSize(file.getSize())
-                .fileType(file.getContentType())
-                .targetId(targetId)
-                .targetType(targetType)
-                .build();
-        uploadFileRepository.save(uf);
+            UploadFile uf = UploadFile.builder()
+                    .originalName(original)
+                    .fileName(uuidName)
+                    .filePath("/files/" + uuidName)
+                    .fileSize(file.getSize())
+                    .fileType(file.getContentType())
+                    .targetId(targetId)
+                    .targetType(targetType)
+                    .build();
+            uploadFileRepository.save(uf);
 
-        return uf;
+            return uf;
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
     @Override
