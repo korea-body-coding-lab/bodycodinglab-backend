@@ -34,6 +34,9 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MemberForm memberFrom;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Subscription subscription;
+
     @Builder
     public Member(User user, String memberAddress, MemberStatus status) {
         this.user = user;

@@ -14,9 +14,8 @@ import java.util.List;
 public interface CouponService {
     ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(String status);
 
-    ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationCoupon(String status);
+    ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(String status);
 
-    ResponseDto<List<TrainerCompleteCouponResponseDto>> findCompleteCoupon(String status);
 
     ResponseDto<Void> putCoupon(Long couponId, @Valid PutCouponRequsetDto dto);
 

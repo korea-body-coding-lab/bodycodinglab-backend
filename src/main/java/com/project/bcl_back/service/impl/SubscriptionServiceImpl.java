@@ -32,7 +32,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public ResponseDto<SubscriptionResponseDto> findSubscription(Long memberId) {
         SubscriptionResponseDto response = null;
 
-        Subscription subscription = subscriptionRepository.findByMemberId(memberId);
+        Subscription subscription = subscriptionRepository.findByMember_MemberId(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
 
