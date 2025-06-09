@@ -37,7 +37,7 @@ public class TrainerCareerController {
             @Valid @RequestBody TrainerCareerRequestDto dto
     ) {
         ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.postTrainerCareer(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 트레이너 경력 조회(단건)
@@ -46,7 +46,7 @@ public class TrainerCareerController {
             @PathVariable Long id
     ) {
         ResponseDto<List<TrainerCareerResponseDto>> response = trainerCareerService.getTrainerCareer(id);
-        return ResponseEntity.ok(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
     // 트레이너 경력 수정
     @PutMapping(PUT_TRAINER_CAREER)
@@ -55,7 +55,7 @@ public class TrainerCareerController {
             @Valid @RequestBody TrainerCareerRequestDto dto
     ) {
         ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.updateTrainerCareer(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 트레이너 경력 삭제
@@ -69,7 +69,7 @@ public class TrainerCareerController {
     @GetMapping(GER_RECENT_TRAINER_CAREER)
     public ResponseEntity<ResponseDto<TrainerRecentCareerResponseDto>> getRecentCareer(){
         ResponseDto<TrainerRecentCareerResponseDto> response = trainerCareerService.getRecentCareer();
-        return  ResponseEntity.status(HttpStatus.OK).body(response);
+        return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
 }
