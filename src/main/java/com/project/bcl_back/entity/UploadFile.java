@@ -27,9 +27,9 @@ public class UploadFile {
     @Enumerated(EnumType.STRING)
     private TargetType targetType;// 커몬 > 이넘 > 타겟타입에 파일저장소와 연결할 부분 추가
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "board_id")
+//    private Board board;
 
     @Builder
     public UploadFile(String originalName, String fileName, String filePath, String fileType, Long fileSize, Long targetId, TargetType targetType){
@@ -41,9 +41,9 @@ public class UploadFile {
         this.targetId = targetId;
         this.targetType = targetType;
     }
-    public void assignToBoard(Board board){
-        this.board = board;
-        board.getImages().add(this);
-    }
+//    public void assignToBoard(Board board){
+//        this.board = board;
+//        board.getImages().add(this);
+//    }
     // 파일 업로드 시스템이 필요한 부분마다 연결
 }
