@@ -5,10 +5,10 @@ import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.memberForm.request.MemberFormCreateRequestDto;
 import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
+import com.project.bcl_back.entity.Member;
 import com.project.bcl_back.entity.MemberForm;
-import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.MemberFormRepository;
-import com.project.bcl_back.repository.UserRepository;
+import com.project.bcl_back.repository.MemberRepository;
 import com.project.bcl_back.service.MemberFormService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +18,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberFormServiceImpl implements MemberFormService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final MemberFormRepository memberFormRepository;
 
     @Override
     public ResponseDto<Void> createMemberForm(Long memberId, MemberFormCreateRequestDto dto) {
-        User user = userRepository.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
 
         MemberForm memberForm = new MemberForm(
               null,
-              user,
+              member,
               dto.getAge(),
               dto.getBodyForm(),
               dto.getGoal(),
@@ -60,8 +60,8 @@ public class MemberFormServiceImpl implements MemberFormService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FAILED + formId));
 
         response = new MemberFormResponseDto(
-                memberForm.getMember().getId(),
-                memberForm.getMember().getUsername(),
+                memberForm.getMember().getMemberId(),
+                memberForm.getMember().getUser().getUsername(),
                 memberForm.getAge(),
                 memberForm.getBodyForm(),
                 memberForm.getGoal(),
