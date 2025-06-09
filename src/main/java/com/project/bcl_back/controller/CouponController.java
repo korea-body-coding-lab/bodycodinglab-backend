@@ -27,16 +27,12 @@ public class CouponController {
     }
 
     @GetMapping(ApiMappingPattern.TRAINER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<TrainerApplicationCouponResponseDto>>> findApplicationCoupon(@RequestParam String status){
-        ResponseDto<List<TrainerApplicationCouponResponseDto>> response = couponService.findApplicationCoupon(status);
+    public ResponseEntity<ResponseDto<List<TrainerApplicationCouponResponseDto>>> findApplicationOrCompleteCoupon(@RequestParam String status){
+        ResponseDto<List<TrainerApplicationCouponResponseDto>> response = couponService.findApplicationOrCompleteCoupon(status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping(ApiMappingPattern.TRAINER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<TrainerCompleteCouponResponseDto>>> findCompleteCoupon(@RequestParam String status){
-        ResponseDto<List<TrainerCompleteCouponResponseDto>> response = couponService.findCompleteCoupon(status);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+
 
     @PutMapping(ApiMappingPattern.TRAINER_COUPON_API + "/{coupon-id}")
     public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable Long couponId, @Valid @RequestBody PutCouponRequsetDto dto){

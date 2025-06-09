@@ -18,7 +18,7 @@ public class Subscription {
     private Long paymentId;
 
     @OneToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(name = "subscription_name", nullable = false, length = 50)
