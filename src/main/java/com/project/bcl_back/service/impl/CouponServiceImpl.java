@@ -54,39 +54,23 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationCoupon(String status) {
+    public ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(String status) {
         List<TrainerApplicationCouponResponseDto> coupons = null;
 
         List<Coupon> applicationCoupon = couponRepository.findByStatus(status);
 
         coupons = applicationCoupon.stream()
                 .map(coupon -> new TrainerApplicationCouponResponseDto(
-                            coupon.getCouponId(),
-                            coupon.getUser().getUsername(),
-                            coupon.getExpirationPeriod(),
-                            coupon.getStatus()
-                        )).collect(Collectors.toList());
-
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, coupons);
-    }
-
-    @Override
-    public ResponseDto<List<TrainerCompleteCouponResponseDto>> findCompleteCoupon(String status) {
-        List<TrainerCompleteCouponResponseDto> coupons = null;
-
-        List<Coupon> completeCoupon = couponRepository.findByStatus(status);
-
-        coupons = completeCoupon.stream()
-                .map(coupon -> new TrainerCompleteCouponResponseDto(
-                            coupon.getCouponId(),
-                            coupon.getUser().getUsername(),
-                            coupon.getExpirationPeriod(),
-                            coupon.getUsedDate(),
-                            coupon.getStatus()
+                        coupon.getCouponId(),
+                        coupon.getUser().getUsername(),
+                        coupon.getExpirationPeriod(),
+                        coupon.getStatus()
                 )).collect(Collectors.toList());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, coupons);
     }
+
+
 
     @Override
     public ResponseDto<Void> putCoupon(Long couponId, PutCouponRequsetDto dto) {
