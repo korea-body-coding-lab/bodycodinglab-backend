@@ -5,8 +5,10 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.board.request.BoardRequestDto;
 import com.project.bcl_back.dto.board.response.BoardResponseDto;
 import com.project.bcl_back.entity.Board;
+import com.project.bcl_back.entity.Category;
 import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.repository.BoardRepository;
+import com.project.bcl_back.repository.CategoryRepository;
 import com.project.bcl_back.repository.UploadFileRepository;
 import com.project.bcl_back.service.BoardDataService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,9 @@ import com.project.bcl_back.common.enums.TargetType;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class BoardDataServiceImpl implements BoardDataService {
     private final BoardRepository boardRepo;
     private final UploadFileRepository fileRepo;
+    private final CategoryRepository categoryRepository;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -38,10 +41,17 @@ public class BoardDataServiceImpl implements BoardDataService {
     @Override
     @Transactional
     public ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, MultipartFile file) throws IOException {
+        Category category = categoryRepository.findById(dto.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
         // 게시글 저장
         Board board = Board.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
+                .category(category)
+                .writerId(dto.getWriterId())
+                .matchId(dto.getMatchId())
+                .createdAt(LocalDateTime.now())
+                .viewCount(dto.getViewCount())
                 .build();
         board = boardRepo.save(board);
 
@@ -72,18 +82,23 @@ public class BoardDataServiceImpl implements BoardDataService {
     @Override
     @Transactional
     public ResponseDto<BoardResponseDto> updatePost(Long id, BoardRequestDto dto, MultipartFile file) throws IOException {
+
         Board board = boardRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
         board.setTitle(dto.getTitle());
         board.setContent(dto.getContent());
+        board.setUpdatedAt(LocalDateTime.now());
         boardRepo.save(board);
 
-        List<UploadFile> existing = fileRepo.findByTargetTypeAndBoard_Id("BOARD", id);
+        List<UploadFile> existing = fileRepo.findByTargetTypeAndTargetId(TargetType.BOARD, id);
+
         for (UploadFile uploadFile : existing) {
             new File(uploadDir + "/" + uploadFile.getFileName()).delete();
             fileRepo.delete(uploadFile);
         }
 
+        //Error
         if(file != null && !file.isEmpty()) {
             saveFile(file, id, "BOARD");
         }
@@ -94,7 +109,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     @Override
     @Transactional
     public ResponseDto<?> deletePost(Long id) {
-        List<UploadFile> files = fileRepo.findByTargetTypeAndBoard_Id("BOARD", id);
+        List<UploadFile> files = fileRepo.findByTargetTypeAndTargetId(TargetType.BOARD, id);
         for (UploadFile uploadFile : files) {
             new File(uploadDir + "/" + uploadFile.getFileName()).delete();
             fileRepo.delete(uploadFile);
@@ -131,6 +146,7 @@ public class BoardDataServiceImpl implements BoardDataService {
                 .fileType(file.getContentType())
                 .fileSize(file.getSize())
                 .targetType(targetType)
+                .targetId(targetId)
                 .build();
         fileRepo.save(uploadFile);
     }

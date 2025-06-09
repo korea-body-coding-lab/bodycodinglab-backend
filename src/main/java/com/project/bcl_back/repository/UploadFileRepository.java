@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface UploadFileRepository extends JpaRepository<UploadFile, Long> {
-    List<UploadFile> findByTargetTypeAndBoard_Id(String targetType, Long BoardId);
+    List<UploadFile> findByTargetTypeAndTargetId(TargetType targetType, Long targetId);
     UploadFile findByTargetIdAndTargetType(Long targetId, TargetType targetType);
 }

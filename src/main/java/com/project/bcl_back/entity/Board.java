@@ -26,7 +26,7 @@ public class Board {
     private Long matchId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(name = "writer_id",nullable = false)
@@ -38,22 +38,25 @@ public class Board {
     @Column(name = "post_content",nullable = false)
     private String content;
 
-    @Column(name = "created_at",nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "view_count")
+    private Long viewCount;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UploadFile> images = new ArrayList<>();
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<UploadFile> images = new ArrayList<>();
 
-    public void addImage(UploadFile file){
-        images.add(file);
-        file.assignToBoard(this);
-    }
+//    public void addImage(UploadFile file){
+//        images.add(file);
+//        file.assignToBoard(this);
+//    }
     public void addComment(Comment comment){
         this.comments.add(comment);
         comment.setBoard(this);
