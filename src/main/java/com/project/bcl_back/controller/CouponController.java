@@ -7,6 +7,7 @@ import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.TrainerApplicationCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.TrainerCompleteCouponResponseDto;
 import com.project.bcl_back.service.CouponService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class CouponController {
     }
 
     @PutMapping(ApiMappingPattern.TRAINER_COUPON_API + "/{coupon-id}")
-    public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable Long couponId, @RequestBody PutCouponRequsetDto dto){
+    public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable Long couponId, @Valid @RequestBody PutCouponRequsetDto dto){
             couponService.putCoupon(couponId, dto);
         return ResponseEntity.noContent().build();
     }
