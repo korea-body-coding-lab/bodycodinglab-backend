@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberFormController {
     private MemberFormService memberFormService;
 
-    private static final String POST_MEMBER_FORMS = "api/v1/members/subscriptions/forms";
+    private static final String POST_MEMBER_FORMS = "api/v1/members/subscriptions/forms/{member-id}";
     private static final String GET_MEMBER_FORMS = "api/v1/trainers/me/match-waiting-list/{form-id}";
 
     @PostMapping(POST_MEMBER_FORMS)

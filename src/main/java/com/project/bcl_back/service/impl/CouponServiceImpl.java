@@ -2,7 +2,7 @@ package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
-import com.project.bcl_back.common.enums.coupon.Status;
+import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
@@ -94,7 +94,7 @@ public class CouponServiceImpl implements CouponService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
 
         coupon.setUsedDate(DateUtils.parse(dto.getUsedDate()));
-        coupon.setStatus(Status.COMPLETE);
+        coupon.setStatus(CouponStatus.COMPLETE);
 
         couponRepository.save(coupon);
 

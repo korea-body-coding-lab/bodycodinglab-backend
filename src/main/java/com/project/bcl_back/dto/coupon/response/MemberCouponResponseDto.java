@@ -1,12 +1,11 @@
 package com.project.bcl_back.dto.coupon.response;
 
-import com.project.bcl_back.common.enums.coupon.Status;
+import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +14,5 @@ public class MemberCouponResponseDto {
     private Long couponId;
     private String trainerName;
     private LocalDate expirationPeriod;
-    private Status status;
+    private CouponStatus status;
 }
