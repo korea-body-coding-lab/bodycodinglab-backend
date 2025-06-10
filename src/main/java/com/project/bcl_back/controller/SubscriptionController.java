@@ -26,7 +26,7 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/api/v1/members/me/subscriptions")
+    @GetMapping("/api/v1/members/me/subscriptions/{memberId}")
     public ResponseEntity<ResponseDto<SubscriptionResponseDto>> findSubscription(
             @PathVariable Long memberId
     ){
