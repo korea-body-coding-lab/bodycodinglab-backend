@@ -1,6 +1,5 @@
 package com.project.bcl_back.repository;
 
-import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.entity.Role;
 import com.project.bcl_back.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
