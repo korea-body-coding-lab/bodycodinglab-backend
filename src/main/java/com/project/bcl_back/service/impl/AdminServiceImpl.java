@@ -44,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
                 .name(user.getName())
                 .age(Year.now().getValue() - user.getBirthdate().getYear())
                 .gender(user.getGender())
-                .status(user.getTrainerInfo().getStatus())
+                .trainerStatus(user.getTrainerInfo().getTrainerStatus())
                 .build();
     }
 }

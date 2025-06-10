@@ -1,6 +1,6 @@
 package com.project.bcl_back.dto.admin.response;
 
-import com.project.bcl_back.common.enums.trainerInfo.Status;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.common.enums.user.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +15,5 @@ public class GetAllTrainersResponseDto {
     private String name;
     private int age;
     private Gender gender;
-    private Status status;
+    private TrainerStatus trainerStatus;
 }

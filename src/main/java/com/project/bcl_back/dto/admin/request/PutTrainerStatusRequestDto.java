@@ -1,6 +1,6 @@
 package com.project.bcl_back.dto.admin.request;
 
-import com.project.bcl_back.common.enums.trainerInfo.Status;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PutTrainerStatusRequestDto {
     private Long trainerId;
-    private Status newStatus;
+    private TrainerStatus newTrainerStatus;
 }

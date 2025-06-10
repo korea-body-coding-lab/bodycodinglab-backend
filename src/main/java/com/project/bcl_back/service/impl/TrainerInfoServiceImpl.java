@@ -1,5 +1,6 @@
 package com.project.bcl_back.service.impl;
 
+import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerInfoRequestDto;
@@ -44,17 +45,17 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
 
         List<TrainerInfo> trainers = trainerInfoRepository.findAll();
 
-        responseDtos =  trainers.stream()
-                .map(trainer ->
+//        responseDtos =  trainers.stream()
+//                .map(trainer ->
 //                        User user = userRepository.findById(trainer.userId)
 //                                .orElseThrow()
-
-                        TrainerListResponseDto.builder()
-                        .id(trainer.getId())
+//
+//                        TrainerListResponseDto.builder()
+//                        .id(trainer.getId())
 //                        .name(trainer.user.getName())
-                        .shortIntroduce(trainer.getShortIntroduce())
-                        .build())
-                .collect(Collectors.toList());
+//                        .shortIntroduce(trainer.getShortIntroduce())
+//                        .build())
+//                .collect(Collectors.toList());
         return null;
     }
 
@@ -96,7 +97,7 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
                 .licenses(licenses)
                 .build();
 
-        return null;
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
     @Override
