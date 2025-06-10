@@ -63,6 +63,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public ResponseDto<GetTrainerResponseDto> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
         GetTrainerResponseDto data = null;
+        String changeReason = dto.getChangeReason();
 
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
@@ -75,11 +76,15 @@ public class AdminServiceImpl implements AdminService {
             return ResponseDto.fail(ResponseCode.ALREADY_EQUAL_STATUS, ResponseMessage.ALREADY_EQUAL_STATUS);
         }
 
+        if (changeReason == null || changeReason.isEmpty()) {
+            changeReason = dto.getNewStatus().toString();
+        }
+
         Status prevStatus = trainer.getStatus();
         trainer.setStatus(dto.getNewStatus());
         TrainerInfo savedTrainer = trainerInfoRepository.save(trainer);
 
-       TrainerChangeLog log = new TrainerChangeLog(id, savedTrainer, prevStatus, dto.getChangeReason());
+       TrainerChangeLog log = new TrainerChangeLog(id, savedTrainer, prevStatus, changeReason);
        trainerChangeLogRepository.save(log);
 
        data = toGetTrainerResDto(savedTrainer);

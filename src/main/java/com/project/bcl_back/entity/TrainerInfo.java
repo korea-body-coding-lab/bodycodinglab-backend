@@ -26,7 +26,7 @@ public class TrainerInfo {
     @Column(nullable = false, name = "job_address")
     private String jobAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "attachment_file_id")
     private UploadFile attachmentFile;
 
