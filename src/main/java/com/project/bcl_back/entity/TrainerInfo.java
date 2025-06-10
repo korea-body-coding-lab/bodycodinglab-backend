@@ -59,13 +59,6 @@ public class TrainerInfo {
     @OneToMany(mappedBy = "trainer_infos", cascade = CascadeType.ALL)
     private List<TrainerLicense> trainerLicense = new ArrayList<>();
 
-    @Builder
-    public TrainerInfo (User user, String jobAddress, Status status) {
-        this.user = user;
-        this.jobAddress = jobAddress;
-        this.status = status;
-    }
-
     public void addCareer(TrainerCareer career) {
         this.trainerCareer.add(career);
         career.setTrainerInfo(this);

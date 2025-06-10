@@ -59,6 +59,7 @@ public interface ResponseMessage {
     String FILE_NOT_FOUND = "파일을 찾을 수 없습니다.";
 
     // 트레이너 관련
+    String ALREADY_EQUAL_STATUS = "이미 설정된 상태입니다.";
     String NOT_EXISTS_LICENSE = "해당 사용자의 자격증을 찾을 수 없습니다.";
     String NOT_EXISTS_CAREER = "해당 사용자의 경력을 찾을 수 없습니다.";
 
