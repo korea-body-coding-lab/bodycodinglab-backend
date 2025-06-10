@@ -36,7 +36,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(String status) {
+    public ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(CouponStatus status) {
         List<MemberCouponResponseDto> coupons = null;
 
         List<Coupon> notUsedCoupon = couponRepository.findByStatus(status);
@@ -54,7 +54,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(String status) {
+    public ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(CouponStatus status) {
         List<TrainerApplicationCouponResponseDto> coupons = null;
 
         List<Coupon> applicationCoupon = couponRepository.findByStatus(status);

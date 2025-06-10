@@ -1,5 +1,6 @@
 package com.project.bcl_back.service;
 
+import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
@@ -12,9 +13,9 @@ import java.util.List;
 
 @Service
 public interface CouponService {
-    ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(String status);
+    ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(CouponStatus status);
 
-    ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(String status);
+    ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(CouponStatus status);
 
 
     ResponseDto<Void> putCoupon(Long couponId, @Valid PutCouponRequsetDto dto);
