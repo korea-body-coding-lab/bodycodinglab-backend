@@ -7,6 +7,7 @@ import com.project.bcl_back.dto.auth.request.SignUpTrainerRequestDto;
 import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
 import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
 import com.project.bcl_back.dto.auth.response.SignUpTrainerResponseDto;
+import com.project.bcl_back.entity.User;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,4 +17,5 @@ public interface AuthService {
     ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto, MultipartFile profile) throws IOException;
     ResponseDto<SignUpTrainerResponseDto> trainerSignup(@Valid SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException;
     ResponseDto<SignInUserResponseDto> login(@Valid SignInUserRequestDto dto) throws IOException;
+    boolean checkPassword(User user, String password);
 }
