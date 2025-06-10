@@ -1,6 +1,7 @@
 package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
+import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
@@ -21,20 +22,20 @@ public class CouponController {
     private final CouponService couponService;
 
     @GetMapping(ApiMappingPattern.MEMBER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<MemberCouponResponseDto>>> findNotUsedOrExpiredCCoupon(@RequestParam String status){
+    public ResponseEntity<ResponseDto<List<MemberCouponResponseDto>>> findNotUsedOrExpiredCCoupon(@RequestParam CouponStatus status){
         ResponseDto<List<MemberCouponResponseDto>> response = couponService.findNotUsedOrExpiredCoupon(status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(ApiMappingPattern.TRAINER_COUPON_API)
-    public ResponseEntity<ResponseDto<List<TrainerApplicationCouponResponseDto>>> findApplicationOrCompleteCoupon(@RequestParam String status){
+    public ResponseEntity<ResponseDto<List<TrainerApplicationCouponResponseDto>>> findApplicationOrCompleteCoupon(@RequestParam CouponStatus status){
         ResponseDto<List<TrainerApplicationCouponResponseDto>> response = couponService.findApplicationOrCompleteCoupon(status);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
 
-    @PutMapping(ApiMappingPattern.TRAINER_COUPON_API + "/{coupon-id}")
+    @PutMapping(ApiMappingPattern.TRAINER_COUPON_API + "/{couponId}")
     public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable Long couponId, @Valid @RequestBody PutCouponRequsetDto dto){
             couponService.putCoupon(couponId, dto);
         return ResponseEntity.noContent().build();
