@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class PutTrainerStatusRequestDto {
-    private Long trainerId;
+public class UpdateTrainerStatusRequestDto {
     private Status newStatus;
+    private String changeReason;
 }

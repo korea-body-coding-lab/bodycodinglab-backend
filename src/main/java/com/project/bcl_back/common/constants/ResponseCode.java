@@ -32,7 +32,7 @@ public interface ResponseCode {
     String USER_ALREADY_EXISTS = "UAE";
     String NOT_CORRECT_PASSWORD = "NCP";
 
-            // 리소스 관련
+    // 리소스 관련
     String NO_EXIST_TOOL = "NT"; // 존재하지 않는 도구
     String NO_EXIST_CUSTOMER = "NC"; // 존재하지 않는 고객
     String TOOL_INSUFFICIENT = "TI"; // 도구 부족
@@ -57,5 +57,8 @@ public interface ResponseCode {
     String DATA_INTEGRITY_VIOLATION = "DIV";
     String CONSTRAINT_VIOLATION = "CV";
     String DUPLICATE_ENTRY = "DUP";
+
+    // 트레이너 관련
+    String ALREADY_EQUAL_STATUS = "AES";
 
 }
