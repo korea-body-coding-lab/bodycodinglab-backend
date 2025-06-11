@@ -62,6 +62,7 @@ public class UserController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, userService.updateTrainerInfo(id, dto, profile));
     }
 
+    @PreAuthorize("hasAnyRole('MEMBER', 'TRAINER')")
     @DeleteMapping(DELETE_USER_URL)
     public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser (@AuthenticationPrincipal Long id, @Valid @RequestBody DeleteUserRequestDto dto) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, userService.deleteUser(id, dto));

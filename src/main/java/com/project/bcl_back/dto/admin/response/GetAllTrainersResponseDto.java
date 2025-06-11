@@ -15,7 +15,6 @@ public class GetAllTrainersResponseDto {
     private Long trainerId;
     private String username;
     private String name;
-    private int age;
     private Gender gender;
     private String createAt;
     private TrainerStatus status;

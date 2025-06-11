@@ -63,7 +63,6 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public ResponseDto<GetTrainerResponseDto> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
         GetTrainerResponseDto data = null;
-        String changeReason = dto.getChangeReason();
 
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
@@ -76,16 +75,12 @@ public class AdminServiceImpl implements AdminService {
             return ResponseDto.fail(ResponseCode.ALREADY_EQUAL_STATUS, ResponseMessage.ALREADY_EQUAL_STATUS);
         }
 
-        if (changeReason == null || changeReason.isEmpty()) {
-            changeReason = dto.getNewStatus().toString();
-        }
-
         TrainerStatus prevStatus = trainer.getTrainerStatus();
         trainer.setTrainerStatus(dto.getNewStatus());
         TrainerInfo savedTrainer = trainerInfoRepository.save(trainer);
 
-//       TrainerChangeLog log = new TrainerChangeLog(id, savedTrainer, prevStatus, changeReason);
-//       trainerChangeLogRepository.save(log);
+       TrainerChangeLog log = new TrainerChangeLog(id, savedTrainer, prevStatus, dto.getChangeReason());
+       trainerChangeLogRepository.save(log);
 
        data = toGetTrainerResDto(savedTrainer);
 
@@ -98,7 +93,6 @@ public class AdminServiceImpl implements AdminService {
                 .trainerId(user.getTrainerInfo().getId())
                 .username(user.getUsername())
                 .name(user.getName())
-                .age(Year.now().getValue() - user.getBirthdate().getYear())
                 .gender(user.getGender())
                 .status(user.getTrainerInfo().getTrainerStatus())
                 .createAt(DateUtils.format(user.getCreatedAt()))
@@ -112,7 +106,6 @@ public class AdminServiceImpl implements AdminService {
                 .username(trainer.getUser().getUsername())
                 .name(trainer.getUser().getName())
                 .birthdate(trainer.getUser().getBirthdate())
-                .age(Year.now().getValue() - trainer.getUser().getBirthdate().getYear())
                 .gender(trainer.getUser().getGender())
                 .phone(trainer.getUser().getPhone())
                 .email(trainer.getUser().getEmail())

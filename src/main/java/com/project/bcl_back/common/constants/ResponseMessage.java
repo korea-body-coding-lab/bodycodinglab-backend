@@ -28,9 +28,12 @@ public interface ResponseMessage {
     String DUPLICATED_EMAIL = "이미 사용 중인 이메일입니다.";
     String DUPLICATED_TEL_NUMBER = "이미 등록된 전화번호입니다.";
     String NO_EXIST_USER_ID = "존재하지 않는 사용자 ID입니다.";
+    String NO_EXIST_EMAIL = "존재하지 않는 이메일입니다.";
     String USER_NOT_FOUND = "사용자를 찾을 수 없습니다.";
     String USER_ALREADY_EXISTS = "이미 가입된 사용자입니다.";
     String NOT_CORRECT_PASSWORD = "비밀번호가 올바르지 않습니다";
+    String NOT_MATCH_INFORMATION = "사용자 정보가 일치하지 않습니다.";
+    String RESET_PASSWORD_FAIL = "비밀번호 변경에 실패하였습니다.";
 
     // 리소스 관련
     String NO_EXIST_TOOL = "존재하지 않는 도구입니다.";
@@ -39,8 +42,8 @@ public interface ResponseMessage {
     String TOOL_INSUFFICIENT = "도구 수량이 부족합니다.";
 
     // 인증번호 / 메시지
-    String TEL_AUTH_FAIL = "전화번호 인증에 실패했습니다.";
-    String MESSAGE_SEND_FAIL = "메시지 전송에 실패했습니다.";
+    String MAIL_AUTH_FAIL = "이메일 인증에 실패했습니다.";
+    String MAIL_SEND_FAIL = "인증 메일 전송에 실패했습니다.";
     String VERIFICATION_CODE_INVALID = "유효하지 않은 인증 코드입니다.";
     String VERIFICATION_CODE_EXPIRED = "인증 코드가 만료되었습니다.";
 
