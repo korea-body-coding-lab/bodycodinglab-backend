@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.trainerInfo.Status;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,7 +38,7 @@ public class TrainerInfo {
 
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private TrainerStatus trainerStatus;
 
     @Column(name = "education_name")
     private String educationName;
