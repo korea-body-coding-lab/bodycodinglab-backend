@@ -7,12 +7,8 @@ import com.project.bcl_back.common.enums.member.MemberStatus;
 import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.auth.request.SignInUserRequestDto;
-import com.project.bcl_back.dto.auth.request.SignUpMemberRequestDto;
-import com.project.bcl_back.dto.auth.request.SignUpTrainerRequestDto;
-import com.project.bcl_back.dto.auth.response.SignInUserResponseDto;
-import com.project.bcl_back.dto.auth.response.SignUpMemberResponseDto;
-import com.project.bcl_back.dto.auth.response.SignUpTrainerResponseDto;
+import com.project.bcl_back.dto.auth.request.*;
+import com.project.bcl_back.dto.auth.response.*;
 import com.project.bcl_back.entity.*;
 import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.repository.*;
@@ -20,9 +16,13 @@ import com.project.bcl_back.service.AuthService;
 import com.project.bcl_back.service.UploadFileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 
@@ -37,8 +37,8 @@ public class AuthServiceImpl implements AuthService {
     private final UploadFileService uploadFileService;
     private final JwtProvider jwtProvider;
 
-    @Transactional
     @Override
+    @Transactional
     public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile file) throws IOException {
         SignUpMemberResponseDto data = null;
 
@@ -93,8 +93,8 @@ public class AuthServiceImpl implements AuthService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public ResponseDto<SignUpTrainerResponseDto> trainerSignup(SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException {
         SignUpTrainerResponseDto data = null;
 
@@ -159,9 +159,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public ResponseDto<SignInUserResponseDto> login(SignInUserRequestDto dto) throws IOException {
         SignInUserResponseDto data = null;
-        User user = null;
-
-        user = userRepository.findByUsername(dto.getUsername())
+        User user = userRepository.findByUsername(dto.getUsername())
                 .orElse(null);
 
         if (user == null) {
@@ -185,7 +183,80 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public ResponseDto<FindUserIdResponseDto> findUserId(FindUserIdRequestDto dto) {
+        FindUserIdResponseDto data = null;
+
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.NO_EXIST_EMAIL, ResponseMessage.NO_EXIST_EMAIL);
+        }
+
+        if (!user.getName().equals(dto.getName()) || !user.getBirthdate().equals(dto.getBirthdate())) {
+            return ResponseDto.fail(ResponseCode.NOT_MATCH_INFORMATION, ResponseMessage.NOT_MATCH_INFORMATION);
+        }
+
+        data = new FindUserIdResponseDto(user.getUsername());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
+    }
+
+    @Override
+    public ResponseDto<UserInformationToResetPasswordResponseDto> findUserToResetPassword(UserInformationToResetPasswordRequestDto dto) {
+        UserInformationToResetPasswordResponseDto data = null;
+        User user = userRepository.findByUsername(dto.getUsername())
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        if (!user.getName().equals(dto.getName()) || !user.getBirthdate().equals(dto.getBirthdate()) || !user.getEmail().equals(dto.getEmail())) {
+            return ResponseDto.fail(ResponseCode.NOT_MATCH_INFORMATION, ResponseMessage.NOT_MATCH_INFORMATION);
+        }
+
+        data = new UserInformationToResetPasswordResponseDto(user.getId());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
+    }
+
+    @Override
+    public Mono<ResponseEntity<String>> resetPassword(String email, ResetPasswordRequestDto dto) {
+        System.out.println(email);
+        User user = userRepository.findByEmail(email)
+                .orElse(null);
+
+        if (user == null) {
+            return Mono.just(ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(ResponseMessage.NO_EXIST_EMAIL));
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            return Mono.just(ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseMessage.NOT_MATCH_PASSWORD));
+        }
+
+        return Mono.fromCallable(() -> {
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            userRepository.save(user);
+
+            return ResponseEntity.ok(ResponseCode.SUCCESS + " (비밀번호 재설정)");
+        }).onErrorResume(e -> Mono.just(ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ResponseMessage.RESET_PASSWORD_FAIL))
+        ).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @Override
     public boolean checkPassword(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Override
+    public boolean checkEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

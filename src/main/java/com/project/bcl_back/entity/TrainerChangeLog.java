@@ -36,12 +36,12 @@ public class TrainerChangeLog extends BaseTimeEntity {
     private String changeReason;
 
     @Builder
-    public TrainerChangeLog(Long trainerId, String username, TrainerStatus prevStatus, TrainerStatus newStatus, Long changedBy, String changeReason) {
-        this.trainerId = trainerId;
-        this.username = username;
+    public TrainerChangeLog(Long id, TrainerInfo trainer, TrainerStatus prevStatus, String changeReason) {
+        this.trainerId = trainer.getId();
+        this.username = trainer.getUser().getUsername();
         this.prevStatus = prevStatus;
-        this.newStatus = newStatus;
-        this.changedBy = changedBy;
+        this.newStatus = trainer.getTrainerStatus();
+        this.changedBy = id;
         this.changeReason = changeReason;
     }
 }

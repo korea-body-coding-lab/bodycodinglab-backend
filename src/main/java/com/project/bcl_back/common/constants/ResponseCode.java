@@ -28,9 +28,12 @@ public interface ResponseCode {
     String DUPLICATED_EMAIL = "DE"; // 중복된 이메일
     String DUPLICATED_TEL_NUMBER = "DT"; // 중복된 전화번호
     String NO_EXIST_USER_ID = "NI"; // 존재하지 않는 사용자
+    String NO_EXIST_EMAIL = "NE";
     String USER_NOT_FOUND = "UNF";
     String USER_ALREADY_EXISTS = "UAE";
     String NOT_CORRECT_PASSWORD = "NCP";
+    String NOT_MATCH_INFORMATION = "NMI";
+    String RESET_PASSWORD_FAIL = "RPF";
 
     // 리소스 관련
     String NO_EXIST_TOOL = "NT"; // 존재하지 않는 도구
@@ -39,8 +42,8 @@ public interface ResponseCode {
     String RESOURCE_NOT_FOUND = "RNF";
 
     // 인증번호 / 메시지 관련
-    String TEL_AUTH_FAIL = "TAF"; // 전화 인증 실패
-    String MESSAGE_SEND_FAIL = "TF"; // 메시지 전송 실패
+    String MAIL_AUTH_FAIL = "MAF"; // 전화 인증 실패
+    String MAIL_SEND_FAIL = "MF"; // 메시지 전송 실패
     String VERIFICATION_CODE_INVALID = "VCI";
     String VERIFICATION_CODE_EXPIRED = "VCE";
 

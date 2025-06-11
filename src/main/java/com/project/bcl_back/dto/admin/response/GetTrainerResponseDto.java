@@ -17,7 +17,6 @@ public class GetTrainerResponseDto {
     private String username;
     private String name;
     private LocalDate birthdate;
-    private int age;
     private Gender gender;
     private String phone;
     private String email;

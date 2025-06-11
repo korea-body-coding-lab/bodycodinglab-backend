@@ -27,9 +27,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request
-            , HttpServletResponse response
-            , FilterChain filterChain
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
     ) throws ServletException, IOException {
         try {
             String authorizationHeader = request.getHeader("Authorization");
@@ -45,22 +45,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Long userId = jwtProvider.getUserIdFromJwt(token);
             String role = jwtProvider.getRoleFromJwt(token);
+            String email = jwtProvider.getEmailFromJwt(token);
 
-            setAuthenticationContext(request, userId, role);
+            setAuthenticationContext(request, userId, role, email);
         } catch (Exception e) {
             e.printStackTrace();
         }
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthenticationContext(HttpServletRequest request, Long userId, String role) {
+    private void setAuthenticationContext(HttpServletRequest request, Long userId, String role, String email) {
 
         Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
 
         AbstractAuthenticationToken authenticationToken
             = new UsernamePasswordAuthenticationToken(userId, null, authorities);
 
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        authenticationToken.setDetails(email);
+//        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authenticationToken);
