@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
+import com.project.bcl_back.common.enums.trainerInfo.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +26,7 @@ public class TrainerInfo {
     @Column(nullable = false, name = "job_address")
     private String jobAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "attachment_file_id")
     private UploadFile attachmentFile;
 
@@ -38,7 +38,7 @@ public class TrainerInfo {
 
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
-    private TrainerStatus trainerStatus;
+    private Status status;
 
     @Column(name = "education_name")
     private String educationName;
@@ -58,13 +58,6 @@ public class TrainerInfo {
 
     @OneToMany(mappedBy = "trainer_infos", cascade = CascadeType.ALL)
     private List<TrainerLicense> trainerLicense = new ArrayList<>();
-
-    @Builder
-    public TrainerInfo (User user, String jobAddress, TrainerStatus trainerStatus) {
-        this.user = user;
-        this.jobAddress = jobAddress;
-        this.trainerStatus = trainerStatus;
-    }
 
     public void addCareer(TrainerCareer career) {
         this.trainerCareer.add(career);

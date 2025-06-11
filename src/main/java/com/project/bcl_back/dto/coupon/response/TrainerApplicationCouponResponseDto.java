@@ -2,12 +2,14 @@ package com.project.bcl_back.dto.coupon.response;
 
 import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class TrainerApplicationCouponResponseDto {
     private Long couponId;
     private String memberName;

@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UploadFileService uploadFileService;
     private final JwtProvider jwtProvider;
-    
+
     @Transactional
     @Override
     public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile file) throws IOException {
@@ -168,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.fail(ResponseCode.NO_EXIST_USER_ID, ResponseMessage.NO_EXIST_USER_ID);
         }
 
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        if (!checkPassword(user, dto.getPassword())) {
             return ResponseDto.fail(ResponseCode.NOT_CORRECT_PASSWORD, ResponseMessage.NOT_CORRECT_PASSWORD);
         }
 
@@ -182,5 +182,10 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
+    }
+
+    @Override
+    public boolean checkPassword(User user, String password) {
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }

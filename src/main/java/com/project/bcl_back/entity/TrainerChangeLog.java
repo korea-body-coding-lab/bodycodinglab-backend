@@ -1,6 +1,6 @@
 package com.project.bcl_back.entity;
 
-import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
+import com.project.bcl_back.common.enums.trainerInfo.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,11 +23,11 @@ public class TrainerChangeLog extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "prev_status")
-    private TrainerStatus prevTrainerStatus;
+    private Status prevStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "new_status")
-    private TrainerStatus newTrainerStatus;
+    private Status newStatus;
 
     @Column(name = "changed_by")
     private Long changedBy;
@@ -36,11 +36,11 @@ public class TrainerChangeLog extends BaseTimeEntity {
     private String changeReason;
 
     @Builder
-    public TrainerChangeLog(Long trainerId, String username, TrainerStatus prevTrainerStatus, TrainerStatus newTrainerStatus, Long changedBy, String changeReason) {
+    public TrainerChangeLog(Long trainerId, String username, Status prevStatus, Status newStatus, Long changedBy, String changeReason) {
         this.trainerId = trainerId;
         this.username = username;
-        this.prevTrainerStatus = prevTrainerStatus;
-        this.newTrainerStatus = newTrainerStatus;
+        this.prevStatus = prevStatus;
+        this.newStatus = newStatus;
         this.changedBy = changedBy;
         this.changeReason = changeReason;
     }
