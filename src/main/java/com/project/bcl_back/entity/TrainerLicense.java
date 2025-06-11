@@ -19,8 +19,9 @@ public class TrainerLicense {
     @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, name = "trainer_id")
-    private Long trainerId;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private TrainerInfo trainerInfo;
 
     @Column(nullable = false, name = "license_type")
     @Enumerated(EnumType.STRING)
@@ -29,7 +30,5 @@ public class TrainerLicense {
     @Column(nullable = false, name = "license_name")
     private String licenseName;
 
-    @ManyToOne
-    @JoinColumn(name = "id")
-    private TrainerInfo trainerInfo;
+
 }

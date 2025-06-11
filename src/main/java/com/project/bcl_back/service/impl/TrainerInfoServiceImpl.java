@@ -29,11 +29,14 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
     @Override
     public ResponseDto<TrainerInfoResponseDto> postTrainerInfo(TrainerInfoRequestDto dto) {
         TrainerInfoResponseDto responseDto = null;
+
+//        User user = userRepository.findById()
+
         TrainerInfo newInfo = TrainerInfo.builder()
                 .id(responseDto.getId())
                 .jobAddress(responseDto.getJobAddress())
                 .shortIntroduce(responseDto.getShortIntroduce())
-                .LongIntroduce(responseDto.getLongIntroduce())
+                .longIntroduce(responseDto.getLongIntroduce())
                 .educationName(responseDto.getEducationName())
                 .educationEntrance(responseDto.getEducationEntrance())
                 .educationGraduate(responseDto.getEducationGraduate())
@@ -70,20 +73,20 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
         TrainerInfo trainer = trainerInfoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
-        List<TrainerCareerResponseDto> careers = trainer.getTrainerCareer().stream()
+        List<TrainerCareerResponseDto> careers = trainer.getTrainerCareers().stream()
                 .map(career -> TrainerCareerResponseDto.builder()
                         .id(career.getId())
-                        .trainerId(career.getTrainerId())
+                        .trainerId(career.getTrainerInfo().getId())
                         .companyName(career.getCompanyName())
                         .companyJoin(career.getCompanyJoin())
                         .companyQuit(career.getCompanyQuit())
                         .build())
                 .collect(Collectors.toList());
 
-        List<TrainerLicenseResponseDto> licenses = trainer.getTrainerLicense().stream()
+        List<TrainerLicenseResponseDto> licenses = trainer.getTrainerLicenses().stream()
                 .map(license -> TrainerLicenseResponseDto.builder()
                         .id(license.getId())
-                        .trainerId(license.getTrainerId())
+                        .trainerId(license.getTrainerInfo().getId())
                         .licenseType(license.getLicenseType())
                         .licenseName(license.getLicenseName())
                         .build())

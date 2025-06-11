@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setName(dto.getName());
-        user.getMember().setMemberAddress(dto.getMemberAddress());
+//        user.getMember().setMemberAddress(dto.getMemberAddress());
         userRepository.save(user);
 
         if (profile != null && !profile.isEmpty()) {
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
                 .gender(user.getGender())
                 .phone(user.getPhone())
                 .email(user.getEmail())
-                .memberAddress(user.getMember().getMemberAddress())
+//                .memberAddress(user.getMember().getMemberAddress())
                 .build();
     }
 

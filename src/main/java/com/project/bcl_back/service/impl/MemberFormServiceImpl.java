@@ -37,7 +37,7 @@ public class MemberFormServiceImpl implements MemberFormService {
               dto.getPreferredDiet(),
               dto.getSugarIntake(),
               dto.getWaterIntake(),
-              dto.getHegiht(),
+              dto.getHeight(),
               dto.getWeight(),
               dto.getWeightGoal(),
               dto.getPhysicalLevel(),
