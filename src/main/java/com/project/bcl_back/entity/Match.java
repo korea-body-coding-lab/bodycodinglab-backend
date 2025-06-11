@@ -11,7 +11,10 @@ import java.util.Date;
 @Entity
 @Table(
         name = "matches",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"member_Id", "trainer_id"})}
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"member_Id", "trainer_id"}),
+                @UniqueConstraint(columnNames = {"member_Id"})
+        }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter

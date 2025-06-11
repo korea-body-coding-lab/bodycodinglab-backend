@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "match_waiting_list",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"member_Id", "trainer_id"})}
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"member_Id", "trainer_id"}),
+                @UniqueConstraint(columnNames = {"member_Id"})}
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
