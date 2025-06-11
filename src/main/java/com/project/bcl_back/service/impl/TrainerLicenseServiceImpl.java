@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +32,12 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
 
         responseDto = TrainerLicenseResponseDto.builder()
                 .id(saved.getId())
-                .trainerId(saved.getTrainerId())
+                .trainerId(saved.getTrainerInfo().getId())
                 .licenseType(saved.getLicenseType())
                 .licenseName(saved.getLicenseName())
                 .build();
 
-        return null;
-//        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
     @Override
@@ -74,7 +72,7 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
 
         responseDto = TrainerLicenseResponseDto.builder()
                 .id(updateLicense.getId())
-                .trainerId(updateLicense.getTrainerId())
+                .trainerId(updateLicense.getTrainerInfo().getId())
                 .licenseType(updateLicense.getLicenseType())
                 .licenseName(updateLicense.getLicenseName())
                 .build();

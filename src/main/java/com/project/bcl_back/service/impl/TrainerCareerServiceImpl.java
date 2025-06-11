@@ -1,5 +1,6 @@
 package com.project.bcl_back.service.impl;
 
+import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
@@ -34,13 +35,13 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
 
         responseDto = TrainerCareerResponseDto.builder()
                 .id(savedCareer.getId())
-                .trainerId(savedCareer.getTrainerId())
+                .trainerId(savedCareer.getTrainerInfo().getId())
                 .companyName(savedCareer.getCompanyName())
                 .companyJoin(savedCareer.getCompanyJoin())
                 .companyQuit(savedCareer.getCompanyQuit())
                 .build();
 
-        return null;
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
 
         responseDto = TrainerCareerResponseDto.builder()
                 .id(updateCareer.getId())
-                .trainerId(updateCareer.getTrainerId())
+                .trainerId(updateCareer.getTrainerInfo().getId())
                 .companyName(updateCareer.getCompanyName())
                 .companyJoin(updateCareer.getCompanyJoin())
                 .companyQuit(updateCareer.getCompanyQuit())
