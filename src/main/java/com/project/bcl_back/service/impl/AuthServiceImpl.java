@@ -4,6 +4,7 @@ import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.common.enums.member.MemberStatus;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.auth.request.SignInUserRequestDto;
@@ -140,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
         TrainerInfo trainerInfo = TrainerInfo.builder()
                 .user(user)
                 .jobAddress(dto.getJobAddress())
-                .status(com.project.bcl_back.common.enums.trainerInfo.Status.NOT_APPROVE)
+                .trainerStatus(TrainerStatus.NOT_APPROVE)
                 .build();
         trainerInfoRepository.save(trainerInfo);
 

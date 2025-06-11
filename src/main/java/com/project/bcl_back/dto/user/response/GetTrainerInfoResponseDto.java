@@ -1,6 +1,6 @@
 package com.project.bcl_back.dto.user.response;
 
-import com.project.bcl_back.common.enums.trainerInfo.Status;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.common.enums.user.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public class GetTrainerInfoResponseDto {
     private String phone;
     private String email;
     private String jobAddress;
-    private Status status;
+    private TrainerStatus trainerStatus;
 //    private String attachmentFileUrl;
 //    private String profileImageUrl;
 }
