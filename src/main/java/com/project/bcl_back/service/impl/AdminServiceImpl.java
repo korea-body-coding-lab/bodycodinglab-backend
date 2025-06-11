@@ -2,7 +2,7 @@ package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
-import com.project.bcl_back.common.enums.trainerInfo.Status;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
@@ -72,7 +72,7 @@ public class AdminServiceImpl implements AdminService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-        if (trainer.getStatus().equals(dto.getNewStatus())) {
+        if (trainer.getTrainerStatus().equals(dto.getNewStatus())) {
             return ResponseDto.fail(ResponseCode.ALREADY_EQUAL_STATUS, ResponseMessage.ALREADY_EQUAL_STATUS);
         }
 
@@ -80,12 +80,12 @@ public class AdminServiceImpl implements AdminService {
             changeReason = dto.getNewStatus().toString();
         }
 
-        Status prevStatus = trainer.getStatus();
-        trainer.setStatus(dto.getNewStatus());
+        TrainerStatus prevStatus = trainer.getTrainerStatus();
+        trainer.setTrainerStatus(dto.getNewStatus());
         TrainerInfo savedTrainer = trainerInfoRepository.save(trainer);
 
-       TrainerChangeLog log = new TrainerChangeLog(id, savedTrainer, prevStatus, changeReason);
-       trainerChangeLogRepository.save(log);
+//       TrainerChangeLog log = new TrainerChangeLog(id, savedTrainer, prevStatus, changeReason);
+//       trainerChangeLogRepository.save(log);
 
        data = toGetTrainerResDto(savedTrainer);
 
@@ -100,7 +100,7 @@ public class AdminServiceImpl implements AdminService {
                 .name(user.getName())
                 .age(Year.now().getValue() - user.getBirthdate().getYear())
                 .gender(user.getGender())
-                .status(user.getTrainerInfo().getStatus())
+                .status(user.getTrainerInfo().getTrainerStatus())
                 .createAt(DateUtils.format(user.getCreatedAt()))
                 .build();
     }
@@ -118,7 +118,7 @@ public class AdminServiceImpl implements AdminService {
                 .email(trainer.getUser().getEmail())
                 .jobAddress(trainer.getJobAddress())
                 .createdAt(DateUtils.format(trainer.getUser().getCreatedAt()))
-                .status(trainer.getStatus())
+                .status(trainer.getTrainerStatus())
                 .build();
     }
 }

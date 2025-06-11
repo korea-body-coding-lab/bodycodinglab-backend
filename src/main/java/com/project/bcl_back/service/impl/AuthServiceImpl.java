@@ -141,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
         TrainerInfo trainerInfo = TrainerInfo.builder()
                 .user(user)
                 .jobAddress(dto.getJobAddress())
-                .trainerStatus(TrainerStatus.NOT_APPROVE)
+                .trainerStatus(TrainerStatus.PENDING)
                 .build();
         trainerInfoRepository.save(trainerInfo);
 
