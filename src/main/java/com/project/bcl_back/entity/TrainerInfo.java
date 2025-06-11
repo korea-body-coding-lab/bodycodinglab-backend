@@ -34,7 +34,7 @@ public class TrainerInfo {
     private String shortIntroduce;
 
     @Column(name = "long_introduce")
-    private String LongIntroduce;
+    private String longIntroduce;
 
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
@@ -53,29 +53,29 @@ public class TrainerInfo {
 //    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 //    private TrainerInfo trainerInfo;
 
-    @OneToMany(mappedBy = "trainer_infos", cascade = CascadeType.ALL)
-    private List<TrainerCareer> trainerCareer = new ArrayList<>();
+    @OneToMany(mappedBy = "trainerInfo", cascade = CascadeType.ALL)
+    private List<TrainerCareer> trainerCareers;
 
-    @OneToMany(mappedBy = "trainer_infos", cascade = CascadeType.ALL)
-    private List<TrainerLicense> trainerLicense = new ArrayList<>();
+    @OneToMany(mappedBy = "trainerInfo", cascade = CascadeType.ALL)
+    private List<TrainerLicense> trainerLicenses;
 
     public void addCareer(TrainerCareer career) {
-        this.trainerCareer.add(career);
+        this.trainerCareers.add(career);
         career.setTrainerInfo(this);
     }
 
     public void removeCareer(TrainerCareer career) {
-        this.trainerCareer.add(career);
+        this.trainerCareers.add(career);
         career.setTrainerInfo(null);
     }
 
     public void addLicense(TrainerLicense license) {
-        this.trainerLicense.add(license);
+        this.trainerLicenses.add(license);
         license.setTrainerInfo(this);
     }
 
     public void removeLicense(TrainerLicense license) {
-        this.trainerLicense.add(license);
+        this.trainerLicenses.add(license);
         license.setTrainerInfo(null);
     }
 }

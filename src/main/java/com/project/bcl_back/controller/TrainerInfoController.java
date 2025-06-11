@@ -25,7 +25,7 @@ public class TrainerInfoController {
     private static final String GET_TRAINER_INFO = "/{trainerId}";
     private static final String GET_TRAINER_BY_NAME = "/search-name";
     private static final String GET_TRAINER_BY_ADDRESS = "/search-address";
-    private static final String PUT_TRAINER_INFO = "/me/information";
+    private static final String PUT_TRAINER_INFO = "/me/update/information";
 
 
     // 트레이너 정보 생성

@@ -13,12 +13,14 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class TrainerCareer {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, name = "trainer_id")
-    private Long trainerId;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private TrainerInfo trainerInfo;
 
     @Column(nullable = false, name = "company_name")
     private String companyName;
@@ -29,8 +31,5 @@ public class TrainerCareer {
     @Column(nullable = false, name = "company_quit")
     private Date companyQuit;
 
-    @ManyToOne
-    @JoinColumn(name = "id")
-    private TrainerInfo trainerInfo;
 
 }
