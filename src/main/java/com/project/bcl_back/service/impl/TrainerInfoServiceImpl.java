@@ -9,7 +9,9 @@ import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerListResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerInfoResponseDto;
 import com.project.bcl_back.entity.TrainerInfo;
+import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.TrainerInfoRepository;
+import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.TrainerInfoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TrainerInfoServiceImpl implements TrainerInfoService {
     private final TrainerInfoRepository trainerInfoRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ResponseDto<TrainerInfoResponseDto> postTrainerInfo(TrainerInfoRequestDto dto) {
@@ -44,18 +47,19 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
         List<TrainerListResponseDto> responseDtos = null;
 
         List<TrainerInfo> trainers = trainerInfoRepository.findAll();
+//        User user = userRepository.findById()
+//                .orElse(null);
 
-//        responseDtos =  trainers.stream()
-//                .map(trainer ->
-//                        User user = userRepository.findById(trainer.userId)
-//                                .orElseThrow()
-//
-//                        TrainerListResponseDto.builder()
-//                        .id(trainer.getId())
+        responseDtos =  trainers.stream()
+                .map(trainer ->
+
+
+                        TrainerListResponseDto.builder()
+                        .id(trainer.getId())
 //                        .name(trainer.user.getName())
-//                        .shortIntroduce(trainer.getShortIntroduce())
-//                        .build())
-//                .collect(Collectors.toList());
+                        .shortIntroduce(trainer.getShortIntroduce())
+                        .build())
+                .collect(Collectors.toList());
         return null;
     }
 
