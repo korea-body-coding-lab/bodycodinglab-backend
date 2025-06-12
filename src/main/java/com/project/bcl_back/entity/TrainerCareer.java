@@ -3,6 +3,7 @@ package com.project.bcl_back.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -31,5 +32,13 @@ public class TrainerCareer {
     @Column(nullable = false, name = "company_quit")
     private Date companyQuit;
 
-
+    public static TrainerCareer create(TrainerInfo trainer, String companyName,
+                                       Date companyJoin, Date companyQuit) {
+        TrainerCareer career = new TrainerCareer();
+        career.trainerInfo = trainer;
+        career.companyName = companyName;
+        career.companyJoin = companyJoin;
+        career.companyQuit = companyQuit;
+        return career;
+    }
 }

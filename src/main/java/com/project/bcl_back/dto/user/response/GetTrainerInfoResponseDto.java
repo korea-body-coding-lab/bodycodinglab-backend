@@ -20,7 +20,7 @@ public class GetTrainerInfoResponseDto {
     private String phone;
     private String email;
     private String jobAddress;
-    private TrainerStatus status;
+    private TrainerStatus trainerStatus;
 //    private String attachmentFileUrl;
 //    private String profileImageUrl;
 }
