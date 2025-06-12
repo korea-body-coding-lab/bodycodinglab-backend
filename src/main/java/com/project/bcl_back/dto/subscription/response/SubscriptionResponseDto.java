@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 public class SubscriptionResponseDto {
     private String memberName;
     private int price;
-    private String subscriptionName;
     private LocalDateTime paymentDate;
-    private LocalDateTime memberSubscriptionDate;
     private MemberStatus staus;
 }

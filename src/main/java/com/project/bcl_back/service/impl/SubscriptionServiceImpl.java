@@ -42,9 +42,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         response = new SubscriptionResponseDto(
                 member.getUser().getUsername(),
                 subscription.getPrice(),
-                subscription.getSubscriptionName(),
                 subscription.getPaymentDate(),
-                subscription.getMemberSubscribeDate(),
                 subscription.getMember().getStatus()
         );
 

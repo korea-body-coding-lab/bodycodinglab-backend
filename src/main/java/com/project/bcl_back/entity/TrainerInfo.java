@@ -58,24 +58,4 @@ public class TrainerInfo {
 
     @OneToMany(mappedBy = "trainerInfo", cascade = CascadeType.ALL)
     private List<TrainerLicense> trainerLicenses;
-
-    public void addCareer(TrainerCareer career) {
-        this.trainerCareers.add(career);
-        career.setTrainerInfo(this);
-    }
-
-    public void removeCareer(TrainerCareer career) {
-        this.trainerCareers.add(career);
-        career.setTrainerInfo(null);
-    }
-
-    public void addLicense(TrainerLicense license) {
-        this.trainerLicenses.add(license);
-        license.setTrainerInfo(this);
-    }
-
-    public void removeLicense(TrainerLicense license) {
-        this.trainerLicenses.add(license);
-        license.setTrainerInfo(null);
-    }
 }
