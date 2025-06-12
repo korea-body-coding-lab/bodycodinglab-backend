@@ -65,11 +65,10 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
     }
 
     @Override
-    public ResponseDto<List<TrainerCareerResponseDto>> getTrainerCareer(Long id) {
+    public ResponseDto<List<TrainerCareerResponseDto>> getTrainerCareer(Long trainerId) {
         List<TrainerCareerResponseDto> responseDtos = null;
 
-        TrainerCareer trainerCareer = trainerCareerRepository.findById(id).orElse(null);
-        List<TrainerCareer> careers = trainerCareer == null ? new ArrayList<>() : List.of(trainerCareer);
+        List<TrainerCareer> careers = trainerCareerRepository.findByTrainerInfoId(trainerId);
 
         responseDtos = careers.stream()
                 .map(career -> TrainerCareerResponseDto.builder()
@@ -146,7 +145,31 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
     }
 
     @Override
-    public ResponseDto<TrainerRecentCareerResponseDto> getRecentCareer() {
-        return null;
+    public ResponseDto<TrainerRecentCareerResponseDto> getRecentCareer(Long id) {
+        TrainerRecentCareerResponseDto responseDto = null;
+
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        TrainerCareer career = trainerCareerRepository.findTopByTrainerInfoIdOrderByCompanyQuitDesc(trainer.getId());
+
+        responseDto = TrainerRecentCareerResponseDto.builder()
+                .companyName(career.getCompanyName())
+                .companyJoin(career.getCompanyJoin())
+                .companyQuit(career.getCompanyQuit())
+                .build();
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 }
