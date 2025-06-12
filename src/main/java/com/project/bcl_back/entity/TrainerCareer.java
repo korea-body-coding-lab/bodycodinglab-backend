@@ -27,13 +27,13 @@ public class TrainerCareer {
     private String companyName;
 
     @Column(nullable = false, name = "company_join")
-    private Date companyJoin;
+    private LocalDate companyJoin;
 
     @Column(nullable = false, name = "company_quit")
-    private Date companyQuit;
+    private LocalDate companyQuit;
 
     public static TrainerCareer create(TrainerInfo trainer, String companyName,
-                                       Date companyJoin, Date companyQuit) {
+                                       LocalDate companyJoin, LocalDate companyQuit) {
         TrainerCareer career = new TrainerCareer();
         career.trainerInfo = trainer;
         career.companyName = companyName;
