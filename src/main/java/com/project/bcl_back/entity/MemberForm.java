@@ -21,6 +21,9 @@ public class MemberForm {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column(name = "is_submit", nullable = false)
+    private boolean isSubmit = false;
+
     @Column(name = "age", nullable = false)
     private Byte age;
 
@@ -33,7 +36,7 @@ public class MemberForm {
     private Goal goal;
 
     @Column(name = "bmi", nullable = false)
-    private short bmi; // UNSIGNED TINYINT → 0~255까지, Java에는 unsigned 없음 → short
+    private short bmi;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "improved_part", nullable = false, length = 20)

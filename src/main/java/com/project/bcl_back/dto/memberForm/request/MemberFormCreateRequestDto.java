@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class MemberFormCreateRequestDto {
+    private boolean isSubmit;
     @NotBlank
     private Byte age;
     @NotBlank

@@ -1,10 +1,8 @@
 package com.project.bcl_back.entity;
 
+import com.project.bcl_back.common.enums.matchWaitingList.ApprovedStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,22 +13,25 @@ import java.time.LocalDateTime;
                 @UniqueConstraint(columnNames = {"member_Id", "trainer_id"}),
                 @UniqueConstraint(columnNames = {"member_Id"})}
 )
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
 public class MatchWaitingList {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @OneToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id" ,nullable = false)
+    private User member;
 
-    @Column(name = "trainer_id", nullable = false)
-    private Long trainerId;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id", referencedColumnName = "id", nullable = false)
+    private User trainer;
 
     @Column(name = "applied_date", nullable = false)
     private LocalDateTime appliedDate;
 
-    @Column(name = "is_approved", nullable = false)
-    private Boolean isApproved = false;
+    @Column(name = "approved_status", nullable = false)
+    private ApprovedStatus approvedStatus;
 }

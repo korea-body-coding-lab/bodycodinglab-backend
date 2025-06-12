@@ -29,6 +29,7 @@ public class MemberFormServiceImpl implements MemberFormService {
         MemberForm memberForm = new MemberForm(
               null,
               member,
+              true,
               dto.getAge(),
               dto.getBodyForm(),
               dto.getGoal(),

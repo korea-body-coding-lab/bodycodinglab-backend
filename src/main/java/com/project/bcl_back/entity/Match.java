@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -30,7 +31,7 @@ public class Match {
     private Long trainerId;
 
     @Column(name = "matched_at", nullable = false)
-    private Date matchedAt;
+    private LocalDateTime matchedAt;
 
     @Column(name = "is_maintained")
     private Boolean isMaintained = true;
