@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class TrainerCareerController {
     private static final String GER_RECENT_TRAINER_CAREER = "/me/information/career/recent";
 
     // 트레이너 경력 생성
+    @PreAuthorize("hasRole('TRAINER')")
     @PostMapping(POST_TRAINER_CAREER)
     public ResponseEntity<ResponseDto<TrainerCareerResponseDto>> postTrainerCareer(
             @Valid @RequestBody TrainerCareerRequestDto dto
