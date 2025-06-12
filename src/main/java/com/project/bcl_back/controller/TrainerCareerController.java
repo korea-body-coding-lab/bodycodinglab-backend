@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class TrainerCareerController {
     private final TrainerCareerService trainerCareerService;
 
     private static final String POST_TRAINER_CAREER = "/me/information/career";
-    private static final String GET_TRAINER_CAREER = "/me/information/career";
+    private static final String GET_TRAINER_CAREER = "/information/career/{id}";
     private static final String PUT_TRAINER_CAREER = "/me/information/career";
     private static final String DELETE_TRAINER_CAREER = "/me/information/career";
     private static final String GER_RECENT_TRAINER_CAREER = "/me/information/career/recent";
@@ -36,9 +37,10 @@ public class TrainerCareerController {
     @PreAuthorize("hasRole('TRAINER')")
     @PostMapping(POST_TRAINER_CAREER)
     public ResponseEntity<ResponseDto<TrainerCareerResponseDto>> postTrainerCareer(
+            @AuthenticationPrincipal Long id,
             @Valid @RequestBody TrainerCareerRequestDto dto
     ) {
-        ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.postTrainerCareer(dto);
+        ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.postTrainerCareer(id, dto);
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
@@ -51,9 +53,10 @@ public class TrainerCareerController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
     // 트레이너 경력 수정
+    @PreAuthorize("hasRole('TRAINER')")
     @PutMapping(PUT_TRAINER_CAREER)
     public ResponseEntity<ResponseDto<TrainerCareerResponseDto>> updateTrainerCareer(
-            @PathVariable Long id,
+            @AuthenticationPrincipal Long id,
             @Valid @RequestBody TrainerCareerRequestDto dto
     ) {
         ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.updateTrainerCareer(id, dto);
@@ -61,8 +64,9 @@ public class TrainerCareerController {
     }
 
     // 트레이너 경력 삭제
+    @PreAuthorize("hasRole('TRAINER')")
     @DeleteMapping(DELETE_TRAINER_CAREER)
-    public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(@AuthenticationPrincipal Long id) {
         ResponseDto<Void> response = trainerCareerService.deleteTrainerCareer(id);
         return ResponseEntity.noContent().build();
     }
