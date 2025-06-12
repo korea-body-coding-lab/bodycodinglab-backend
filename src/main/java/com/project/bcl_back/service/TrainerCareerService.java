@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public interface TrainerCareerService {
-    ResponseDto<TrainerCareerResponseDto> postTrainerCareer(@Valid TrainerCareerRequestDto dto);
+    ResponseDto<TrainerCareerResponseDto> postTrainerCareer(Long id, @Valid TrainerCareerRequestDto dto);
 
     ResponseDto<List<TrainerCareerResponseDto>> getTrainerCareer(Long id);
 
