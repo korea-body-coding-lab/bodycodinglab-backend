@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .jobAddress(user.getTrainerInfo().getJobAddress())
-                .trainerStatus(user.getTrainerInfo().getTrainerStatus())
+                .status(user.getTrainerInfo().getTrainerStatus())
                 .build();
     }
 }

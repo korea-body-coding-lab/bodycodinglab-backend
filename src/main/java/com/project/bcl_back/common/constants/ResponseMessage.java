@@ -15,6 +15,7 @@ public interface ResponseMessage {
     String TOKEN_CREATE_FAIL = "토큰 생성에 실패했습니다.";
     String TOKEN_EXPIRED = "토큰이 만료되었습니다.";
     String INVALID_TOKEN = "유효하지 않은 토큰입니다.";
+    String MISSING_TOKEN = "토큰이 누락되었습니다.";
 
     // 유효성 검사
     String VALIDATION_FAIL = "입력값이 유효하지 않습니다.";
