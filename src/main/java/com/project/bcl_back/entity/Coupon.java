@@ -22,11 +22,11 @@ public class Coupon {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private User user;
+    private User member;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id", nullable = false)
-    private User trainerId;
+    private User trainer;
 
 
     @Column(name = "expiration_period", nullable = false)
