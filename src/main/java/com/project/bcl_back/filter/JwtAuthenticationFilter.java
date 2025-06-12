@@ -1,5 +1,6 @@
 package com.project.bcl_back.filter;
 
+import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.provider.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -45,24 +46,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Long userId = jwtProvider.getUserIdFromJwt(token);
             String role = jwtProvider.getRoleFromJwt(token);
-            String email = jwtProvider.getEmailFromJwt(token);
 
-            setAuthenticationContext(request, userId, role, email);
+            setAuthenticationContext(request, userId, role);
         } catch (Exception e) {
             e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(ResponseMessage.INVALID_TOKEN);
         }
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthenticationContext(HttpServletRequest request, Long userId, String role, String email) {
+    private void setAuthenticationContext(HttpServletRequest request, Long userId, String role) {
 
         Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
 
         AbstractAuthenticationToken authenticationToken
             = new UsernamePasswordAuthenticationToken(userId, null, authorities);
 
-        authenticationToken.setDetails(email);
-//        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authenticationToken);

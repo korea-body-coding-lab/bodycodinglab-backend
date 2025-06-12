@@ -13,6 +13,7 @@ import com.project.bcl_back.entity.*;
 import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.AuthService;
+import com.project.bcl_back.service.MailService;
 import com.project.bcl_back.service.UploadFileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -223,23 +224,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Mono<ResponseEntity<String>> resetPassword(String email, ResetPasswordRequestDto dto) {
-        System.out.println(email);
-        User user = userRepository.findByEmail(email)
-                .orElse(null);
-
-        if (user == null) {
-            return Mono.just(ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(ResponseMessage.NO_EXIST_EMAIL));
-        }
-
-        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+        if (email == null) {
             return Mono.just(ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseMessage.NOT_MATCH_PASSWORD));
+                    .body(ResponseMessage.MAIL_AUTH_FAIL));
         }
 
         return Mono.fromCallable(() -> {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.NO_EXIST_EMAIL));
+
+            if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(ResponseMessage.NOT_MATCH_PASSWORD);
+            }
+
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);
 

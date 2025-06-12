@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -65,10 +67,10 @@ public class AuthController {
         return mailService.sendVerifyEmail(dto);
     }
 
-    @GetMapping(VERIFY_EMAIL)
-    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
-        return mailService.verifyEmail(token);
-    }
+//    @GetMapping(VERIFY_EMAIL)
+//    public Mono<ServerResponse> verifyEmail(ServerRequest request) {
+//        return mailService.verifyEmail(request);
+//    }
 
     @PostMapping(RESET_PASSWORD)
     public ResponseEntity<ResponseDto<UserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody UserInformationToResetPasswordRequestDto dto) {
@@ -76,7 +78,7 @@ public class AuthController {
     }
 
     @PostMapping(RESET_PASSWORD + "/setting")
-    public Mono<ResponseEntity<String>> resetPassword(@AuthenticationPrincipal String email, @Valid @RequestBody ResetPasswordRequestDto dto) {
+    public Mono<ResponseEntity<String>> resetPassword(@RequestParam String email, @Valid @RequestBody ResetPasswordRequestDto dto) {
         return authService.resetPassword(email, dto);
     }
 
