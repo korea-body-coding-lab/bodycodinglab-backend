@@ -21,8 +21,8 @@ public class MatchWaitingList {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id" ,nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", referencedColumnName = "id" ,nullable = false, unique = true)
     private User member;
 
     @ManyToOne
@@ -32,6 +32,6 @@ public class MatchWaitingList {
     @Column(name = "applied_date", nullable = false)
     private LocalDateTime appliedDate;
 
-    @Column(name = "approved_status", nullable = false)
-    private ApprovedStatus approvedStatus;
+    @Column(name = "is_approved", nullable = false)
+    private ApprovedStatus approvedStatus ;
 }

@@ -44,7 +44,7 @@ public class CouponServiceImpl implements CouponService {
         coupons = notUsedCoupon.stream()
                 .map(coupon -> new MemberCouponResponseDto(
                         coupon.getCouponId(),
-                        coupon.getUser().getUsername(),
+                        coupon.getTrainer().getUsername(),
                         coupon.getExpirationPeriod(),
                         coupon.getStatus()
                 )).collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class CouponServiceImpl implements CouponService {
         coupons = applicationCoupon.stream()
                 .map(coupon -> new TrainerApplicationCouponResponseDto(
                         coupon.getCouponId(),
-                        coupon.getUser().getUsername(),
+                        coupon.getMember().getUsername(),
                         coupon.getExpirationPeriod(),
                         coupon.getStatus()
                 )).collect(Collectors.toList());
