@@ -13,7 +13,6 @@ import com.project.bcl_back.entity.*;
 import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.AuthService;
-import com.project.bcl_back.service.MailService;
 import com.project.bcl_back.service.UploadFileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -204,7 +203,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<UserInformationToResetPasswordResponseDto> findUserToResetPassword(UserInformationToResetPasswordRequestDto dto) {
+    public ResponseDto<UserInformationToResetPasswordResponseDto> findUserToResetPassword(GetUserInformationToResetPasswordRequestDto dto) {
         UserInformationToResetPasswordResponseDto data = null;
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElse(null);
@@ -248,6 +247,27 @@ public class AuthServiceImpl implements AuthService {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ResponseMessage.RESET_PASSWORD_FAIL))
         ).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @Override
+    public ResponseDto<Void> reapplyTrainer(String email, ReapplyTrainerRequestDto dto, MultipartFile attachmentFile) {
+        User user = userRepository.findByEmail(email)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        if (!user.getRole().getName().equals(UserRole.TRAINER)) {
+            return ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        user.getTrainerInfo().setJobAddress(dto.getJobAddress());
+        // 이자리에 파일 업데이트 소스 구현 예정
+        user.getTrainerInfo().setTrainerStatus(TrainerStatus.PENDING);
+        userRepository.save(user);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
     @Override

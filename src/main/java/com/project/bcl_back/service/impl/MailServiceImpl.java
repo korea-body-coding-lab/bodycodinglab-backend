@@ -1,6 +1,8 @@
 package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
+import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailDto;
 import com.project.bcl_back.dto.auth.request.SendEmailRequestDto;
 import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.service.AuthService;
@@ -42,7 +44,7 @@ public class MailServiceImpl implements MailService {
 
         return Mono.fromCallable(() -> {
             String token = jwtProvider.generateEmailValidToken(dto.getEmail());
-            MimeMessage message = createMail(dto.getEmail(), token);
+            MimeMessage message = createVerifyMail(dto.getEmail(), token);
             javaMailSender.send(message);
             return ResponseEntity.ok(ResponseMessage.SUCCESS + " (인증 메일 발송)");
         }).onErrorResume(e -> Mono.just(
@@ -73,7 +75,34 @@ public class MailServiceImpl implements MailService {
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
-    private MimeMessage createMail(String email, String token) throws MessagingException {
+    @Override
+    public Mono<ResponseEntity<String>> sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailDto dto) {
+        boolean isEmailVerified = authService.checkEmail(dto.getEmail());
+
+        if (!isEmailVerified) {
+            return Mono.just(ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(ResponseMessage.NO_EXIST_EMAIL));
+        }
+
+        return Mono.fromCallable(() -> {
+            if (dto.getStatus().equals(TrainerStatus.APPROVE)) {
+                MimeMessage message = createTrainerApproveMail(dto.getEmail());
+                javaMailSender.send(message);
+                return ResponseEntity.ok(ResponseMessage.SUCCESS + " (승인 메일 발송)");
+            } else {
+                MimeMessage message = createTrainerReapplyMail(dto.getEmail(), dto.getChangeReason());
+                javaMailSender.send(message);
+                return ResponseEntity.ok(ResponseMessage.SUCCESS + " (재신청 메일 발송)");
+            }
+        }).onErrorResume(e -> Mono.just(
+                ResponseEntity.badRequest().body(ResponseMessage.MAIL_SEND_FAIL))
+        ).subscribeOn(Schedulers.boundedElastic());
+    }
+
+
+
+    private MimeMessage createVerifyMail(String email, String token) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setFrom(senderEmail);
         message.setRecipients(MimeMessage.RecipientType.TO, email);
@@ -84,7 +113,57 @@ public class MailServiceImpl implements MailService {
                 <br />
                 <p>아래 이메일 인증 링크에 접속하여 인증을 완료해 주세요.</p>
                 <a href="http://localhost:8080/api/v1/auth/verify?token=%s">여기를 클릭하여 인증 페이지에 접속해 주세요.</a>
+                <br />
+                <p>감사합니다.</p>
                 """.formatted(token);
+
+        message.setText(body, "utf-8", "html");
+        return message;
+    }
+
+    private MimeMessage createTrainerReapplyMail(String email, String changeReason) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.setFrom(senderEmail);
+        message.setRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject("[Fit-Mate] 트레이너 재신청 요청");
+
+        String body = """
+                <p>안녕하세요, Fit-Mate 입니다.</p>
+                <br />
+                <p>저희 서비스를 이용해 주셔서 감사드립니다.</p>
+                <br />
+                <p>트레이너 가입이 거부되어 재신청 절차 안내드립니다.</p>
+                <b>1. 거부 사유 확인</b><br />
+                <b>2. 서류 보완</b></br>
+                <b>3. 아래 링크에 접속하여 재신청</b><br />
+                <b>4. 가입 승인 대기</b><br /></p>
+                <br />
+                <p>거부 사유: <strong>%s</strong><br />
+                <a href="http://localhost:8080/api/v1/auth/trainer-reapply?email=%s">여기를 클릭하여 재신청 페이지에 접속해 주세요.</a><br /></p>
+                <br />
+                <p>감사합니다.</p>
+                """.formatted(changeReason, email);
+
+        message.setText(body, "utf-8", "html");
+        return message;
+    }
+    private MimeMessage createTrainerApproveMail(String email) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.setFrom(senderEmail);
+        message.setRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject("[Fit-Mate] 트레이너 승인 안내");
+
+        String body = """
+                <p>안녕하세요, Fit-Mate 입니다.</p>
+                <br />
+                <p>저희 서비스를 이용해 주셔서 감사드립니다.</p>
+                <br />
+                <p>트레이너 가입이 승인되었습니다.<br />
+                홈페이지에 방문하시면, 서비스 이용이 가능합니다. <br />
+                이용 중 불편함이 있으시면 고객센터로 연락 바랍니다.</p>
+                <br />
+                <p>감사합니다.</p>
+                """;
 
         message.setText(body, "utf-8", "html");
         return message;

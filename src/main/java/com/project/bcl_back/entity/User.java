@@ -73,8 +73,20 @@ public class User extends BaseTimeEntity implements UserDetails {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private MatchWaitingList matchWaitingListAsMember;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MatchWaitingList> matchWaitingListsAsTrainer = new ArrayList<>();
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<MatchWaitingList> matchWaitingListAsTrainers = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Match memberMatch;
+
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Match> trainerMatches;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Coupon> memberCoupons;
+
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Coupon> trainerCoupons;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
