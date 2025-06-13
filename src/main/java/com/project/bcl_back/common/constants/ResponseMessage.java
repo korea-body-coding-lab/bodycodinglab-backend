@@ -44,7 +44,7 @@ public interface ResponseMessage {
 
     // 인증번호 / 메시지
     String MAIL_AUTH_FAIL = "이메일 인증에 실패했습니다.";
-    String MAIL_SEND_FAIL = "인증 메일 전송에 실패했습니다.";
+    String MAIL_SEND_FAIL = "메일 전송에 실패했습니다.";
     String VERIFICATION_CODE_INVALID = "유효하지 않은 인증 코드입니다.";
     String VERIFICATION_CODE_EXPIRED = "인증 코드가 만료되었습니다.";
 

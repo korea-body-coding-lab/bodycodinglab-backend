@@ -4,18 +4,14 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.auth.request.*;
 import com.project.bcl_back.dto.auth.response.*;
-import com.project.bcl_back.dto.user.request.DeleteUserRequestDto;
 import com.project.bcl_back.service.AuthService;
 import com.project.bcl_back.service.MailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -33,6 +29,7 @@ public class AuthController {
     private static final String SEND_EMAIL = "/send-email";
     private static final String VERIFY_EMAIL = "/verify";
     private static final String RESET_PASSWORD = "/reset-password";
+    private static final String TRAINER_REAPPLY = "/trainer-reapply";
 
 
     @PostMapping(SIGN_UP + "/member")
@@ -73,13 +70,23 @@ public class AuthController {
 //    }
 
     @PostMapping(RESET_PASSWORD)
-    public ResponseEntity<ResponseDto<UserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody UserInformationToResetPasswordRequestDto dto) {
+    public ResponseEntity<ResponseDto<UserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody GetUserInformationToResetPasswordRequestDto dto) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, authService.findUserToResetPassword(dto));
     }
 
     @PostMapping(RESET_PASSWORD + "/setting")
     public Mono<ResponseEntity<String>> resetPassword(@RequestParam String email, @Valid @RequestBody ResetPasswordRequestDto dto) {
         return authService.resetPassword(email, dto);
+    }
+
+    @PutMapping(TRAINER_REAPPLY)
+    public ResponseEntity<ResponseDto<Void>> reapplyTrainer(
+            @RequestParam String email,
+            @Valid @RequestPart(value = "dto") ReapplyTrainerRequestDto dto,
+            @RequestPart(value = "attachmentFile", required = false) MultipartFile attachmentFile
+            // 파일 업데이트 기능 완료되면 required = false 제거
+    ) throws IOException {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.reapplyTrainer(email, dto, attachmentFile));
     }
 
 }

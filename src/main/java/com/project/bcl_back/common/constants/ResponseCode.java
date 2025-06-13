@@ -64,5 +64,6 @@ public interface ResponseCode {
 
     // 트레이너 관련
     String ALREADY_EQUAL_STATUS = "AES";
+    String TRAINER_NOT_FOUND = "TNF";
 
 }
