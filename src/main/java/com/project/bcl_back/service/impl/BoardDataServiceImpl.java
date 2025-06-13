@@ -65,8 +65,8 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public ResponseDto<List<BoardResponseDto>> getAllPosts() {
-        List<BoardResponseDto> list = boardRepo.findAll().stream()
+    public ResponseDto<List<BoardResponseDto>> getPostByCategory(int categoryId) {
+        List<BoardResponseDto> list = boardRepo.findByCategoryId(categoryId).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
         return ResponseDto.success(ResponseMessage.SUCCESS, "", list);

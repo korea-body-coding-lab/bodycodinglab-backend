@@ -32,21 +32,28 @@ public class BoardController {
     }
 
     // 게시글 목록 조회
-    @GetMapping
-    public ResponseEntity<ResponseDto<List<BoardResponseDto>>> getAllPosts(){
-        return ResponseEntity.ok(boardDataService.getAllPosts());
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<ResponseDto<List<BoardResponseDto>>> getPostByCategory(
+            @PathVariable("categoryId") int categoryId
+    ){
+        ResponseDto<List<BoardResponseDto>> posts = boardDataService.getPostByCategory(categoryId);
+        return ResponseEntity.ok(posts);
     }
 
     // 게시글 단건 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto<BoardResponseDto>> getPost(@PathVariable Long id) {
+    @GetMapping("/{categoryId}/{id}")
+    public ResponseEntity<ResponseDto<BoardResponseDto>> getPost(
+            @PathVariable("categoryId") int categoryId,
+            @PathVariable Long id
+    ) {
         return ResponseEntity.ok(boardDataService.getPostById(id));
     }
 
     // 게시글 수정
-    @PutMapping("/{id}")
+    @PutMapping("/{categoryId}/{id}")
     public ResponseEntity<ResponseDto<BoardResponseDto>> updatePost(
             @PathVariable Long id,
+            @PathVariable("categoryId") int categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
             @RequestPart(value = "file", required = false) MultipartFile file
     )throws IOException {
@@ -54,8 +61,11 @@ public class BoardController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<?>> deletePost(@PathVariable Long id) {
+    @DeleteMapping("/{categoryId}/{id}")
+    public ResponseEntity<ResponseDto<?>> deletePost(
+            @PathVariable Long id,
+            @PathVariable("categoryId") int categoryId
+    ) {
         return ResponseEntity.ok(boardDataService.deletePost(id));
     }
 }
