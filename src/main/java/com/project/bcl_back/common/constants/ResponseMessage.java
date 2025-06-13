@@ -44,7 +44,7 @@ public interface ResponseMessage {
 
     // 인증번호 / 메시지
     String MAIL_AUTH_FAIL = "이메일 인증에 실패했습니다.";
-    String MAIL_SEND_FAIL = "인증 메일 전송에 실패했습니다.";
+    String MAIL_SEND_FAIL = "메일 전송에 실패했습니다.";
     String VERIFICATION_CODE_INVALID = "유효하지 않은 인증 코드입니다.";
     String VERIFICATION_CODE_EXPIRED = "인증 코드가 만료되었습니다.";
 
@@ -66,7 +66,7 @@ public interface ResponseMessage {
     String ALREADY_EQUAL_STATUS = "이미 설정된 상태입니다.";
     String NOT_EXISTS_LICENSE = "해당 사용자의 자격증을 찾을 수 없습니다.";
     String NOT_EXISTS_CAREER = "해당 사용자의 경력을 찾을 수 없습니다.";
-    String TRAINER_NOT_FOUND = "사용자를 찾을 수 없습니다.";
+    String TRAINER_NOT_FOUND = "트레이너를 찾을 수 없습니다.";
 
     // 게시판 관련
     String NOT_EXISTS_POST = "게시글을 찾을 수 없습니다.";
