@@ -5,7 +5,7 @@ import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.matchWaitingList.ApprovedStatus;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.matchWatingList.request.MatchRejectRequestDto;
+import com.project.bcl_back.dto.matchWatingList.request.MatchWaitingListRequestDto;
 import com.project.bcl_back.dto.matchWatingList.response.MemberMatchWaitingListResponseDto;
 import com.project.bcl_back.dto.matchWatingList.response.TrainerMatchWaitingListResponseDto;
 import com.project.bcl_back.entity.MatchWaitingList;
@@ -36,7 +36,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
         User trainer = userRepository.findById(trainerId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + trainerId));
 
-        User member = userRepository.findById(trainerId)
+        User member = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException((ResponseMessage.USER_NOT_FOUND + trainerId)));
 
         MatchWaitingList matchWaitingList = new MatchWaitingList(
@@ -49,7 +49,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
 
         matchWaitingListRepository.save(matchWaitingList);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
                                     list.getMember().getName(),
                                     age,
                                     list.getMember().getGender(),
-                                    DateUtils.parse(DateUtils.nowFormated()));
+                                    parse(nowFormated()));
                         }
                 ).collect(Collectors.toList());
 
@@ -94,7 +94,17 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
-    public ResponseDto<Void> matchReject(Long matchWaitingListId, MatchRejectRequestDto dto) {
+    public  ResponseDto<Void> matchApprove(Long matchWaitingListId, MatchWaitingListRequestDto dto) {
+        MatchWaitingList matchWaitingList = matchWaitingListRepository.findById(matchWaitingListId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchWaitingListId));
+
+        matchWaitingList.setApprovedStatus(dto.getApprovedStatus());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    @Override
+    public ResponseDto<Void> matchReject(Long matchWaitingListId, MatchWaitingListRequestDto dto) {
         MatchWaitingList matchWaitingList  = matchWaitingListRepository.findById(matchWaitingListId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchWaitingListId));
 
@@ -102,6 +112,20 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
 
         matchWaitingListRepository.delete(matchWaitingList);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
+
+    @Override
+    public ResponseDto<Void> matchCancel(Long memberId, MatchWaitingListRequestDto dto) {
+
+        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId);
+
+        list.setApprovedStatus(dto.getApprovedStatus());
+
+        matchWaitingListRepository.delete(list);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+
 }

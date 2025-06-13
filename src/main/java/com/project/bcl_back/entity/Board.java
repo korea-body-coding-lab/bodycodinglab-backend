@@ -32,6 +32,8 @@ public class Board {
     @Column(name = "writer_id",nullable = false)
     private Long writerId;
 
+
+
     @Column(name = "post_title",nullable = false)
     private String title;
 

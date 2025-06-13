@@ -22,16 +22,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.TRAINER_API)
+@RequestMapping(ApiMappingPattern.USER_API)
 @RequiredArgsConstructor
 public class TrainerCareerController {
     private final TrainerCareerService trainerCareerService;
 
-    private static final String POST_TRAINER_CAREER = "/me/information/career";
-    private static final String GET_TRAINER_CAREER = "/information/career";
-    private static final String PUT_TRAINER_CAREER = "/me/information/career";
-    private static final String DELETE_TRAINER_CAREER = "/me/information/career";
-    private static final String GER_RECENT_TRAINER_CAREER = "/me/information/career/recent";
+    private static final String POST_TRAINER_CAREER = "/trainers/me/information/career";
+    private static final String PUT_TRAINER_CAREER = "/trainers/me/information/career";
+    private static final String DELETE_TRAINER_CAREER = "/trainers/me/information/career";
+    private static final String GER_RECENT_TRAINER_CAREER = "/trainers/me/information/career/recent";
 
     // 트레이너 경력 생성
     @PreAuthorize("hasRole('TRAINER')")
@@ -44,14 +43,6 @@ public class TrainerCareerController {
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
-    // 트레이너 경력 조회
-    @GetMapping(GET_TRAINER_CAREER)
-    public ResponseEntity<ResponseDto<List<TrainerCareerResponseDto>>> getTrainerCareer(
-            @RequestParam Long trainerId
-    ) {
-        ResponseDto<List<TrainerCareerResponseDto>> response = trainerCareerService.getTrainerCareer(trainerId);
-        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
-    }
     // 트레이너 경력 수정
     @PreAuthorize("hasRole('TRAINER')")
     @PutMapping(PUT_TRAINER_CAREER)

@@ -13,8 +13,6 @@ import java.util.List;
 public interface TrainerCareerService {
     ResponseDto<TrainerCareerResponseDto> postTrainerCareer(Long id, @Valid TrainerCareerRequestDto dto);
 
-    ResponseDto<List<TrainerCareerResponseDto>> getTrainerCareer(Long trainerId);
-
     ResponseDto<TrainerCareerResponseDto> updateTrainerCareer(Long id, @Valid TrainerCareerRequestDto dto);
 
     ResponseDto<Void> deleteTrainerCareer(Long id);
