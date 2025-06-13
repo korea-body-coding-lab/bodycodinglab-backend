@@ -1,7 +1,7 @@
 package com.project.bcl_back.service;
 
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.matchWatingList.request.MatchRejectRequestDto;
+import com.project.bcl_back.dto.matchWatingList.request.MatchWaitingListRequestDto;
 import com.project.bcl_back.dto.matchWatingList.response.MemberMatchWaitingListResponseDto;
 import com.project.bcl_back.dto.matchWatingList.response.TrainerMatchWaitingListResponseDto;
 import org.springframework.stereotype.Service;
@@ -16,5 +16,9 @@ public interface MatchWaitingListService {
 
     ResponseDto<TrainerMatchWaitingListResponseDto> findTrainerMatchWaitingList(Long memberId);
 
-    ResponseDto<Void> matchReject(Long matchWaitingListId, MatchRejectRequestDto dto);
+    ResponseDto<Void> matchReject(Long matchWaitingListId, MatchWaitingListRequestDto dto);
+
+    ResponseDto<Void> matchCancel(Long memberId, MatchWaitingListRequestDto dto);
+
+    ResponseDto<Void> matchApprove(Long matchWaitingListId, MatchWaitingListRequestDto dto);
 }

@@ -37,8 +37,8 @@ public class CouponController {
 
     @PutMapping(ApiMappingPattern.TRAINER_COUPON_API + "/{couponId}")
     public ResponseEntity<ResponseDto<Void>> putCoupon(@PathVariable Long couponId, @Valid @RequestBody PutCouponRequsetDto dto){
-            couponService.putCoupon(couponId, dto);
-        return ResponseEntity.noContent().build();
+           ResponseDto<Void> response = couponService.putCoupon(couponId, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
