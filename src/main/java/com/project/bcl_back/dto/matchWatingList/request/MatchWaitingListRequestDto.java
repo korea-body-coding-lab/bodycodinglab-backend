@@ -4,7 +4,7 @@ import com.project.bcl_back.common.enums.matchWaitingList.ApprovedStatus;
 import lombok.Getter;
 
 @Getter
-public class MatchRejectRequestDto {
+public class MatchWaitingListRequestDto {
     private ApprovedStatus approvedStatus;
 
 }

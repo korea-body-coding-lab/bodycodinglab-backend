@@ -82,7 +82,7 @@ public class CouponServiceImpl implements CouponService {
 
         couponRepository.save(coupon);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
 

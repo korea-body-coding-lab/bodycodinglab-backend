@@ -3,34 +3,37 @@ package com.project.bcl_back.controller;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.subscription.request.CreateSubscriptionRequestDto;
 import com.project.bcl_back.dto.subscription.response.SubscriptionResponseDto;
+import com.project.bcl_back.entity.User;
 import com.project.bcl_back.service.SubscriptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 public class SubscriptionController {
-
     private final SubscriptionService subscriptionService;
 
-    @PostMapping("/api/v1/members/trainers/{trainer-id}/subscriptions/{member-id}")
+    @PostMapping("/api/v1/members/me/match-waiting-lists/{matchWaitingListId}/subscriptions")
     public ResponseEntity<ResponseDto<Void>> createSubscriptionLog(
-            @PathVariable Long trainerId,
-            @PathVariable Long memberId,
+            @AuthenticationPrincipal User user,
+            @PathVariable Long matchWaitingListId,
             @Valid @RequestBody CreateSubscriptionRequestDto dto
-            ){
-        ResponseDto<Void> response = subscriptionService.createSubscriptionLog(trainerId, memberId ,dto);
+    ){
+        Long userId = user.getId();
+        ResponseDto<Void> response = subscriptionService.createSubscriptionLog(userId, matchWaitingListId,dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/api/v1/members/me/subscriptions/{memberId}")
+    @GetMapping("/api/v1/members/me/subscriptions")
     public ResponseEntity<ResponseDto<SubscriptionResponseDto>> findSubscription(
-            @PathVariable Long memberId
+            @AuthenticationPrincipal User user
     ){
-        ResponseDto<SubscriptionResponseDto> response = subscriptionService.findSubscription(memberId);
+        Long userId = user.getId();
+        ResponseDto<SubscriptionResponseDto> response = subscriptionService.findSubscription(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

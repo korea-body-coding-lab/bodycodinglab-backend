@@ -1,10 +1,7 @@
 package com.project.bcl_back.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -17,18 +14,21 @@ import java.util.Date;
                 @UniqueConstraint(columnNames = {"member_Id"})
         }
 )
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
 public class Match {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @OneToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id",nullable = false)
+    private User member;
 
-    @Column(name = "trainer_id", nullable = false)
-    private Long trainerId;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id", referencedColumnName = "id" ,nullable = false)
+    private User trainer;
 
     @Column(name = "matched_at", nullable = false)
     private LocalDateTime matchedAt;

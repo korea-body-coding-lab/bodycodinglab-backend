@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface SubscriptionService {
-    ResponseDto<Void> createSubscriptionLog(Long trainerId, Long memberId, @Valid CreateSubscriptionRequestDto dto);
+    ResponseDto<Void> createSubscriptionLog(Long userId, Long matchWaitingListId, @Valid CreateSubscriptionRequestDto dto);
 
-    ResponseDto<SubscriptionResponseDto> findSubscription(Long memberId);
+    ResponseDto<SubscriptionResponseDto> findSubscription(Long userId);
 }
