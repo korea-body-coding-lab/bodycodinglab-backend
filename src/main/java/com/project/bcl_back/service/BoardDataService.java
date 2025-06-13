@@ -13,7 +13,7 @@ public interface BoardDataService {
     ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, MultipartFile file)throws IOException;
 
     // 전체 게시글 조회
-    ResponseDto<List<BoardResponseDto>> getAllPosts();
+    ResponseDto<List<BoardResponseDto>> getPostByCategory(int categoryId);
 
     // 단건 게시글 조회
     ResponseDto<BoardResponseDto> getPostById(Long id);
