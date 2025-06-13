@@ -15,7 +15,9 @@ public interface TrainerCareerService {
 
     ResponseDto<TrainerCareerResponseDto> updateTrainerCareer(Long id, @Valid TrainerCareerRequestDto dto);
 
-    ResponseDto<Void> deleteTrainerCareer(Long id);
+    ResponseDto<Void> deleteAllTrainerCareer(Long id);
 
     ResponseDto<TrainerRecentCareerResponseDto> getRecentCareer(Long id);
+
+    ResponseDto<Void> deleteTrainerCareer(Long id, Long careerId);
 }

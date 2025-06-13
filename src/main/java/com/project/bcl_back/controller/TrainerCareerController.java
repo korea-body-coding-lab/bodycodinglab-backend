@@ -3,14 +3,9 @@ package com.project.bcl_back.controller;
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
-import com.project.bcl_back.dto.trainer.request.TrainerInfoRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerInfoResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
-import com.project.bcl_back.entity.TrainerCareer;
 import com.project.bcl_back.service.TrainerCareerService;
-import com.project.bcl_back.service.TrainerInfoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,11 +49,22 @@ public class TrainerCareerController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 트레이너 경력 삭제
+    // 트레이너 경력 삭제(단건)
     @PreAuthorize("hasRole('TRAINER')")
-    @DeleteMapping(DELETE_TRAINER_CAREER)
-    public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(@AuthenticationPrincipal Long id) {
-        ResponseDto<Void> response = trainerCareerService.deleteTrainerCareer(id);
+    @DeleteMapping(DELETE_TRAINER_CAREER + "/{careerId}")
+    public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(
+            @AuthenticationPrincipal Long id,
+            @PathVariable Long careerId
+    ) {
+        ResponseDto<Void> response = trainerCareerService.deleteTrainerCareer(id, careerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 트레이너 경력 삭제(전체)
+    @PreAuthorize("hasRole('TRAINER')")
+    @DeleteMapping(DELETE_TRAINER_CAREER + "/all")
+    public ResponseEntity<ResponseDto<Void>> deleteAllTrainerCareer(@AuthenticationPrincipal Long id) {
+        ResponseDto<Void> response = trainerCareerService.deleteAllTrainerCareer(id);
         return ResponseEntity.noContent().build();
     }
 

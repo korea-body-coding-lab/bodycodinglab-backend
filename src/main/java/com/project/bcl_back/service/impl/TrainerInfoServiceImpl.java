@@ -75,7 +75,7 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
 
         List<TrainerCareerResponseDto> careers = trainer.getTrainerCareers().stream()
                 .map(career -> TrainerCareerResponseDto.builder()
-                        .id(career.getId())
+//                        .id(career.getId())
                         .trainerId(career.getTrainerInfo().getId())
                         .companyName(career.getCompanyName())
                         .companyJoin(career.getCompanyJoin())
@@ -85,7 +85,7 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
 
         List<TrainerLicenseResponseDto> licenses = trainer.getTrainerLicenses().stream()
                 .map(license -> TrainerLicenseResponseDto.builder()
-                        .id(license.getId())
+//                        .id(license.getId())
                         .trainerId(license.getTrainerInfo().getId())
                         .licenseType(license.getLicenseType())
                         .licenseName(license.getLicenseName())

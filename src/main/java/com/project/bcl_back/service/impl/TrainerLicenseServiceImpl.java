@@ -115,7 +115,7 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
     }
 
     @Override
-    public ResponseDto<Void> deleteTrainerLicense(Long id) {
+    public ResponseDto<Void> deleteTrainerLicense(Long id, Long licenseId) {
         User user = userRepository.findById(id)
                 .orElse(null);
 
@@ -131,10 +131,34 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        TrainerLicense license = trainerLicenseRepository.findById(trainer.getId())
+        TrainerLicense license = trainerLicenseRepository.findById(licenseId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_LICENSE));
 
         trainerLicenseRepository.delete(license);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+    }
+
+    @Override
+    public ResponseDto<Void> deleteAllTrainerLicense(Long id) {
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        List<TrainerLicense> license = trainerLicenseRepository.findByTrainerInfoId(trainer.getId());
+
+        trainerLicenseRepository.deleteAll(license);
+
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
     }
 

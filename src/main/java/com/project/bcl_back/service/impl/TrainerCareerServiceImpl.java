@@ -8,6 +8,7 @@ import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
 import com.project.bcl_back.entity.TrainerCareer;
 import com.project.bcl_back.entity.TrainerInfo;
+import com.project.bcl_back.entity.TrainerLicense;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.TrainerCareerRepository;
 import com.project.bcl_back.repository.TrainerInfoRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,7 +105,7 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
     }
 
     @Override
-    public ResponseDto<Void> deleteTrainerCareer(Long id) {
+    public ResponseDto<Void> deleteTrainerCareer(Long id, Long careerId) {
         User user = userRepository.findById(id)
                 .orElse(null);
 
@@ -119,10 +121,34 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        TrainerCareer career = trainerCareerRepository.findById(trainer.getId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_CAREER));
+        TrainerCareer career = trainerCareerRepository.findById(careerId)
+                        .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_CAREER));
 
         trainerCareerRepository.delete(career);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+    }
+
+    @Override
+    public ResponseDto<Void> deleteAllTrainerCareer(Long id) {
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        List<TrainerCareer> career = trainerCareerRepository.findByTrainerInfoId(trainer.getId());
+
+        trainerCareerRepository.deleteAll(career);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
     }
@@ -155,4 +181,5 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
                 .build();
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
+
 }
