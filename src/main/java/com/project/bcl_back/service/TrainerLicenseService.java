@@ -6,18 +6,18 @@ import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public interface TrainerLicenseService {
-    ResponseDto<TrainerLicenseResponseDto> postTrainerLicense(@Valid TrainerLicenseRequestDto dto);
+    ResponseDto<TrainerLicenseResponseDto> postTrainerLicense(Long id, @Valid TrainerLicenseRequestDto dto, MultipartFile file) throws IOException;
 
-    ResponseDto<List<TrainerLicenseResponseDto>> getTrainerLicense(Long id);
-
-    ResponseDto<TrainerLicenseResponseDto> updateTrainerLicense(Long id, @Valid TrainerLicenseRequestDto dto);
+    ResponseDto<TrainerLicenseResponseDto> updateTrainerLicense(Long id, @Valid TrainerLicenseRequestDto dto,MultipartFile file) throws IOException;
 
     ResponseDto<Void> deleteTrainerLicense(Long id);
 
-    ResponseDto<TrainerRecentLicenseResponseDto> getRecentLicense();
+    ResponseDto<TrainerRecentLicenseResponseDto> getRecentLicense(Long id);
 }
