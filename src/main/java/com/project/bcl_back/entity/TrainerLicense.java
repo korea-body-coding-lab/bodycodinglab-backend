@@ -4,8 +4,6 @@ import com.project.bcl_back.common.enums.trainerLicense.LicenseType;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-
 @Entity
 @Table(name = "trainer_licenses")
 @Getter
@@ -30,5 +28,17 @@ public class TrainerLicense {
     @Column(nullable = false, name = "license_name")
     private String licenseName;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "license_image_id")
+    private UploadFile licenseImage;
+
+    public static TrainerLicense create(TrainerInfo trainer, LicenseType licenseType,
+                                        String licenseName) {
+        TrainerLicense license = new TrainerLicense();
+        license.trainerInfo = trainer;
+        license.licenseType = licenseType;
+        license.licenseName = licenseName;
+        return license;
+    }
 
 }

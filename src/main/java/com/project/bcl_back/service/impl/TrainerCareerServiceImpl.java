@@ -65,23 +65,6 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
     }
 
     @Override
-    public ResponseDto<List<TrainerCareerResponseDto>> getTrainerCareer(Long trainerId) {
-        List<TrainerCareerResponseDto> responseDtos = null;
-
-        List<TrainerCareer> careers = trainerCareerRepository.findByTrainerInfoId(trainerId);
-
-        responseDtos = careers.stream()
-                .map(career -> TrainerCareerResponseDto.builder()
-                    .trainerId(career.getTrainerInfo().getId())
-                    .companyName(career.getCompanyName())
-                    .companyJoin(career.getCompanyJoin())
-                    .companyQuit(career.getCompanyQuit())
-                    .build())
-                .collect(Collectors.toList());
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
-    }
-
-    @Override
     public ResponseDto<TrainerCareerResponseDto> updateTrainerCareer(Long id, TrainerCareerRequestDto dto) {
         TrainerCareerResponseDto responseDto = null;
 
