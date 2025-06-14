@@ -25,7 +25,7 @@ public class Member {
     private String memberAddress;
 
     @Column(name = "oneday_ticket_count")
-    private int oneDayTicketCount;
+    private int oneDayTicketCount = 3;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
