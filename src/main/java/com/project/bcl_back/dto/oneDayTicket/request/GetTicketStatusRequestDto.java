@@ -1,4 +1,4 @@
-package com.project.bcl_back.dto.onedayTicket.request;
+package com.project.bcl_back.dto.oneDayTicket.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

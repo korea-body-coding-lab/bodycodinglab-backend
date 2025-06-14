@@ -88,6 +88,12 @@ public class User extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Coupon> trainerCoupons;
 
+    @OneToMany(mappedBy = "member")
+    private List<OneDayTicket> memberOneDayTickets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trainer")
+    private List<OneDayTicket> trainerOneDayTickets = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.getName()));

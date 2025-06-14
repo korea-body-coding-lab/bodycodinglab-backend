@@ -73,4 +73,6 @@ public interface ResponseMessage {
     String COMMENT_NOT_BELONG_POST = "댓글이 지정된 게시글에 속하지 않습니다.";
     String NOT_EXISTS_COMMENT = "댓글을 찾을 수 없습니다.";
 
+    // 체험권 관련
+    String NOT_EXISTS_ONE_DAY_TICKET = "체험권이 존재하지 않습니다.";
 }
