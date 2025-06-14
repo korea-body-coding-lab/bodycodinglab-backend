@@ -30,7 +30,6 @@ public class MemberFormServiceImpl implements MemberFormService {
               null,
               member,
               true,
-              dto.getAge(),
               dto.getBodyForm(),
               dto.getGoal(),
               dto.getBmi(),
@@ -62,8 +61,7 @@ public class MemberFormServiceImpl implements MemberFormService {
 
         response = new MemberFormResponseDto(
                 memberForm.getMember().getMemberId(),
-                memberForm.getMember().getUser().getUsername(),
-                memberForm.getAge(),
+                memberForm.getMember().getUser().getName(),
                 memberForm.getBodyForm(),
                 memberForm.getGoal(),
                 memberForm.getBmi(),

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.Year;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,10 +62,9 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
         response = lists.stream()
                 .map(list ->{
 
-                            User member = list.getMember();
-                            LocalDate birthdate = member.getBirthdate();
+                            LocalDate birthdate = list.getMember().getBirthdate();
+                            int age = Period.between(birthdate, LocalDate.now()).getYears();
 
-                            int age = Year.now().getValue() - birthdate.getYear();
                             return new MemberMatchWaitingListResponseDto(
                                     list.getMember().getId(),
                                     list.getMember().getName(),

@@ -24,11 +24,8 @@ public class MemberForm {
     @Column(name = "is_submit", nullable = false)
     private boolean isSubmit = false;
 
-    @Column(name = "age", nullable = false)
-    private Byte age;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = " bodyform",nullable = false, length = 10)
+    @Column(name = "bodyform",nullable = false, length = 10)
     private BodyForm bodyForm;
 
     @Enumerated(EnumType.STRING)

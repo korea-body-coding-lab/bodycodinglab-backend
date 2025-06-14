@@ -7,9 +7,11 @@ import com.project.bcl_back.dto.match.response.MemberMatchListResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchResponseDto;
 import com.project.bcl_back.dto.match.response.TrainerMatchResponseDto;
 import com.project.bcl_back.entity.Match;
+import com.project.bcl_back.entity.Subscription;
 import com.project.bcl_back.entity.TrainerLicense;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.MatchRepository;
+import com.project.bcl_back.repository.SubscriptionRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.MatchService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.Year;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     @Override
     public ResponseDto<TrainerMatchResponseDto> findMatchTrainer(Long userId) {
@@ -57,7 +61,7 @@ public class MatchServiceImpl implements MatchService {
                 .map(match ->{
 
                     LocalDate birthdate = match.getMember().getBirthdate();
-                    int age = Year.now().getValue() - birthdate.getYear();
+                    int age = Period.between(birthdate, LocalDate.now()).getYears();
 
                     return new MemberMatchListResponseDto(
                             match.getMember().getName(),
@@ -78,7 +82,7 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchId));
 
         LocalDate birthdate = match.getMember().getBirthdate();
-        int age = Year.now().getValue() - birthdate.getYear();
+        int age = Period.between(birthdate, LocalDate.now()).getYears();
 
         if(match.getMember().getMember().getMemberForm() != null){
             response = new MemberMatchResponseDto(
@@ -106,6 +110,11 @@ public class MatchServiceImpl implements MatchService {
     public ResponseDto<Void> cancelMatch(Long matchId) {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchId));
+
+
+        Subscription subscription = match.getMember().getMember().getSubscription();
+
+        subscriptionRepository.delete(subscription);
 
         matchRepository.delete(match);
 
