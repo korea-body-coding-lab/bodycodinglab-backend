@@ -4,6 +4,7 @@ import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

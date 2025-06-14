@@ -27,124 +27,87 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseDto<TrainerInfoResponseDto> postTrainerInfo(TrainerInfoRequestDto dto) {
+    public ResponseDto<TrainerInfoResponseDto> postTrainerInfo(Long id, TrainerInfoRequestDto dto) {
         TrainerInfoResponseDto responseDto = null;
 
-//        User user = userRepository.findById()
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
 
         TrainerInfo newInfo = TrainerInfo.builder()
-                .id(responseDto.getId())
-                .jobAddress(responseDto.getJobAddress())
-                .shortIntroduce(responseDto.getShortIntroduce())
-                .longIntroduce(responseDto.getLongIntroduce())
-                .educationName(responseDto.getEducationName())
-                .educationEntrance(responseDto.getEducationEntrance())
-                .educationGraduate(responseDto.getEducationGraduate())
-                .build(); // career, license (?)
+                .jobAddress(dto.getJobAddress())
+                .shortIntroduce(dto.getShortIntroduce())
+                .longIntroduce(dto.getLongIntroduce())
+                .educationName(dto.getEducationName())
+                .educationEntrance(dto.getEducationEntrance())
+                .educationGraduate(dto.getEducationGraduate())
+                .build();
 
-        return null;
-    }
-
-    @Override
-    public ResponseDto<List<TrainerListResponseDto>> getAllTrainers() {
-        List<TrainerListResponseDto> responseDtos = null;
-
-        List<TrainerInfo> trainers = trainerInfoRepository.findAll();
-//        User user = userRepository.findById()
-//                .orElse(null);
-
-        responseDtos =  trainers.stream()
-                .map(trainer ->
-
-
-                        TrainerListResponseDto.builder()
-                        .id(trainer.getId())
-//                        .name(trainer.user.getName())
-                        .shortIntroduce(trainer.getShortIntroduce())
-                        .build())
-                .collect(Collectors.toList());
-        return null;
-    }
-
-    @Override
-    public ResponseDto<TrainerInfoResponseDto> getTrainerById(Long id) {
-        TrainerInfoResponseDto responseDto = null;
-
-        TrainerInfo trainer = trainerInfoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
-
-        List<TrainerCareerResponseDto> careers = trainer.getTrainerCareers().stream()
-                .map(career -> TrainerCareerResponseDto.builder()
-//                        .id(career.getId())
-                        .trainerId(career.getTrainerInfo().getId())
-                        .companyName(career.getCompanyName())
-                        .companyJoin(career.getCompanyJoin())
-                        .companyQuit(career.getCompanyQuit())
-                        .build())
-                .collect(Collectors.toList());
-
-        List<TrainerLicenseResponseDto> licenses = trainer.getTrainerLicenses().stream()
-                .map(license -> TrainerLicenseResponseDto.builder()
-//                        .id(license.getId())
-                        .trainerId(license.getTrainerInfo().getId())
-                        .licenseType(license.getLicenseType())
-                        .licenseName(license.getLicenseName())
-                        .build())
-                .collect(Collectors.toList());
+        TrainerInfo savedInfo = trainerInfoRepository.save(newInfo);
 
         responseDto = TrainerInfoResponseDto.builder()
-                .id(trainer.getId())
-                .jobAddress(trainer.getJobAddress())
-                .shortIntroduce(trainer.getShortIntroduce())
-                .longIntroduce(trainer.getLongIntroduce())
-                .educationName(trainer.getEducationName())
-                .educationEntrance(trainer.getEducationEntrance())
-                .educationGraduate(trainer.getEducationGraduate())
-                .careers(careers)
-                .licenses(licenses)
+                .trainerId(savedInfo.getId())
+                .jobAddress(savedInfo.getJobAddress())
+                .shortIntroduce(savedInfo.getShortIntroduce())
+                .longIntroduce(savedInfo.getLongIntroduce())
+                .educationName(savedInfo.getEducationName())
+                .educationEntrance(savedInfo.getEducationEntrance())
+                .educationGraduate(savedInfo.getEducationGraduate())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
     @Override
-    public ResponseDto<List<TrainerListResponseDto>> searchTrainerByName(String trainerName) {
-        List<TrainerListResponseDto> responseDtos = null;
-
-//        List<TrainerInfo> trainers = trainerInfoRepository.findByName(name);
-//
-//        responseDtos = trainers.stream()
-//                .map(trainer -> TrainerListResponseDto.builder()
-//                        .id(trainer.getId())
-//                        .name()
-//                        .shortIntroduce(trainer.getShortIntroduce())
-//                        .jobAddress(trainer.getJobAddress())
-//                        .build())
-//                .collect(Collectors.toList());
-        return null;
-    }
-
-    @Override
-    public ResponseDto<List<TrainerListResponseDto>> searchTrainerByAddress(String address) {
-        List<TrainerListResponseDto> responseDtos = null;
-
-//        List<TrainerInfo> trainers = trainerInfoRepository.findByAddress(jobAddress);
-//
-//        responseDtos = trainers.stream()
-//                .map(trainer -> TrainerListResponseDto.builder()
-//                        .id(trainer.getId())
-//                        .name()
-//                        .shortIntroduce(trainer.getShortIntroduce())
-//                        .jobAddress(trainer.getJobAddress())
-//                        .build())
-//                .collect(Collectors.toList());
-        return null;
-    }
-
-    @Override
     public ResponseDto<TrainerInfoResponseDto> updateTrainerInfo(Long id, TrainerInfoRequestDto dto) {
+        TrainerInfoResponseDto responseDto = null;
 
+        User user = userRepository.findById(id)
+                .orElse(null);
 
-        return null;
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        TrainerInfo info = trainerInfoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.TRAINER_NOT_FOUND));
+
+        info.setJobAddress(dto.getJobAddress());
+        info.setShortIntroduce(dto.getShortIntroduce());
+        info.setLongIntroduce(dto.getLongIntroduce());
+        info.setEducationName(dto.getEducationName());
+        info.setEducationEntrance(dto.getEducationEntrance());
+        info.setEducationGraduate(dto.getEducationGraduate());
+
+        TrainerInfo updateInfo = trainerInfoRepository.save(info);
+
+        responseDto = TrainerInfoResponseDto.builder()
+                .trainerId(updateInfo.getId())
+                .jobAddress(updateInfo.getJobAddress())
+                .shortIntroduce(updateInfo.getShortIntroduce())
+                .longIntroduce(updateInfo.getLongIntroduce())
+                .educationName(updateInfo.getEducationName())
+                .educationEntrance(updateInfo.getEducationEntrance())
+                .educationGraduate(updateInfo.getEducationGraduate())
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 }
