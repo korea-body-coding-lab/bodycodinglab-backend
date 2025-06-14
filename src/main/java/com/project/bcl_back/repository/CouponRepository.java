@@ -10,12 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
-    List<Coupon> findByStatus(CouponStatus status);
+    Optional<List<Coupon>> findByStatus(CouponStatus status);
 
-    @Modifying
-    @Query("UPDATE Coupon c SET c.status = 'EXPIRED' WHERE c.expirationPeriod < :today AND c.status = 'NOT_USED'")
-    void expireOldCoupons(@Param("today") LocalDate today);
+    List<Coupon> findByExpirationPeriodBeforeAndStatus(LocalDate date, CouponStatus status);
 }

@@ -5,10 +5,9 @@ import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.coupon.CouponStatus;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.coupon.request.PutCouponRequsetDto;
+import com.project.bcl_back.dto.coupon.request.PutCouponRequestDto;
+import com.project.bcl_back.dto.coupon.response.TrainerCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
-import com.project.bcl_back.dto.coupon.response.TrainerApplicationCouponResponseDto;
-import com.project.bcl_back.dto.coupon.response.TrainerCompleteCouponResponseDto;
 import com.project.bcl_back.entity.Coupon;
 import com.project.bcl_back.repository.CouponRepository;
 import com.project.bcl_back.service.CouponService;
@@ -19,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,56 +29,95 @@ public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
 
-
     @Scheduled(cron = "0 0 0 * * *")
     public void expireCoupons() {
         LocalDate today = LocalDate.now();
-        couponRepository.expireOldCoupons(today);
+        List<Coupon> couponsToExpire = couponRepository
+                .findByExpirationPeriodBeforeAndStatus(today, CouponStatus.NOT_USED);
+
+        for (Coupon coupon : couponsToExpire) {
+            coupon.setStatus(CouponStatus.EXPIRED);
+        }
     }
 
     @Override
-    public ResponseDto<List<MemberCouponResponseDto>> findNotUsedOrExpiredCoupon(CouponStatus status) {
-        List<MemberCouponResponseDto> coupons = null;
+    public ResponseDto<List<TrainerCouponResponseDto>> findNotUsedOrExpiredCoupon(Long memberId, CouponStatus status) {
+        List<TrainerCouponResponseDto> responseCoupons = null;
 
-        List<Coupon> notUsedCoupon = couponRepository.findByStatus(status);
+        List<Coupon> notUsedOrExpiredCoupons = couponRepository.findByStatus(status)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + status));
 
-        coupons = notUsedCoupon.stream()
-                .map(coupon -> new MemberCouponResponseDto(
+        List<Coupon> memberCoupons = null;
+
+        memberCoupons = notUsedOrExpiredCoupons.stream()
+                .filter(coupon -> memberId.equals(coupon.getMember().getId()))
+                .toList();
+
+
+        responseCoupons = memberCoupons.stream()
+                .map(coupon -> new TrainerCouponResponseDto(
                         coupon.getCouponId(),
-                        coupon.getTrainer().getUsername(),
+                        coupon.getTrainer().getName(),
                         coupon.getExpirationPeriod(),
                         coupon.getStatus()
                 )).collect(Collectors.toList());
 
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, coupons);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseCoupons);
     }
 
     @Override
-    public ResponseDto<List<TrainerApplicationCouponResponseDto>> findApplicationOrCompleteCoupon(CouponStatus status) {
-        List<TrainerApplicationCouponResponseDto> coupons = null;
+    public ResponseDto<List<MemberCouponResponseDto>> findApplicationOrCompleteCoupon(Long trainerId, CouponStatus status) {
+        List<MemberCouponResponseDto> responseCoupons = null;
 
-        List<Coupon> applicationCoupon = couponRepository.findByStatus(status);
+        if (status != CouponStatus.APPLICATION && status != CouponStatus.COMPLETE) {
+            throw new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + status);
+        }
 
-        coupons = applicationCoupon.stream()
-                .map(coupon -> new TrainerApplicationCouponResponseDto(
-                        coupon.getCouponId(),
-                        coupon.getMember().getUsername(),
-                        coupon.getExpirationPeriod(),
-                        coupon.getStatus()
-                )).collect(Collectors.toList());
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, coupons);
+        List<Coupon> applicationOrExpiredCoupons = couponRepository.findByStatus(status)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + status));
+
+        List<Coupon> trainerCoupons = null;
+
+        trainerCoupons = applicationOrExpiredCoupons.stream()
+                .filter(coupon -> trainerId.equals(coupon.getTrainer().getId()))
+                .toList();
+
+        if(status == CouponStatus.APPLICATION){
+            responseCoupons = trainerCoupons.stream()
+                    .map(coupon -> new MemberCouponResponseDto(
+                            coupon.getCouponId(),
+                            coupon.getMember().getUsername(),
+                            coupon.getExpirationPeriod(),
+                            coupon.getStatus()
+                    )).collect(Collectors.toList());
+        } else if(status == CouponStatus.COMPLETE){
+            responseCoupons = trainerCoupons.stream()
+                    .map(coupon -> new MemberCouponResponseDto(
+                            coupon.getCouponId(),
+                            coupon.getMember().getName(),
+                            coupon.getExpirationPeriod(),
+                            coupon.getUsedDate(),
+                            coupon.getStatus()
+                    )).collect(Collectors.toList());
+        }
+
+
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseCoupons);
     }
 
 
 
     @Override
-    public ResponseDto<Void> putCoupon(Long couponId, PutCouponRequsetDto dto) {
+    public ResponseDto<Void> putCoupon(Long couponId, PutCouponRequestDto dto) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
 
-        coupon.setUsedDate(DateUtils.parse(dto.getUsedDate()));
+        LocalDateTime usedDate = LocalDate.parse(dto.getUsedDate(), DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+
+        coupon.setUsedDate(DateUtils.parse(DateUtils.format(usedDate)));
         coupon.setStatus(CouponStatus.COMPLETE);
 
         couponRepository.save(coupon);
