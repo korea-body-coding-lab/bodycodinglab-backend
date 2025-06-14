@@ -24,6 +24,9 @@ public class Member {
     @Column(name = "member_address", nullable = false)
     private String memberAddress;
 
+    @Column(name = "oneday_ticket_count")
+    private int oneDayTicketCount = 3;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private MemberStatus status = MemberStatus.NOT_PAYMENT;
