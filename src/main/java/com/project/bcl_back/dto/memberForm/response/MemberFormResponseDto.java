@@ -9,7 +9,6 @@ import lombok.Getter;
 public class MemberFormResponseDto {
     private Long MemberId;
     private String memberName;
-    private Byte age;
     private BodyForm bodyForm;
     private Goal goal;
     private Short bmi;
