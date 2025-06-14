@@ -32,7 +32,7 @@ public class Member {
     private Boolean isApproved;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private MemberForm memberFrom;
+    private MemberForm memberForm;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Subscription subscription;
