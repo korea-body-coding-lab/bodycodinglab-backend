@@ -41,7 +41,6 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-
         TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
                 .orElse(null);
 

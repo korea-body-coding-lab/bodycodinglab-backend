@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class TrainerListResponseDto {
-    private Long id;
+    private Long trainerId;
     private String name;
     private String shortIntroduce;
     private String jobAddress;

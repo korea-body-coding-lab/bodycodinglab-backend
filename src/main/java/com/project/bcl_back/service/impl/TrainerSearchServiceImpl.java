@@ -3,15 +3,16 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
+import com.project.bcl_back.dto.trainer.response.*;
 import com.project.bcl_back.entity.TrainerCareer;
+import com.project.bcl_back.entity.TrainerInfo;
 import com.project.bcl_back.entity.TrainerLicense;
 import com.project.bcl_back.repository.TrainerCareerRepository;
 import com.project.bcl_back.repository.TrainerInfoRepository;
 import com.project.bcl_back.repository.TrainerLicenseRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.TrainerSearchService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,95 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
                         .trainerId(license.getTrainerInfo().getId())
                         .licenseType(license.getLicenseType())
                         .licenseName(license.getLicenseName())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
+    }
+
+    @Override
+    public ResponseDto<List<TrainerListResponseDto>> getAllTrainers() {
+        List<TrainerListResponseDto> responseDtos = null;
+
+        List<TrainerInfo> trainers = trainerInfoRepository.findAll();
+
+        responseDtos =  trainers.stream()
+                .map(trainer -> TrainerListResponseDto.builder()
+                                .trainerId(trainer.getId())
+                                .name(trainer.getUser().getName())
+                                .shortIntroduce(trainer.getShortIntroduce())
+                                .build())
+                .collect(Collectors.toList());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
+    }
+
+    @Override
+    public ResponseDto<TrainerDetailResponseDto> getTrainerById(Long trainerId) {
+        TrainerDetailResponseDto responseDto = null;
+
+        TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.TRAINER_NOT_FOUND));
+
+        List<TrainerCareerResponseDto> careers = trainer.getTrainerCareers().stream()
+                .map(career -> TrainerCareerResponseDto.builder()
+                        .trainerId(career.getTrainerInfo().getId())
+                        .companyName(career.getCompanyName())
+                        .companyJoin(career.getCompanyJoin())
+                        .companyQuit(career.getCompanyQuit())
+                        .build())
+                .collect(Collectors.toList());
+
+        List<TrainerLicenseResponseDto> licenses = trainer.getTrainerLicenses().stream()
+                .map(license -> TrainerLicenseResponseDto.builder()
+                        .trainerId(license.getTrainerInfo().getId())
+                        .licenseType(license.getLicenseType())
+                        .licenseName(license.getLicenseName())
+                        .build())
+                .collect(Collectors.toList());
+
+        responseDto = TrainerDetailResponseDto.builder()
+                .trainerId(trainer.getId())
+                .jobAddress(trainer.getJobAddress())
+                .shortIntroduce(trainer.getShortIntroduce())
+                .longIntroduce(trainer.getLongIntroduce())
+                .educationName(trainer.getEducationName())
+                .educationEntrance(trainer.getEducationEntrance())
+                .educationGraduate(trainer.getEducationGraduate())
+                .careers(careers)
+                .licenses(licenses)
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    public ResponseDto<List<TrainerListResponseDto>> searchTrainerByName(String name) {
+        List<TrainerListResponseDto> responseDtos = null;
+
+        List<TrainerInfo> trainers = trainerInfoRepository.findTrainerByName(name);
+
+        responseDtos = trainers.stream()
+                .map(trainer -> TrainerListResponseDto.builder()
+                        .trainerId(trainer.getId())
+                        .name(trainer.getUser().getName())
+                        .shortIntroduce(trainer.getShortIntroduce())
+                        .jobAddress(trainer.getJobAddress())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
+    }
+
+    @Override
+    public ResponseDto<List<TrainerListResponseDto>> searchTrainerByAddress(String jobAddress) {
+        List<TrainerListResponseDto> responseDtos = null;
+
+        List<TrainerInfo> trainers = trainerInfoRepository.findTrainerByAddress(jobAddress);
+
+        responseDtos = trainers.stream()
+                .map(trainer -> TrainerListResponseDto.builder()
+                        .trainerId(trainer.getId())
+                        .name(trainer.getUser().getName())
+                        .shortIntroduce(trainer.getShortIntroduce())
+                        .jobAddress(trainer.getJobAddress())
                         .build())
                 .collect(Collectors.toList());
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
