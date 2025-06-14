@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class PutCouponRequsetDto {
+public class PutCouponRequestDto {
     @NotBlank
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String usedDate;

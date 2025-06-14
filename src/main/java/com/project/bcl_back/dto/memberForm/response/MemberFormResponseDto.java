@@ -17,7 +17,7 @@ public class MemberFormResponseDto {
     private PreferredDiet preferredDiet;
     private SugarIntake sugarIntake;
     private WaterIntake waterIntake;
-    private Short hegiht;
+    private Short height;
     private Short weight;
     private Short weightGoal;
     private Short physicalLevel;

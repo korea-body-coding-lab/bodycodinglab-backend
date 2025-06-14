@@ -10,11 +10,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class MemberMatchResponseDto {
-    private String memberUsername;
     private String memberName;
     private int memberAge;
     private Gender memberGender;
     private String memberPhone;
     private String memberAddress;
     private MemberForm memberForm;
+
+    public MemberMatchResponseDto(
+            String memberName,
+            int memberAge,
+            Gender memberGender,
+            String memberPhone,
+            String memberAddress){
+        this.memberName = memberName;
+        this.memberAge = memberAge;
+        this.memberGender = memberGender;
+        this.memberPhone = memberPhone;
+        this.memberAddress = memberAddress;
+    }
 }
