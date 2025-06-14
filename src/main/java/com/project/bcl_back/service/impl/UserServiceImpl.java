@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         if (user == null) {
-            return ResponseDto.fail(ResponseCode.AUTHORIZATION_FAIL, ResponseMessage.AUTHORIZATION_FAIL);
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetMemberInfoResponseDto(user));
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         if (user == null) {
-            return ResponseDto.fail(ResponseCode.AUTHORIZATION_FAIL, ResponseMessage.AUTHORIZATION_FAIL);
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
         user.setName(dto.getName());
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         if (user == null) {
-            return ResponseDto.fail(ResponseCode.AUTHORIZATION_FAIL, ResponseMessage.AUTHORIZATION_FAIL);
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetTrainerInfoResponseDto(user));
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         if (user == null) {
-            return ResponseDto.fail(ResponseCode.AUTHORIZATION_FAIL, ResponseMessage.AUTHORIZATION_FAIL);
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
         user.setName(dto.getName());
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         if (user == null) {
-            return ResponseDto.fail(ResponseCode.AUTHORIZATION_FAIL, ResponseMessage.AUTHORIZATION_FAIL);
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
         if (!dto.getDeleteMessage().equals("탈퇴하겠습니다.")) {

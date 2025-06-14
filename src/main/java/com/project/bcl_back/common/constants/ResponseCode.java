@@ -66,4 +66,7 @@ public interface ResponseCode {
     String ALREADY_EQUAL_STATUS = "AES";
     String TRAINER_NOT_FOUND = "TNF";
 
+    // 체험권 관련
+    String NOT_EXISTS_ONE_DAY_TICKET = "NET";
+
 }

@@ -58,7 +58,7 @@ public class AdminServiceImpl implements AdminService {
                 .orElse(null);
 
         if (trainer == null) {
-            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+            return ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetTrainerResDto(trainer));
@@ -71,7 +71,7 @@ public class AdminServiceImpl implements AdminService {
                 .orElse(null);
 
         if (trainer == null) {
-            return Mono.just(ResponseDto.toResponseEntity(HttpStatus.BAD_REQUEST, ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND)));
+            return Mono.just(ResponseDto.toResponseEntity(HttpStatus.BAD_REQUEST, ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND)));
         }
 
         if (trainer.getTrainerStatus().equals(dto.getNewStatus())) {
