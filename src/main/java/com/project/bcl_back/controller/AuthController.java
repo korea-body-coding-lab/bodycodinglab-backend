@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
     private final MailService mailService;
 
-    private static final String SIGN_UP = "/signup";
+    private static final String SIGN_UP = "/sign-up";
     private static final String SIGN_IN = "/login";
     private static final String FIND_ID = "/finding-id";
     private static final String SEND_EMAIL = "/send-email";
