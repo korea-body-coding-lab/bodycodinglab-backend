@@ -121,13 +121,13 @@ public class BoardDataServiceImpl implements BoardDataService {
     // Post -> DTO 변환
     private BoardResponseDto toDto(Board board){
         String writerName = null;
-        if (board.getWriter() != null) {
-            writerName = board.getWriter().getName();
-        }
+//        if (board.getWriter() != null) {
+//            writerName = board.getWriter().getName();
+//        }
         return BoardResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getWriterId())
-                .writerName(writerName)
+//                .writerName(writerName)
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt().format(FORMAT))

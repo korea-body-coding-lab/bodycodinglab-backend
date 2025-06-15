@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByCategoryId(int categoryId);
-    @Query("SELECT b FROM Board b JOIN FETCH b.writer WHERE b.id = :id")
-    Optional<Board> findByIdWithWriter(@Param("id") Long id);
+//    @Query("SELECT b FROM Board b JOIN FETCH b.writer WHERE b.id = :id")
+//    Optional<Board> findByIdWithWriter(@Param("id") Long id);
 }
