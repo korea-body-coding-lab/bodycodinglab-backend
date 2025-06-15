@@ -13,5 +13,5 @@ public class TrainerMatchWaitingListResponseDto {
     private Long trainerId;
     private String trainerName;
     private String trainerJobAddress;
-    private LocalDateTime appliedDate;
+    private LocalDateTime appliedAt;
 }

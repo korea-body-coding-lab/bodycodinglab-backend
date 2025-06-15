@@ -87,7 +87,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
                 list.getTrainer().getId(),
                 list.getTrainer().getName(),
                 list.getTrainer().getTrainerInfo().getJobAddress(),
-                list.getAppliedDate()
+                list.getAppliedAt()
         );
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);

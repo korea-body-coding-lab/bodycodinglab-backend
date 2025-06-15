@@ -29,9 +29,9 @@ public class MatchWaitingList {
     @JoinColumn(name = "trainer_id", referencedColumnName = "id", nullable = false)
     private User trainer;
 
-    @Column(name = "applied_date", nullable = false)
-    private LocalDateTime appliedDate;
+    @Column(name = "applied_at", nullable = false)
+    private LocalDateTime appliedAt;
 
-    @Column(name = "is_approved", nullable = false)
+    @Column(name = "approved_status", nullable = false)
     private ApprovedStatus approvedStatus ;
 }
