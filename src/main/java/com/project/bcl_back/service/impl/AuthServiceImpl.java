@@ -157,8 +157,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<SignInUserResponseDto> login(SignInUserRequestDto dto) throws IOException {
-        SignInUserResponseDto data = null;
+    public ResponseDto<LoginUserResponseDto> login(LoginUserRequestDto dto) throws IOException {
+        LoginUserResponseDto data = null;
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElse(null);
 
@@ -172,9 +172,9 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName().toString());
 
-        data = SignInUserResponseDto.builder()
+        data = LoginUserResponseDto.builder()
                 .token(token)
-                .userId(user.getId())
+                .exprTime(jwtProvider.getExpiration())
                 .name(user.getName())
 //                .profileImage(uploadFileService.getProfileImage(user.getId(), TargetType.PROFILE))
                 .build();

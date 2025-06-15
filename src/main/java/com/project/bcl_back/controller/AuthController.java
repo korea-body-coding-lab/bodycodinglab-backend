@@ -24,7 +24,7 @@ public class AuthController {
     private final MailService mailService;
 
     private static final String SIGN_UP = "/sign-up";
-    private static final String SIGN_IN = "/login";
+    private static final String LOGIN = "/login";
     private static final String FIND_ID = "/finding-id";
     private static final String SEND_EMAIL = "/send-email";
     private static final String VERIFY_EMAIL = "/verify";
@@ -49,8 +49,8 @@ public class AuthController {
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.trainerSignup(dto, attachmentFile, profile));
     }
 
-    @PostMapping(SIGN_IN)
-    public ResponseEntity<ResponseDto<SignInUserResponseDto>> login(@Valid @RequestBody SignInUserRequestDto dto) throws IOException {
+    @PostMapping(LOGIN)
+    public ResponseEntity<ResponseDto<LoginUserResponseDto>> login(@Valid @RequestBody LoginUserRequestDto dto) throws IOException {
         return ResponseDto.toResponseEntity(HttpStatus.OK, authService.login(dto));
     }
 
