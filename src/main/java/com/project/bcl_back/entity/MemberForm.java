@@ -32,8 +32,9 @@ public class MemberForm {
     @Column(name = "goal",nullable = false, length = 20)
     private Goal goal;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "bmi", nullable = false)
-    private short bmi;
+    private Bmi bmi;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "improved_part", nullable = false, length = 20)

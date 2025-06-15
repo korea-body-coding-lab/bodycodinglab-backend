@@ -11,7 +11,7 @@ public class MemberFormResponseDto {
     private String memberName;
     private BodyForm bodyForm;
     private Goal goal;
-    private Short bmi;
+    private Bmi bmi;
     private Improved_part improvedPart;
     private PreferredDiet preferredDiet;
     private SugarIntake sugarIntake;
