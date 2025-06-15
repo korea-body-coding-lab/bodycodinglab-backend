@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class SignInUserResponseDto {
+public class LoginUserResponseDto {
     private String token;
-    private Long userId;
+    private int exprTime;
     private String name;
-    byte[] profileImage;
+    private byte[] profileImage;
 }
