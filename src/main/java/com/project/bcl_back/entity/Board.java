@@ -32,9 +32,9 @@ public class Board {
     @Column(name = "writer_id",nullable = false)
     private Long writerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id", insertable = false, updatable = false)
-    private User writer;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "writer_id", insertable = false, updatable = false)
+//    private User writer;
 
     @Column(name = "post_title",nullable = false)
     private String title;

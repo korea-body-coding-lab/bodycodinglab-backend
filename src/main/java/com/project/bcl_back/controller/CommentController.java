@@ -21,10 +21,10 @@ public class CommentController {
     // 1.댓글 생성
     @PostMapping
     public ResponseEntity<ResponseDto<CommentResponseDto>> createComment(
-            @PathVariable Long id,
+            @PathVariable Long boardId,
             @Valid @RequestBody CommentRequestDto dto
     ) {
-        ResponseDto<CommentResponseDto> responseDto = commentService.createComment(id, dto);
+        ResponseDto<CommentResponseDto> responseDto = commentService.createComment(boardId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
