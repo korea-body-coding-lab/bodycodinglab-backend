@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class SendTrainerApprovalResultEmailDto {
+public class SendTrainerApprovalResultEmailRequestDto {
     private String email;
     private TrainerStatus status;
     private String changeReason;

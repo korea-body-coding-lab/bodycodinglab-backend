@@ -8,8 +8,11 @@ import lombok.Getter;
 @Getter
 @Builder
 public class LoginUserResponseDto {
-    private String token;
-    private int exprTime;
+    private Long id;
+    private String role;
+    private String username;
     private String name;
     private byte[] profileImage;
+    private String token;
+    private int exprTime;
 }

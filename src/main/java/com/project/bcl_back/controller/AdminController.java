@@ -4,7 +4,7 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.admin.request.UpdateTrainerStatusRequestDto;
 import com.project.bcl_back.dto.admin.response.GetAllTrainersResponseDto;
-import com.project.bcl_back.dto.admin.response.GetTrainerResponseDto;
+import com.project.bcl_back.dto.admin.response.GetTrainerDetailResponseDto;
 import com.project.bcl_back.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +33,13 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(GET_TRAINERS + "/{trainerId}")
-    public ResponseEntity<ResponseDto<GetTrainerResponseDto>> getTrainer(@PathVariable Long trainerId) {
+    public ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>> getTrainer(@PathVariable Long trainerId) {
         return ResponseDto.toResponseEntity(HttpStatus.OK,adminService.getTrainer(trainerId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(GET_TRAINERS + "/{trainerId}")
-    public Mono<ResponseEntity<ResponseDto<GetTrainerResponseDto>>> updateTrainerStatus(
+    public Mono<ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>>> updateTrainerStatus(
             @AuthenticationPrincipal Long id,
             @PathVariable Long trainerId,
             @Valid @RequestBody UpdateTrainerStatusRequestDto dto

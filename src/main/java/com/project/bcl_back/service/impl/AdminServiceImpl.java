@@ -6,10 +6,10 @@ import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailDto;
+import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailRequestDto;
 import com.project.bcl_back.dto.admin.request.UpdateTrainerStatusRequestDto;
 import com.project.bcl_back.dto.admin.response.GetAllTrainersResponseDto;
-import com.project.bcl_back.dto.admin.response.GetTrainerResponseDto;
+import com.project.bcl_back.dto.admin.response.GetTrainerDetailResponseDto;
 import com.project.bcl_back.entity.Role;
 import com.project.bcl_back.entity.TrainerChangeLog;
 import com.project.bcl_back.entity.TrainerInfo;
@@ -53,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseDto<GetTrainerResponseDto> getTrainer(Long trainerId) {
+    public ResponseDto<GetTrainerDetailResponseDto> getTrainer(Long trainerId) {
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
 
@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public Mono<ResponseEntity<ResponseDto<GetTrainerResponseDto>>> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
+    public Mono<ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>>> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
 
@@ -85,7 +85,7 @@ public class AdminServiceImpl implements AdminService {
 
         createLog(id, savedTrainer,prevStatus,dto.getChangeReason());
 
-        SendTrainerApprovalResultEmailDto sendEmailDto = new SendTrainerApprovalResultEmailDto(savedTrainer.getUser().getEmail(), dto.getNewStatus(), dto.getChangeReason());
+        SendTrainerApprovalResultEmailRequestDto sendEmailDto = new SendTrainerApprovalResultEmailRequestDto(savedTrainer.getUser().getEmail(), dto.getNewStatus(), dto.getChangeReason());
 
         return mailService.sendTrainerApprovalResultEmail(sendEmailDto)
                 .flatMap(response -> {
@@ -101,18 +101,19 @@ public class AdminServiceImpl implements AdminService {
 
     private GetAllTrainersResponseDto toGetAllTrainersResDto(User user) {
         return GetAllTrainersResponseDto.builder()
-                .userId(user.getId())
+                .id(user.getId())
                 .trainerId(user.getTrainerInfo().getId())
                 .username(user.getUsername())
                 .name(user.getName())
-                .gender(user.getGender())
+                .birthdate(user.getBirthdate())
+                .jobAddress(user.getTrainerInfo().getJobAddress())
+                .createdAt(DateUtils.format(user.getCreatedAt()))
                 .status(user.getTrainerInfo().getTrainerStatus())
-                .createAt(DateUtils.format(user.getCreatedAt()))
                 .build();
     }
 
-    private GetTrainerResponseDto toGetTrainerResDto(TrainerInfo trainer) {
-        return GetTrainerResponseDto.builder()
+    private GetTrainerDetailResponseDto toGetTrainerResDto(TrainerInfo trainer) {
+        return GetTrainerDetailResponseDto.builder()
                 .userId(trainer.getUser().getId())
                 .trainerId(trainer.getId())
                 .username(trainer.getUser().getUsername())
