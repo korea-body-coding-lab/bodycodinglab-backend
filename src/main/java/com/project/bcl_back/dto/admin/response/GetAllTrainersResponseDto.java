@@ -7,15 +7,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @Getter @Setter
 @Builder
 public class GetAllTrainersResponseDto {
-    private Long userId;
+    private Long id;
     private Long trainerId;
     private String username;
     private String name;
-    private Gender gender;
-    private String createAt;
+    private LocalDate birthdate;
+    private String jobAddress;
+    private String createdAt;
     private TrainerStatus status;
 }

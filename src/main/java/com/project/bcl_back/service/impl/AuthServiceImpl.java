@@ -173,10 +173,13 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName().toString());
 
         data = LoginUserResponseDto.builder()
-                .token(token)
-                .exprTime(jwtProvider.getExpiration())
+                .id(user.getId())
+                .role(user.getRole().getName().toString())
+                .username(user.getUsername())
                 .name(user.getName())
 //                .profileImage(uploadFileService.getProfileImage(user.getId(), TargetType.PROFILE))
+                .token(token)
+                .exprTime(jwtProvider.getExpiration())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);

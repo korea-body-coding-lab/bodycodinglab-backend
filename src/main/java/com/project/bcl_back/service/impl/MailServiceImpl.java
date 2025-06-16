@@ -2,7 +2,7 @@ package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
-import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailDto;
+import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailRequestDto;
 import com.project.bcl_back.dto.auth.request.SendEmailRequestDto;
 import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.service.AuthService;
@@ -76,7 +76,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public Mono<ResponseEntity<String>> sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailDto dto) {
+    public Mono<ResponseEntity<String>> sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailRequestDto dto) {
         boolean isEmailVerified = authService.checkEmail(dto.getEmail());
 
         if (!isEmailVerified) {
