@@ -94,6 +94,22 @@ public class User extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "trainer")
     private List<OneDayTicket> trainerOneDayTickets = new ArrayList<>();
 
+    public void addMatchWaitingListAsTrainers(MatchWaitingList matchWaitingList) {
+        matchWaitingListAsTrainers.add(matchWaitingList);
+    }
+
+    public void removeMatchWaitingListAsTrainers(MatchWaitingList matchWaitingList){
+        matchWaitingListAsTrainers.remove(matchWaitingList);
+    }
+
+    public void addTrainerMatches(Match match){
+        trainerMatches.add(match);
+    }
+
+    public void removeTrainerMatches(Match match){
+        trainerMatches.remove(match);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.getName()));
