@@ -32,6 +32,7 @@ public class MatchWaitingList {
     @Column(name = "applied_at", nullable = false)
     private LocalDateTime appliedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "approved_status", nullable = false)
     private ApprovedStatus approvedStatus ;
 }

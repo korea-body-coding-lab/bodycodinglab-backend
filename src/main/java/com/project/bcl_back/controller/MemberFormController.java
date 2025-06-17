@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +19,23 @@ import org.springframework.web.bind.annotation.*;
 public class MemberFormController {
     private final MemberFormService memberFormService;
 
-    private static final String POST_MEMBER_FORMS = "/api/v1/members/subscriptions/forms";
-    private static final String GET_MEMBER_FORMS = "/api/v1/trainers/me/match-waiting-list/{formId}";
+    private static final String MEMBER_FORMS = "/api/v1/users/members/me/forms";
 
-    @PostMapping(POST_MEMBER_FORMS)
-    public ResponseEntity<ResponseDto<Void>> createMemberForm(
-            @AuthenticationPrincipal User user,
+
+    @PreAuthorize("hasRole('MEMBER')")
+    @PostMapping(MEMBER_FORMS)
+    public ResponseEntity<ResponseDto<Long>> createMemberForm(
+            @AuthenticationPrincipal Long memberId,
             @Valid @RequestBody MemberFormCreateRequestDto dto
     ){
-        Long memberId = user.getId();
-        ResponseDto<Void> response = memberFormService.createMemberForm(memberId, dto);
+        ResponseDto<Long> response = memberFormService.createMemberForm(memberId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping(GET_MEMBER_FORMS)
-    public ResponseEntity<ResponseDto<MemberFormResponseDto>> findByFormIdMemberForm(@PathVariable Long formId){
-        ResponseDto<MemberFormResponseDto> response = memberFormService.findByFromIdMemberForm(formId);
+    @PreAuthorize("hasRole('MEMBER')")
+    @GetMapping(MEMBER_FORMS )
+    public ResponseEntity<ResponseDto<MemberFormResponseDto>> findByFormIdMemberForm(@AuthenticationPrincipal Long memberId){
+        ResponseDto<MemberFormResponseDto> response = memberFormService.findByFromIdMemberForm(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

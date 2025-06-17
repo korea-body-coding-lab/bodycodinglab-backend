@@ -108,10 +108,21 @@ public class CouponServiceImpl implements CouponService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseCoupons);
     }
 
+    @Override
+    public ResponseDto<Void> memberPutCoupon(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
+
+        coupon.setStatus(CouponStatus.APPLICATION);
+
+        couponRepository.save(coupon);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
 
 
     @Override
-    public ResponseDto<Void> putCoupon(Long couponId, PutCouponRequestDto dto) {
+    public ResponseDto<Void> trainerPutCoupon(Long couponId, PutCouponRequestDto dto) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
 

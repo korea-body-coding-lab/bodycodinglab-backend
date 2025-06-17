@@ -22,8 +22,9 @@ import java.util.List;
 public class BoardController {
     private final BoardDataService boardDataService;
     // 게시글 등록
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value="/{categoryId}" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<BoardResponseDto>> createPost(
+            @PathVariable Long categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
             @RequestPart(value = "file", required = false) MultipartFile file
     )throws IOException {
