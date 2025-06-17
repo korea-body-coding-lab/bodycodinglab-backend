@@ -10,6 +10,6 @@ public interface ApiMappingPattern {
     String TRAINER_COUPON_API = "/api/v1/trainers/me/coupons";
 
     String BOARD_API = "/api/v1/personal-community-boards";
-    String BOARD_COMMENT_API = BOARD_API + "/comments";
+    String BOARD_COMMENT_API = BOARD_API + "/{boardId}" + "/comments";
     String NOTE_API = "/api/v1/notes";
 }

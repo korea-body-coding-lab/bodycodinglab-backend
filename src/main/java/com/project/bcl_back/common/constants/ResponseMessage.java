@@ -8,7 +8,7 @@ public interface ResponseMessage {
     String DATABASE_ERROR = "데이터베이스 오류가 발생했습니다.";
 
     // 인증/인가
-    String SIGN_IN_FAIL = "로그인에 실패했습니다.";
+    String LOGIN_FAIL = "로그인에 실패했습니다.";
     String AUTHENTICATION_FAIL = "인증에 실패했습니다.";
     String AUTHORIZATION_FAIL = "인가에 실패했습니다.";
     String NO_PERMISSION = "권한이 없습니다.";

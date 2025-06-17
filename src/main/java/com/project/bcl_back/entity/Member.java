@@ -2,6 +2,8 @@ package com.project.bcl_back.entity;
 
 import com.project.bcl_back.common.enums.member.MemberStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @Entity
@@ -24,8 +26,9 @@ public class Member {
     @Column(name = "member_address", nullable = false)
     private String memberAddress;
 
-    @Column(name = "oneday_ticket_count")
-    private int oneDayTicketCount = 3;
+    @Min(0) @Max(3)
+    @Column(name = "one_day_ticket_count", nullable = false)
+    private int oneDayTicketCount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

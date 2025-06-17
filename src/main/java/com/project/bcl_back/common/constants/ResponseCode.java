@@ -8,7 +8,7 @@ public interface ResponseCode {
     String DATABASE_ERROR = "DBE"; // Database Error
 
     // 인증/인가 관련
-    String SIGN_IN_FAIL = "SF"; // Sign in failed
+    String LOGIN_FAIL = "SF"; // Sign in failed
     String AUTHENTICATION_FAIL = "AF"; // 인증 실패
     String AUTHORIZATION_FAIL = "AUF"; // 인가 실패
     String NO_PERMISSION = "NP"; // 권한 없음

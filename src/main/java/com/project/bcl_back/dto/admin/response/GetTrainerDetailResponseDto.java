@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Builder
-public class GetTrainerResponseDto {
+public class GetTrainerDetailResponseDto {
     private Long userId;
     private Long trainerId;
     private String username;

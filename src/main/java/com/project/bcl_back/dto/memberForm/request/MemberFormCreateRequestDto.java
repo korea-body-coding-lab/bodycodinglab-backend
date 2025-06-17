@@ -11,7 +11,7 @@ public class MemberFormCreateRequestDto {
     @NotBlank
     private Goal goal;
     @NotBlank
-    private Short bmi;
+    private Bmi bmi;
     @NotBlank
     private Improved_part improvedPart;
     @NotBlank
