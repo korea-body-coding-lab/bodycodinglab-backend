@@ -2,40 +2,41 @@ package com.project.bcl_back.dto.memberForm.request;
 
 import com.project.bcl_back.common.enums.memberFrom.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class MemberFormCreateRequestDto {
-    @NotBlank
+    @NotNull(message = "체형은 필수입니다.")
     private BodyForm bodyForm;
-    @NotBlank
+    @NotNull(message = "목표는 필수입니다.")
     private Goal goal;
-    @NotBlank
+    @NotNull(message = "BMI는 필수입니다.")
     private Bmi bmi;
-    @NotBlank
+    @NotNull(message = "향상시키고픈 부위는 필수입니다.")
     private Improved_part improvedPart;
-    @NotBlank
+    @NotNull(message = "따르는 식단은 필수입니다.")
     private PreferredDiet preferredDiet;
-    @NotBlank
+    @NotNull(message = "당 섭취 빈도는 필수입니다.")
     private SugarIntake sugarIntake;
-    @NotBlank
+    @NotNull(message = "수분 섭취 빈도는 필수입니다.")
     private WaterIntake waterIntake;
-    @NotBlank
+    @NotNull(message = "신장값은 필수입니다..")
     private Short height;
-    @NotBlank
+    @NotNull(message = "현제 체중값은 필수 입니다..")
     private Short weight;
-    @NotBlank
+    @NotNull(message = "목표 체중값은 필수입니다.")
     private Short weightGoal;
-    @NotBlank
+    @NotNull(message = "신체능력 점수값는 필수 입니다.")
     private Short physicalLevel;
-    @NotBlank
+    @NotNull(message = "운동시 겪었던 문제는 필수 입니다..")
     private ExercisingProblem exercisingProblem;
-    @NotBlank
+    @NotNull(message = "팔굽혀펴기 갯수는 필수입니다.")
     private PushupLevel pushupLevel;
-    @NotBlank
+    @NotNull(message = "턱걸이 갯수는 필수 입니다.")
     private PullupLevel pullupLevel;
-    @NotBlank
+    @NotNull(message = "운동 빈도는 필수입니다.")
     private ExerciseFrequency exerciseFrequency;
-    @NotBlank
+    @NotNull(message = "운동 투자 가능 시간 여부는 필수입니다.")
     private InvestableTime investableTime;
 }
