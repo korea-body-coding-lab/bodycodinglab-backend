@@ -15,7 +15,10 @@ public interface CouponService {
 
     ResponseDto<List<MemberCouponResponseDto>> findApplicationOrCompleteCoupon(Long trainerId, CouponStatus status);
 
-    ResponseDto<Void> putCoupon(Long couponId, PutCouponRequestDto dto);
+    ResponseDto<Void> memberPutCoupon(Long couponId);
+
+
+    ResponseDto<Void> trainerPutCoupon(Long couponId, PutCouponRequestDto dto);
 
 
 }
