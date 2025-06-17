@@ -25,7 +25,7 @@ public class AuthController {
 
     private static final String SIGN_UP = "/sign-up";
     private static final String LOGIN = "/login";
-    private static final String FIND_ID = "/finding-id";
+    private static final String FIND_USERNAME = "/finding-id";
     private static final String SEND_EMAIL = "/send-email";
     private static final String VERIFY_EMAIL = "/verify";
     private static final String RESET_PASSWORD = "/reset-password";
@@ -54,8 +54,8 @@ public class AuthController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, authService.login(dto));
     }
 
-    @GetMapping(FIND_ID)
-    public ResponseEntity<ResponseDto<FindUserIdResponseDto>> findUserId(@Valid @RequestBody FindUserIdRequestDto dto) {
+    @PostMapping(FIND_USERNAME)
+    public ResponseEntity<ResponseDto<FindUsernameResponseDto>> findUserId(@Valid @RequestBody FindUsernameRequestDto dto) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, authService.findUserId(dto));
     }
 
@@ -70,7 +70,7 @@ public class AuthController {
 //    }
 
     @PostMapping(RESET_PASSWORD)
-    public ResponseEntity<ResponseDto<UserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody GetUserInformationToResetPasswordRequestDto dto) {
+    public ResponseEntity<ResponseDto<GetUserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody GetUserInformationToResetPasswordRequestDto dto) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, authService.findUserToResetPassword(dto));
     }
 
