@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class GetMemberAllTicketsResponseDto {
     private Long id;
+    private Long trainerId;
     private String trainerName;
     private String jobAddress;
     private LocalDate issuedAt;
@@ -19,4 +20,5 @@ public class GetMemberAllTicketsResponseDto {
     private LocalDate canceledAt;
     private OneDayTicketStatus status;
     private int count;
+//    private String trainerProfileUrl;
 }
