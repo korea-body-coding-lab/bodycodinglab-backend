@@ -2,6 +2,7 @@ package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerInfoRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
@@ -11,12 +12,16 @@ import com.project.bcl_back.dto.trainer.response.TrainerInfoResponseDto;
 import com.project.bcl_back.entity.TrainerInfo;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.TrainerInfoRepository;
+import com.project.bcl_back.repository.UploadFileRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.TrainerInfoService;
+import com.project.bcl_back.service.UploadFileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +30,11 @@ import java.util.stream.Collectors;
 public class TrainerInfoServiceImpl implements TrainerInfoService {
     private final TrainerInfoRepository trainerInfoRepository;
     private final UserRepository userRepository;
+    private final UploadFileRepository uploadFileRepository;
+    private final UploadFileService uploadFileService;
 
     @Override
-    public ResponseDto<TrainerInfoResponseDto> postTrainerInfo(Long id, TrainerInfoRequestDto dto) {
+    public ResponseDto<TrainerInfoResponseDto> postTrainerInfo(Long id, TrainerInfoRequestDto dto, MultipartFile file) throws IOException {
         TrainerInfoResponseDto responseDto = null;
 
         User user = userRepository.findById(id)
@@ -55,6 +62,12 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
 
         TrainerInfo savedInfo = trainerInfoRepository.save(newInfo);
 
+        if (file != null && !file.isEmpty()) {
+            uploadFileService.saveFile(file, user.getTrainerInfo().getId(), TargetType.INFOS);
+            trainerInfoRepository.save(newInfo);
+        }
+
+
         responseDto = TrainerInfoResponseDto.builder()
                 .trainerId(savedInfo.getId())
                 .jobAddress(savedInfo.getJobAddress())
@@ -69,7 +82,7 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
     }
 
     @Override
-    public ResponseDto<TrainerInfoResponseDto> updateTrainerInfo(Long id, TrainerInfoRequestDto dto) {
+    public ResponseDto<TrainerInfoResponseDto> updateTrainerInfo(Long id, TrainerInfoRequestDto dto, MultipartFile file) throws IOException {
         TrainerInfoResponseDto responseDto = null;
 
         User user = userRepository.findById(id)
@@ -97,6 +110,11 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
         info.setEducationGraduate(dto.getEducationGraduate());
 
         TrainerInfo updateInfo = trainerInfoRepository.save(info);
+
+        if (file != null && !file.isEmpty()) {
+            uploadFileService.saveFile(file, user.getTrainerInfo().getId(), TargetType.INFOS);
+            trainerInfoRepository.save(info);
+        }
 
         responseDto = TrainerInfoResponseDto.builder()
                 .trainerId(updateInfo.getId())

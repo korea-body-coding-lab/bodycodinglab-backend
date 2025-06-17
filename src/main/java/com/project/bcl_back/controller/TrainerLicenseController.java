@@ -29,7 +29,8 @@ public class TrainerLicenseController {
 
     private static final String POST_TRAINER_LICENSE = "/trainers/me/information/license";
     private static final String PUT_TRAINER_LICENSE = "/trainers/me/information/license";
-    private static final String DELETE_TRAINER_LICENSE = "/trainers/me/information/license";
+    private static final String DELETE_TRAINER_LICENSE = "/trainers/me/information/license/{licenseId}";
+    private static final String DELETE_ALL_TRAINER_LICENSE = "/trainers/me/information/license/all";
     private static final String GER_RECENT_TRAINER_LICENSE = "/trainers/me/information/license/recent";
 
     // 트레이너 자격증 생성
@@ -58,7 +59,7 @@ public class TrainerLicenseController {
 
     // 트레이너 자격증 삭제(단건)
     @PreAuthorize("hasRole('TRAINER')")
-    @DeleteMapping(DELETE_TRAINER_LICENSE + "/{licenseId}")
+    @DeleteMapping(DELETE_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<Void>> deleteTrainerLicense(
             @AuthenticationPrincipal Long id,
             @PathVariable Long licenseId
@@ -69,7 +70,7 @@ public class TrainerLicenseController {
 
     // 트레이너 자격증 삭제(전체)
     @PreAuthorize("hasRole('TRAINER')")
-    @DeleteMapping(DELETE_TRAINER_LICENSE + "/all")
+    @DeleteMapping(DELETE_ALL_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<Void>> deleteAllTrainerLicense(@AuthenticationPrincipal Long id) {
         ResponseDto<Void> response = trainerLicenseService.deleteAllTrainerLicense(id);
         return ResponseEntity.noContent().build();
