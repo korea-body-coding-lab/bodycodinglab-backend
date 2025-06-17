@@ -10,6 +10,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 public class TrainerCareerRequestDto {
+    private Long id;
     private String companyName;
     private LocalDate companyJoin;
     private LocalDate companyQuit;

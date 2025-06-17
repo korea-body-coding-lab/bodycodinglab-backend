@@ -53,12 +53,12 @@ public class TrainerCareerController {
     // 트레이너 경력 삭제(단건)
     @PreAuthorize("hasRole('TRAINER')")
     @DeleteMapping(DELETE_TRAINER_CAREER)
-    public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(
+    public ResponseEntity<ResponseDto<TrainerCareerResponseDto>> deleteTrainerCareer(
             @AuthenticationPrincipal Long id,
             @PathVariable Long careerId
     ) {
-        ResponseDto<Void> response = trainerCareerService.deleteTrainerCareer(id, careerId);
-        return ResponseEntity.noContent().build();
+        ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.deleteTrainerCareer(id, careerId);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 트레이너 경력 삭제(전체)

@@ -56,6 +56,7 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
         TrainerCareer savedCareer = trainerCareerRepository.save(career);
 
         responseDto = TrainerCareerResponseDto.builder()
+                .id(savedCareer.getId())
                 .trainerId(savedCareer.getTrainerInfo().getId())
                 .companyName(savedCareer.getCompanyName())
                 .companyJoin(savedCareer.getCompanyJoin())
@@ -84,7 +85,7 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        TrainerCareer career = trainerCareerRepository.findById(trainer.getId())
+        TrainerCareer career = trainerCareerRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_CAREER));
 
         career.setCompanyName(dto.getCompanyName());
@@ -94,6 +95,7 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
         TrainerCareer updateCareer = trainerCareerRepository.save(career);
 
         responseDto = TrainerCareerResponseDto.builder()
+                .id(updateCareer.getId())
                 .trainerId(updateCareer.getTrainerInfo().getId())
                 .companyName(updateCareer.getCompanyName())
                 .companyJoin(updateCareer.getCompanyJoin())
@@ -104,7 +106,7 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
     }
 
     @Override
-    public ResponseDto<Void> deleteTrainerCareer(Long id, Long careerId) {
+    public ResponseDto<TrainerCareerResponseDto> deleteTrainerCareer(Long id, Long careerId) {
         User user = userRepository.findById(id)
                 .orElse(null);
 
