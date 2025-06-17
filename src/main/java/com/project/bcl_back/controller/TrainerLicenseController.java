@@ -60,12 +60,12 @@ public class TrainerLicenseController {
     // 트레이너 자격증 삭제(단건)
     @PreAuthorize("hasRole('TRAINER')")
     @DeleteMapping(DELETE_TRAINER_LICENSE)
-    public ResponseEntity<ResponseDto<Void>> deleteTrainerLicense(
+    public ResponseEntity<ResponseDto<TrainerLicenseResponseDto>> deleteTrainerLicense(
             @AuthenticationPrincipal Long id,
             @PathVariable Long licenseId
     ) {
-        ResponseDto<Void> response = trainerLicenseService.deleteTrainerLicense(id, licenseId);
-        return ResponseEntity.noContent().build();
+        ResponseDto<TrainerLicenseResponseDto> response = trainerLicenseService.deleteTrainerLicense(id, licenseId);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 트레이너 자격증 삭제(전체)

@@ -65,6 +65,7 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
         }
 
         responseDto = TrainerLicenseResponseDto.builder()
+                .id(saved.getId())
                 .trainerId(saved.getTrainerInfo().getId())
                 .licenseType(saved.getLicenseType())
                 .licenseName(saved.getLicenseName())
@@ -106,6 +107,7 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
         }
 
         responseDto = TrainerLicenseResponseDto.builder()
+                .id(updateLicense.getId())
                 .trainerId(updateLicense.getTrainerInfo().getId())
                 .licenseType(updateLicense.getLicenseType())
                 .licenseName(updateLicense.getLicenseName())
@@ -115,7 +117,7 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
     }
 
     @Override
-    public ResponseDto<Void> deleteTrainerLicense(Long id, Long licenseId) {
+    public ResponseDto<TrainerLicenseResponseDto> deleteTrainerLicense(Long id, Long licenseId) {
         User user = userRepository.findById(id)
                 .orElse(null);
 

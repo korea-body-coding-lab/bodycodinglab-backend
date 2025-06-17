@@ -17,7 +17,7 @@ public interface TrainerLicenseService {
 
     ResponseDto<TrainerLicenseResponseDto> updateTrainerLicense(Long id, @Valid TrainerLicenseRequestDto dto,MultipartFile file) throws IOException;
 
-    ResponseDto<Void> deleteTrainerLicense(Long id, Long licenseId);
+    ResponseDto<TrainerLicenseResponseDto> deleteTrainerLicense(Long id, Long licenseId);
 
     ResponseDto<Void> deleteAllTrainerLicense(Long id);
 
