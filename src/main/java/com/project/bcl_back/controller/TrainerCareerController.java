@@ -24,7 +24,8 @@ public class TrainerCareerController {
 
     private static final String POST_TRAINER_CAREER = "/trainers/me/information/career";
     private static final String PUT_TRAINER_CAREER = "/trainers/me/information/career";
-    private static final String DELETE_TRAINER_CAREER = "/trainers/me/information/career";
+    private static final String DELETE_TRAINER_CAREER = "/trainers/me/information/career/{careerId}";
+    private static final String DELETE_ALL_TRAINER_CAREER = "/trainers/me/information/career/all";
     private static final String GER_RECENT_TRAINER_CAREER = "/trainers/me/information/career/recent";
 
     // 트레이너 경력 생성
@@ -51,7 +52,7 @@ public class TrainerCareerController {
 
     // 트레이너 경력 삭제(단건)
     @PreAuthorize("hasRole('TRAINER')")
-    @DeleteMapping(DELETE_TRAINER_CAREER + "/{careerId}")
+    @DeleteMapping(DELETE_TRAINER_CAREER)
     public ResponseEntity<ResponseDto<Void>> deleteTrainerCareer(
             @AuthenticationPrincipal Long id,
             @PathVariable Long careerId
@@ -62,7 +63,7 @@ public class TrainerCareerController {
 
     // 트레이너 경력 삭제(전체)
     @PreAuthorize("hasRole('TRAINER')")
-    @DeleteMapping(DELETE_TRAINER_CAREER + "/all")
+    @DeleteMapping(DELETE_ALL_TRAINER_CAREER)
     public ResponseEntity<ResponseDto<Void>> deleteAllTrainerCareer(@AuthenticationPrincipal Long id) {
         ResponseDto<Void> response = trainerCareerService.deleteAllTrainerCareer(id);
         return ResponseEntity.noContent().build();
