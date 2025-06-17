@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class UserInformationToResetPasswordResponseDto {
+public class GetUserInformationToResetPasswordResponseDto {
     private Long userId;
+    private String email;
 }

@@ -186,8 +186,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<FindUserIdResponseDto> findUserId(FindUserIdRequestDto dto) {
-        FindUserIdResponseDto data = null;
+    public ResponseDto<FindUsernameResponseDto> findUserId(FindUsernameRequestDto dto) {
+        FindUsernameResponseDto data = null;
 
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElse(null);
@@ -200,14 +200,14 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.fail(ResponseCode.NOT_MATCH_INFORMATION, ResponseMessage.NOT_MATCH_INFORMATION);
         }
 
-        data = new FindUserIdResponseDto(user.getUsername());
+        data = new FindUsernameResponseDto(user.getUsername());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }
 
     @Override
-    public ResponseDto<UserInformationToResetPasswordResponseDto> findUserToResetPassword(GetUserInformationToResetPasswordRequestDto dto) {
-        UserInformationToResetPasswordResponseDto data = null;
+    public ResponseDto<GetUserInformationToResetPasswordResponseDto> findUserToResetPassword(GetUserInformationToResetPasswordRequestDto dto) {
+        GetUserInformationToResetPasswordResponseDto data = null;
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElse(null);
 
@@ -219,7 +219,10 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.fail(ResponseCode.NOT_MATCH_INFORMATION, ResponseMessage.NOT_MATCH_INFORMATION);
         }
 
-        data = new UserInformationToResetPasswordResponseDto(user.getId());
+        data = GetUserInformationToResetPasswordResponseDto.builder()
+                .userId(user.getId())
+                .email(dto.getEmail())
+                .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }

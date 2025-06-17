@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class FindUserIdResponseDto {
+public class FindUsernameResponseDto {
     private String username;
 }
