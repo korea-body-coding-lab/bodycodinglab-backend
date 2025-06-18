@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class MemberMatchWaitingListResponseDto {
+    private Long matchWaitingListId;
     private Long memberId;
     private String memberName;
     private int memberAge;
