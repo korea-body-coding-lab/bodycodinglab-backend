@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class NoteResponseDto {
+    private Long id;
     private String noteText;
     private Long noteWriter;
     private Long noteReceiver;
