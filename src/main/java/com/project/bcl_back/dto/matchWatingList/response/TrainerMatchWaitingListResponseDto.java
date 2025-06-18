@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class TrainerMatchWaitingListResponseDto {
+    private Long matchWaitingListId;
     private Long trainerId;
     private String trainerName;
     private String trainerJobAddress;

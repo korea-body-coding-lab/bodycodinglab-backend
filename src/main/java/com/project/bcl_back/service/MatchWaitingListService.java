@@ -10,11 +10,11 @@ import java.util.List;
 
 @Service
 public interface MatchWaitingListService {
-    ResponseDto<Void> createMatchWaitingList(Long trainerId, Long userId);
+    ResponseDto<Long> createMatchWaitingList(Long trainerId, Long userId);
 
-    ResponseDto<List<MemberMatchWaitingListResponseDto>> findMemberWaitingList(Long trainerId);
+    ResponseDto<List<MemberMatchWaitingListResponseDto>> findTrainerWaitingList(Long trainerId);
 
-    ResponseDto<TrainerMatchWaitingListResponseDto> findTrainerMatchWaitingList(Long memberId);
+    ResponseDto<TrainerMatchWaitingListResponseDto> findMemberMatchWaitingList(Long memberId);
 
     ResponseDto<Void> matchReject(Long matchWaitingListId, MatchWaitingListRequestDto dto);
 

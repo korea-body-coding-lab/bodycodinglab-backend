@@ -9,6 +9,7 @@ import com.project.bcl_back.service.MatchWaitingListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,43 +21,44 @@ public class MatchWaitListController {
 
     private final MatchWaitingListService matchWaitingListService;
 
-    private static final String TRAINER_MATCH_WAITING_LIST = "/api/v1/trainers/me/match-waiting-lists";
-    private static final String MEMBER_MATCH_WAITING_LIST = "/api/v1/members/me/match-waiting-lists";
+    private static final String TRAINER_MATCH_WAITING_LIST = "/api/v1/users/trainers/me/match-waiting-lists";
+    private static final String MEMBER_MATCH_WAITING_LIST = "/api/v1/users/members/me/match-waiting-lists";
 
-
-    @PostMapping("/api/v1/members/trainers/{trainerId}/match-waiting-lists")
-    public ResponseEntity<ResponseDto<Void>> createMatchWaitingList(
+    @PreAuthorize("hasRole('MEMBER')")
+    @PostMapping("/api/v1/users/members/trainers/{trainerId}/match-waiting-lists")
+    public ResponseEntity<ResponseDto<Long>> createMatchWaitingList(
             @PathVariable Long trainerId,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Long userId
     ){
-        Long userId = user.getId();
-        ResponseDto<Void> response = matchWaitingListService.createMatchWaitingList(trainerId, userId);
+        ResponseDto<Long> response = matchWaitingListService.createMatchWaitingList(trainerId, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("hasRole('TRAINER')")
     @GetMapping(TRAINER_MATCH_WAITING_LIST)
-    public ResponseEntity<ResponseDto<List<MemberMatchWaitingListResponseDto>>> findMemberMatchWaitingList(
-            @AuthenticationPrincipal User user
+    public ResponseEntity<ResponseDto<List<MemberMatchWaitingListResponseDto>>> findTrainerMatchWaitingList(
+            @AuthenticationPrincipal Long trainerId
     ){
-        Long trainerId = user.getId();
+
         ResponseDto<List<MemberMatchWaitingListResponseDto>> response
-                = matchWaitingListService.findMemberWaitingList(trainerId);
+                = matchWaitingListService.findTrainerWaitingList(trainerId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
+    @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_MATCH_WAITING_LIST)
-    public ResponseEntity<ResponseDto<TrainerMatchWaitingListResponseDto>> findTrainerMatchWaitingList(
-            @AuthenticationPrincipal User user
-    ){
-        Long memberId = user.getId();
-        ResponseDto<TrainerMatchWaitingListResponseDto> response = matchWaitingListService.findTrainerMatchWaitingList(memberId);
+    public ResponseEntity<ResponseDto<TrainerMatchWaitingListResponseDto>> findTMemberMatchWaitingList(
+            @AuthenticationPrincipal Long memberId
+    )
+    {
+        ResponseDto<TrainerMatchWaitingListResponseDto> response = matchWaitingListService.findMemberMatchWaitingList(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
+    @PreAuthorize("hasRole('TRAINER')")
     @PutMapping(TRAINER_MATCH_WAITING_LIST + "/{matchWaitingListId}/approves")
     public ResponseEntity<ResponseDto<Void>> matchApprove(
             @PathVariable Long matchWaitingListId,
@@ -68,7 +70,8 @@ public class MatchWaitListController {
     }
 
 
-    @DeleteMapping(TRAINER_MATCH_WAITING_LIST + "/{matchWaitingListId}/rejects")
+    @PreAuthorize("hasRole('TRAINER')")
+    @PutMapping(TRAINER_MATCH_WAITING_LIST + "/{matchWaitingListId}/rejects")
     public ResponseEntity<ResponseDto<Void>> matchReject(
             @PathVariable Long matchWaitingListId,
             @RequestBody MatchWaitingListRequestDto dto
@@ -80,12 +83,12 @@ public class MatchWaitListController {
     }
 
 
-    @DeleteMapping(MEMBER_MATCH_WAITING_LIST + "/cancel")
+    @PreAuthorize("hasRole('MEMBER')")
+    @PutMapping(MEMBER_MATCH_WAITING_LIST + "/cancels")
     public ResponseEntity<ResponseDto<Void>> matchCancel(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal Long memberId,
             @RequestBody MatchWaitingListRequestDto dto
     ){
-        Long memberId = user.getId();
 
         ResponseDto<Void> response =  matchWaitingListService.matchCancel(memberId, dto);
 
