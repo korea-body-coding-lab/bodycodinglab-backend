@@ -52,8 +52,13 @@ public class UserServiceImpl implements UserService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-        user.setName(dto.getName());
-//        user.getMember().setMemberAddress(dto.getMemberAddress());
+        if (dto.getName() != null && !dto.getName().isEmpty()) {
+            user.setName(dto.getName());
+        }
+
+        if (dto.getMemberAddress() != null && !dto.getMemberAddress().isEmpty()) {
+            user.getMember().setMemberAddress(dto.getMemberAddress());
+        }
         userRepository.save(user);
 
         if (profile != null && !profile.isEmpty()) {
@@ -133,7 +138,7 @@ public class UserServiceImpl implements UserService {
                 .gender(user.getGender())
                 .phone(user.getPhone())
                 .email(user.getEmail())
-//                .memberAddress(user.getMember().getMemberAddress())
+                .memberAddress(user.getMember().getMemberAddress())
                 .build();
     }
 
