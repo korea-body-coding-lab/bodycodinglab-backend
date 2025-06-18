@@ -49,7 +49,8 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
     public ResponseDto<List<TrainerLicenseResponseDto>> getTrainerLicense(Long trainerId) {
         List<TrainerLicenseResponseDto> responseDtos = null;
 
-        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainerId);
+        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainerId)
+                .orElseThrow();
 
         responseDtos = licenses.stream()
                 .map(license -> TrainerLicenseResponseDto.builder()
