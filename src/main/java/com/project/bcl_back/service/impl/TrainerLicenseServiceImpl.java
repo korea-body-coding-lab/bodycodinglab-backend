@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,7 +95,7 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        TrainerLicense license = trainerLicenseRepository.findById(trainer.getId())
+        TrainerLicense license = trainerLicenseRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_LICENSE));
 
         license.setLicenseType(dto.getLicenseType());
@@ -157,11 +159,45 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        List<TrainerLicense> license = trainerLicenseRepository.findByTrainerInfoId(trainer.getId());
+        List<TrainerLicense> license = trainerLicenseRepository.findByTrainerInfoId(trainer.getId())
+                .orElseThrow();
 
         trainerLicenseRepository.deleteAll(license);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+    }
+
+
+    @Override
+    public ResponseDto<List<TrainerLicenseResponseDto>> getLicenseList(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainer.getId()).orElseThrow();
+
+
+
+        List<TrainerLicenseResponseDto> responseDto = licenses.stream()
+                .map(license -> TrainerLicenseResponseDto.builder()
+                        .id(license.getId())
+                        .trainerId(license.getTrainerInfo().getId())
+                        .licenseType(license.getLicenseType())
+                        .licenseName(license.getLicenseName())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
     @Override
@@ -191,4 +227,5 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
                 .build();
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
+
 }
