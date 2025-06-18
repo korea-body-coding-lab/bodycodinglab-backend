@@ -155,4 +155,9 @@ public class UserServiceImpl implements UserService {
                 .status(user.getTrainerInfo().getTrainerStatus())
                 .build();
     }
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
 }

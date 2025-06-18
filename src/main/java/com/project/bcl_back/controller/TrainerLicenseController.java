@@ -2,14 +2,10 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
-import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
-import com.project.bcl_back.service.TrainerCareerService;
 import com.project.bcl_back.service.TrainerLicenseService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +27,15 @@ public class TrainerLicenseController {
     private static final String PUT_TRAINER_LICENSE = "/trainers/me/information/license";
     private static final String DELETE_TRAINER_LICENSE = "/trainers/me/information/license/{licenseId}";
     private static final String DELETE_ALL_TRAINER_LICENSE = "/trainers/me/information/license/all";
-    private static final String GER_RECENT_TRAINER_LICENSE = "/trainers/me/information/license/recent";
+    private static final String GET_RECENT_TRAINER_LICENSE = "/trainers/me/information/license/recent";
+    private static final String GET_TRAINER_LICENSE_LIST = "/trainers/me/information/license";
 
     // 트레이너 자격증 생성
     @PreAuthorize("hasRole('TRAINER')")
     @PostMapping(POST_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerLicenseResponseDto>> postTrainerLicense(
             @AuthenticationPrincipal Long id,
-            @Valid @RequestBody TrainerLicenseRequestDto dto,
+            @ModelAttribute TrainerLicenseRequestDto dto,
             @RequestPart(value = "file", required = false) MultipartFile file
     ) throws IOException {
         ResponseDto<TrainerLicenseResponseDto> response = trainerLicenseService.postTrainerLicense(id, dto, file);
@@ -50,7 +47,7 @@ public class TrainerLicenseController {
     @PutMapping(PUT_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerLicenseResponseDto>> updateTrainerLicense(
             @AuthenticationPrincipal Long id,
-            @Valid @RequestBody TrainerLicenseRequestDto dto,
+            @ModelAttribute TrainerLicenseRequestDto dto,
             @RequestPart(value = "file", required = false) MultipartFile file
     ) throws IOException {
         ResponseDto<TrainerLicenseResponseDto> response = trainerLicenseService.updateTrainerLicense(id, dto, file);
@@ -76,8 +73,18 @@ public class TrainerLicenseController {
         return ResponseEntity.noContent().build();
     }
 
+    // 트레이너 현재 자격증 목록 조회
+    @PreAuthorize("hasRole('TRAINER')")
+    @GetMapping(GET_TRAINER_LICENSE_LIST)
+    public ResponseEntity<ResponseDto<List<TrainerLicenseResponseDto>>> getLicenseList(
+            @AuthenticationPrincipal Long id
+    ){
+        ResponseDto<List<TrainerLicenseResponseDto>> response = trainerLicenseService.getLicenseList(id);
+        return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
+    }
+
     // 트레이너 최근 등록 자격증 조회
-    @GetMapping(GER_RECENT_TRAINER_LICENSE)
+    @GetMapping(GET_RECENT_TRAINER_LICENSE)
     public ResponseEntity<ResponseDto<TrainerRecentLicenseResponseDto>> getRecentLicense(
             @AuthenticationPrincipal Long id
     ){

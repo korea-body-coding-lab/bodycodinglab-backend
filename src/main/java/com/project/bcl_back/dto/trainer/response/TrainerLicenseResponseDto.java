@@ -15,5 +15,4 @@ public class TrainerLicenseResponseDto {
     private Long trainerId;
     private LicenseType licenseType;
     private String licenseName;
-    private MultipartFile file;
 }

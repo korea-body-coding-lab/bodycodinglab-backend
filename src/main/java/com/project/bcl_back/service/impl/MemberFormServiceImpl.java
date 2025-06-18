@@ -70,7 +70,7 @@ public class MemberFormServiceImpl implements MemberFormService {
 
         response = new MemberFormResponseDto(
                 memberForm.getMember().getMemberId(),
-                memberForm.getMember().getUser().getUsername(),
+                memberForm.getMember().getUser().getName(),
                 memberForm.getBodyForm(),
                 memberForm.getGoal(),
                 memberForm.getBmi(),

@@ -45,7 +45,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 DateUtils.parse(DateUtils.nowFormated())
         );
 
-        MatchWaitingList matchWaitingList = matchWaitingListRepository.findByMember_Id(userId);
+        MatchWaitingList matchWaitingList = matchWaitingListRepository.findByMember_Id(userId)
+                .orElseThrow(() -> new EntityNotFoundException((ResponseMessage.RESOURCE_NOT_FOUND + "매칭 대기 리스트 null")));
 
         Match match = new Match(
                 null,
