@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class NoteController {
     }
 
     // 2. 노트 전체 조회
-    @GetMapping
+    @GetMapping("/allnotes")
     public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getAllNotes(){
         return ResponseEntity.ok(noteService.getAllNotes());
     }
@@ -47,4 +48,14 @@ public class NoteController {
     ){
         return ResponseEntity.ok(noteService.deleteNote(id));
     }
+//    @GetMapping("/received")
+//    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal UserPrincipal user) {
+//        return ResponseEntity.ok(noteService.getReceivedNotes(user.getId()));
+//    }
+
+//    @GetMapping("/sent")
+//    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal UserPrincipal user) {
+//        return ResponseEntity.ok(noteService.getSentNotes(user.getId()));
+//    }
+
 }

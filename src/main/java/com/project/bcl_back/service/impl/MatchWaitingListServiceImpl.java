@@ -16,6 +16,7 @@ import com.project.bcl_back.service.MatchWaitingListService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -32,8 +33,10 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     private final MatchWaitingListRepository matchWaitingListRepository;
     private final UserRepository userRepository;
 
+
     @Override
-    public ResponseDto<Void> createMatchWaitingList(Long trainerId, Long userId) {
+    @Transactional
+    public ResponseDto<Long> createMatchWaitingList(Long trainerId, Long userId) {
         User trainer = userRepository.findById(trainerId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + trainerId));
 
@@ -48,16 +51,22 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
                 ApprovedStatus.NOT_APPROVED
         );
 
+        member.setMatchWaitingListAsMember(matchWaitingList);
+        trainer.addMatchWaitingListAsTrainers(matchWaitingList);
+
         matchWaitingListRepository.save(matchWaitingList);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, matchWaitingList.getId());
     }
 
     @Override
-    public ResponseDto<List<MemberMatchWaitingListResponseDto>> findMemberWaitingList(Long trainerId) {
+    public ResponseDto<List<MemberMatchWaitingListResponseDto>> findTrainerWaitingList(Long trainerId) {
         List<MemberMatchWaitingListResponseDto> response = null;
 
-        List<MatchWaitingList> lists = matchWaitingListRepository.findByTrainer_Id(trainerId);
+        List<MatchWaitingList> lists = matchWaitingListRepository.findByTrainer_Id(trainerId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + trainerId));
 
         response = lists.stream()
                 .map(list ->{
@@ -66,6 +75,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
                             int age = Period.between(birthdate, LocalDate.now()).getYears();
 
                             return new MemberMatchWaitingListResponseDto(
+                                    list.getId(),
                                     list.getMember().getId(),
                                     list.getMember().getName(),
                                     age,
@@ -78,12 +88,15 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
-    public ResponseDto<TrainerMatchWaitingListResponseDto> findTrainerMatchWaitingList(Long memberId) {
+    public ResponseDto<TrainerMatchWaitingListResponseDto> findMemberMatchWaitingList(Long memberId) {
         TrainerMatchWaitingListResponseDto response = null;
 
-        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId);
+        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
+
 
         response = new TrainerMatchWaitingListResponseDto(
+                list.getId(),
                 list.getTrainer().getId(),
                 list.getTrainer().getName(),
                 list.getTrainer().getTrainerInfo().getJobAddress(),
@@ -100,15 +113,35 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
 
         matchWaitingList.setApprovedStatus(dto.getApprovedStatus());
 
+        matchWaitingListRepository.save(matchWaitingList);
+
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
     @Override
+    @Transactional
     public ResponseDto<Void> matchReject(Long matchWaitingListId, MatchWaitingListRequestDto dto) {
         MatchWaitingList matchWaitingList  = matchWaitingListRepository.findById(matchWaitingListId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchWaitingListId));
 
         matchWaitingList.setApprovedStatus(dto.getApprovedStatus());
+
+
+
+        Long memberId = matchWaitingList.getMember().getId();
+        Long trainerId = matchWaitingList.getTrainer().getId();
+
+        User member = userRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
+
+        User trainer = userRepository.findById(trainerId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + trainerId));
+
+        member.setMatchWaitingListAsMember(null);
+        trainer.removeMatchWaitingListAsTrainers(matchWaitingList);
+
+        userRepository.save(member);
+        userRepository.save(trainer);
 
         matchWaitingListRepository.delete(matchWaitingList);
 
@@ -116,16 +149,23 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
+    @Transactional
     public ResponseDto<Void> matchCancel(Long memberId, MatchWaitingListRequestDto dto) {
 
-        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId);
+        User member = userRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException((ResponseMessage.RESOURCE_NOT_FOUND + memberId)));
 
+
+        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
+
+
+        member.setMatchWaitingListAsMember(null);
         list.setApprovedStatus(dto.getApprovedStatus());
 
         matchWaitingListRepository.delete(list);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
-
 
 }
