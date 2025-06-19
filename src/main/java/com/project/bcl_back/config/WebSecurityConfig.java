@@ -55,8 +55,8 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsFilter()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/personal-community-boards/**").permitAll()
-                        .requestMatchers("/api/v1/notes/**").permitAll()
+                        .requestMatchers("/api/v1/personal-community-boards/**").hasAnyRole("MEMBER","TRAINER","ADMIN")
+                        .requestMatchers("/api/v1/notes/**").hasAnyRole("MEMBER","TRAINER","ADMIN")
                         .requestMatchers("/api/v1/users/members/**").hasRole("MEMBER")
                         .requestMatchers("/api/v1/users/trainers/**").hasRole("TRAINER")
                         .requestMatchers("/api/v1/trainers/**").hasRole("TRAINER")

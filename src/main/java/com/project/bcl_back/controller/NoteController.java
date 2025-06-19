@@ -32,8 +32,10 @@ public class NoteController {
 
     // 2. 노트 전체 조회
     @GetMapping("/allnotes")
-    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getAllNotes(){
-        return ResponseEntity.ok(noteService.getAllNotes());
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> findByNoteWriterOrNoteReceiver(
+            @AuthenticationPrincipal Long userId
+    ){
+        return ResponseEntity.ok(noteService.findByNoteWriterOrNoteReceiver(userId));
     }
     // 3. 노트 단일 조회
     @GetMapping("/{id}")
