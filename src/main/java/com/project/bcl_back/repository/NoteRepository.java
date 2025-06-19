@@ -13,4 +13,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     // 보낸 쪽지
     List<Note> findByNoteWriter(Long writerId);
+
+    List<Note> findByNoteWriterOrNoteReceiver(Long noteWriter, Long noteReceiver);
+
 }
