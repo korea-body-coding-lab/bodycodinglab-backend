@@ -50,13 +50,13 @@ public class NoteController {
         return ResponseEntity.ok(noteService.deleteNote(id));
     }
     @GetMapping("/received")
-    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal UserPrincipal user) {
-        return ResponseEntity.ok(noteService.getReceivedNotes(user.getId()));
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(noteService.getReceivedNotes(userId));
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal UserPrincipal user) {
-        return ResponseEntity.ok(noteService.getSentNotes(user.getId()));
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(noteService.getSentNotes(userId));
     }
 
 }
