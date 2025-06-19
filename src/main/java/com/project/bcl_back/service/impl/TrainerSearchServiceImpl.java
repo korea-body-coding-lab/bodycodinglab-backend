@@ -32,7 +32,8 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
     public ResponseDto<List<TrainerCareerResponseDto>> getTrainerCareer(Long trainerId) {
         List<TrainerCareerResponseDto> responseDtos = null;
 
-        List<TrainerCareer> careers = trainerCareerRepository.findByTrainerInfoId(trainerId);
+        List<TrainerCareer> careers = trainerCareerRepository.findByTrainerInfoId(trainerId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_CAREER));
 
         responseDtos = careers.stream()
                 .map(career -> TrainerCareerResponseDto.builder()

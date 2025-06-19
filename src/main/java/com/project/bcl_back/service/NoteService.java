@@ -4,6 +4,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

@@ -24,21 +24,19 @@ import java.util.List;
 public class TrainerInfoController {
     private final TrainerInfoService trainerInfoService;
 
-    private static final String POST_TRAINER_INFO = "/trainers/me/information";
-    private static final String UPDATE_TRAINER_INFO = "/trainers/me/information/update";
-
+    private static final String UPDATE_TRAINER_INFO = "/trainers/me/information";
 
     // 트레이너 정보 생성
-    @PreAuthorize("hasRole('TRAINER')")
-    @PutMapping(POST_TRAINER_INFO)
-    public ResponseEntity<ResponseDto<TrainerInfoResponseDto>> postTrainerInfo(
-            @AuthenticationPrincipal Long id,
-            @Valid @RequestBody TrainerInfoRequestDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file
-    ) throws IOException {
-        ResponseDto<TrainerInfoResponseDto> response = trainerInfoService.postTrainerInfo(id, dto, file);
-        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
-    }
+//    @PreAuthorize("hasRole('TRAINER')")
+//    @PutMapping(POST_TRAINER_INFO)
+//    public ResponseEntity<ResponseDto<TrainerInfoResponseDto>> postTrainerInfo(
+//            @AuthenticationPrincipal Long id,
+//            @Valid @RequestBody TrainerInfoRequestDto dto,
+//            @RequestPart(value = "file", required = false) MultipartFile file
+//    ) throws IOException {
+//        ResponseDto<TrainerInfoResponseDto> response = trainerInfoService.postTrainerInfo(id, dto, file);
+//        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
+//    }
 
     // 트래이너 정보 수정
     @PreAuthorize("hasRole('TRAINER')")

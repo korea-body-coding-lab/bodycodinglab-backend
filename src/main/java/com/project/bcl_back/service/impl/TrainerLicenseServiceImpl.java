@@ -178,16 +178,15 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-
         TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
                 .orElse(null);
 
         if (trainer == null) {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
-        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainer.getId()).orElseThrow();
 
-
+        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainer.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_LICENSE));
 
         List<TrainerLicenseResponseDto> responseDto = licenses.stream()
                 .map(license -> TrainerLicenseResponseDto.builder()
