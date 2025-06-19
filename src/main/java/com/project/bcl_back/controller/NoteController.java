@@ -2,6 +2,7 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
+import com.project.bcl_back.dto.UserPrincipal;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
 import com.project.bcl_back.service.NoteService;
@@ -48,14 +49,14 @@ public class NoteController {
     ){
         return ResponseEntity.ok(noteService.deleteNote(id));
     }
-//    @GetMapping("/received")
-//    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal UserPrincipal user) {
-//        return ResponseEntity.ok(noteService.getReceivedNotes(user.getId()));
-//    }
+    @GetMapping("/received")
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal UserPrincipal user) {
+        return ResponseEntity.ok(noteService.getReceivedNotes(user.getId()));
+    }
 
-//    @GetMapping("/sent")
-//    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal UserPrincipal user) {
-//        return ResponseEntity.ok(noteService.getSentNotes(user.getId()));
-//    }
+    @GetMapping("/sent")
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal UserPrincipal user) {
+        return ResponseEntity.ok(noteService.getSentNotes(user.getId()));
+    }
 
 }
