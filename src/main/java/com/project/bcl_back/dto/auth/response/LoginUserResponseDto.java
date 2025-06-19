@@ -3,6 +3,7 @@ package com.project.bcl_back.dto.auth.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.core.io.Resource;
 
 @AllArgsConstructor
 @Getter
@@ -12,7 +13,7 @@ public class LoginUserResponseDto {
     private String role;
     private String username;
     private String name;
-    private byte[] profileImage;
+    private String profileImageUrl;
     private String token;
     private int exprTime;
 }

@@ -61,6 +61,7 @@ public interface ResponseMessage {
     // 파일 관련
     String FILE_UPLOAD_FAIL = "파일 업로드에 실패했습니다.";
     String FILE_NOT_FOUND = "파일을 찾을 수 없습니다.";
+    String FILE_NOT_ATTACHED = "첨부된 파일이 없습니다.";
 
     // 트레이너 관련
     String ALREADY_EQUAL_STATUS = "이미 설정된 상태입니다.";

@@ -12,6 +12,7 @@ import com.project.bcl_back.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ public class UserController {
     private static final String MEMBER_MYPAGE_URL = "/members/me";
     private static final String TRAINER_MYPAGE_URL = "/trainers/me";
     private static final String DELETE_USER_URL = "/account-cancellation/me";
+    private static final String UPDATE_PROFILE_URL = "/me/profile-image";
 
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_MYPAGE_URL)
@@ -40,10 +42,9 @@ public class UserController {
     @PutMapping(MEMBER_MYPAGE_URL + "/setting")
     public ResponseEntity<ResponseDto<GetMemberInfoResponseDto>> updateMemberInfo (
             @AuthenticationPrincipal Long id,
-            @Valid @RequestPart(value = "dto") UpdateMemberInfoRequestDto dto,
-            @RequestPart(value = "profile", required = false) MultipartFile profile
+            @Valid @RequestBody UpdateMemberInfoRequestDto dto
     ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.updateMemberInfo(id, dto, profile));
+        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.updateMemberInfo(id, dto));
     }
 
     @PreAuthorize("hasRole('TRAINER')")
@@ -56,15 +57,29 @@ public class UserController {
     @PutMapping(TRAINER_MYPAGE_URL + "/setting")
     public ResponseEntity<ResponseDto<GetTrainerInfoResponseDto>> updateTrainerInfo (
             @AuthenticationPrincipal Long id,
-            @Valid @RequestPart(value = "dto") UpdateTrainerInfoRequestDto dto,
-            @RequestPart(value = "profile", required = false) MultipartFile profile
+            @Valid @RequestBody UpdateTrainerInfoRequestDto dto
     ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.updateTrainerInfo(id, dto, profile));
+        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.updateTrainerInfo(id, dto));
     }
 
     @PreAuthorize("hasAnyRole('MEMBER', 'TRAINER')")
     @DeleteMapping(DELETE_USER_URL)
     public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser (@AuthenticationPrincipal Long id, @Valid @RequestBody DeleteUserRequestDto dto) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, userService.deleteUser(id, dto));
+    }
+
+    @PreAuthorize("hasAnyRole('MEMBER', 'TRAINER')")
+    @PutMapping(UPDATE_PROFILE_URL)
+    public ResponseEntity<ResponseDto<Void>> updateProfileImage (
+            @AuthenticationPrincipal Long id,
+            @RequestPart(value = "profile") MultipartFile profile
+    ) throws IOException {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.updateProfileImage(id, profile));
+    }
+
+    @PreAuthorize("hasAnyRole('MEMBER', 'TRAINER')")
+    @DeleteMapping(value = UPDATE_PROFILE_URL)
+    public ResponseEntity<ResponseDto<Void>> deleteProfileImage (@AuthenticationPrincipal Long id) throws IOException {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.deleteProfileImage(id));
     }
 }

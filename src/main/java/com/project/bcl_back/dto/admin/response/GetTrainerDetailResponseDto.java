@@ -21,8 +21,8 @@ public class GetTrainerDetailResponseDto {
     private String phone;
     private String email;
     private String jobAddress;
+    private String attachmentFileUrl;
     private String createdAt;
     private TrainerStatus status;
-//    private String attachmentFileUrl;
-//    private String profileImageUrl;
+    private String profileImageUrl;
 }

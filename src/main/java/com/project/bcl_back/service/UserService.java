@@ -15,9 +15,11 @@ import java.io.IOException;
 
 public interface UserService {
     ResponseDto<GetMemberInfoResponseDto> getMemberInfo(Long id);
-    ResponseDto<GetMemberInfoResponseDto> updateMemberInfo(Long id, @Valid UpdateMemberInfoRequestDto dto, MultipartFile profile) throws IOException;
+    ResponseDto<GetMemberInfoResponseDto> updateMemberInfo(Long id, @Valid UpdateMemberInfoRequestDto dto) throws IOException;
     ResponseDto<GetTrainerInfoResponseDto> getTrainerInfo(Long id);
-    ResponseDto<GetTrainerInfoResponseDto> updateTrainerInfo(Long id, @Valid UpdateTrainerInfoRequestDto dto, MultipartFile profile) throws IOException;
+    ResponseDto<GetTrainerInfoResponseDto> updateTrainerInfo(Long id, @Valid UpdateTrainerInfoRequestDto dto) throws IOException;
     ResponseDto<DeleteUserResponseDto> deleteUser(Long id, @Valid DeleteUserRequestDto dto);
+    ResponseDto<Void> updateProfileImage(Long id, MultipartFile profile) throws IOException;
+    ResponseDto<Void> deleteProfileImage(Long id) throws IOException;
     User findById(Long id);
 }

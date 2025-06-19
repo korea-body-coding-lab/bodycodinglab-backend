@@ -18,5 +18,4 @@ public class GetMemberInfoResponseDto {
     private String phone;
     private String email;
     private String memberAddress;
-//    private String profileImageUrl;
 }
