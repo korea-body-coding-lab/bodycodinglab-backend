@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +20,8 @@ public class TrainerDetailResponseDto {
     private String shortIntroduce;
     private String longIntroduce;
     private String educationName;
-    private Date educationEntrance;
-    private Date educationGraduate;
+    private String educationEntrance;
+    private String educationGraduate;
     private List<TrainerCareerResponseDto> careers;
     private List<TrainerLicenseResponseDto> licenses;
 }

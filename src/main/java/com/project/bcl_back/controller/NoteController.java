@@ -2,6 +2,7 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
+import com.project.bcl_back.dto.UserPrincipal;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
 import com.project.bcl_back.service.NoteService;
@@ -31,8 +32,10 @@ public class NoteController {
 
     // 2. 노트 전체 조회
     @GetMapping("/allnotes")
-    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getAllNotes(){
-        return ResponseEntity.ok(noteService.getAllNotes());
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> findByNoteWriterOrNoteReceiver(
+            @AuthenticationPrincipal Long userId
+    ){
+        return ResponseEntity.ok(noteService.findByNoteWriterOrNoteReceiver(userId));
     }
     // 3. 노트 단일 조회
     @GetMapping("/{id}")
@@ -48,14 +51,14 @@ public class NoteController {
     ){
         return ResponseEntity.ok(noteService.deleteNote(id));
     }
-//    @GetMapping("/received")
-//    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal UserPrincipal user) {
-//        return ResponseEntity.ok(noteService.getReceivedNotes(user.getId()));
-//    }
+    @GetMapping("/received")
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getReceivedNotes(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(noteService.getReceivedNotes(userId));
+    }
 
-//    @GetMapping("/sent")
-//    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal UserPrincipal user) {
-//        return ResponseEntity.ok(noteService.getSentNotes(user.getId()));
-//    }
+    @GetMapping("/sent")
+    public ResponseEntity<ResponseDto<List<NoteResponseDto>>> getSentNotes(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(noteService.getSentNotes(userId));
+    }
 
 }

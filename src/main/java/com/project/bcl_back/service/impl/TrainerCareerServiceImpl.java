@@ -5,10 +5,8 @@ import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
 import com.project.bcl_back.entity.TrainerCareer;
 import com.project.bcl_back.entity.TrainerInfo;
-import com.project.bcl_back.entity.TrainerLicense;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.TrainerCareerRepository;
 import com.project.bcl_back.repository.TrainerInfoRepository;
@@ -18,9 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -147,7 +143,8 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        List<TrainerCareer> career = trainerCareerRepository.findByTrainerInfoId(trainer.getId());
+        List<TrainerCareer> career = trainerCareerRepository.findByTrainerInfoId(trainer.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_CAREER));
 
         trainerCareerRepository.deleteAll(career);
 
@@ -155,8 +152,40 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
     }
 
     @Override
-    public ResponseDto<TrainerRecentCareerResponseDto> getRecentCareer(Long id) {
-        TrainerRecentCareerResponseDto responseDto = null;
+    public ResponseDto<List<TrainerCareerResponseDto>> getCareerList(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        List<TrainerCareer> careers = trainerCareerRepository.findByTrainerInfoId(trainer.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_CAREER));
+
+        List<TrainerCareerResponseDto> responseDto = careers.stream()
+                .map(career-> TrainerCareerResponseDto.builder()
+                        .id(career.getId())
+                        .trainerId(career.getTrainerInfo().getId())
+                        .companyName(career.getCompanyName())
+                        .companyJoin(career.getCompanyJoin())
+                        .companyQuit(career.getCompanyQuit())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    public ResponseDto<TrainerCareerResponseDto> getRecentCareer(Long id) {
+        TrainerCareerResponseDto responseDto = null;
 
         User user = userRepository.findById(id)
                 .orElse(null);
@@ -175,7 +204,9 @@ public class TrainerCareerServiceImpl implements TrainerCareerService {
 
         TrainerCareer career = trainerCareerRepository.findTopByTrainerInfoIdOrderByCompanyQuitDesc(trainer.getId());
 
-        responseDto = TrainerRecentCareerResponseDto.builder()
+        responseDto = TrainerCareerResponseDto.builder()
+                .id(career.getId())
+                .trainerId(career.getTrainerInfo().getId())
                 .companyName(career.getCompanyName())
                 .companyJoin(career.getCompanyJoin())
                 .companyQuit(career.getCompanyQuit())

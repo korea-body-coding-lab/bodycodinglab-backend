@@ -6,8 +6,6 @@ import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
-import com.project.bcl_back.entity.TrainerCareer;
 import com.project.bcl_back.entity.TrainerInfo;
 import com.project.bcl_back.entity.TrainerLicense;
 import com.project.bcl_back.entity.User;
@@ -23,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -178,16 +175,15 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-
         TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
                 .orElse(null);
 
         if (trainer == null) {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
-        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainer.getId()).orElseThrow();
 
-
+        List<TrainerLicense> licenses = trainerLicenseRepository.findByTrainerInfoId(trainer.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_LICENSE));
 
         List<TrainerLicenseResponseDto> responseDto = licenses.stream()
                 .map(license -> TrainerLicenseResponseDto.builder()
@@ -201,8 +197,8 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
     }
 
     @Override
-    public ResponseDto<TrainerRecentLicenseResponseDto> getRecentLicense(Long id) {
-        TrainerRecentLicenseResponseDto responseDto = null;
+    public ResponseDto<TrainerLicenseResponseDto> getRecentLicense(Long id) {
+        TrainerLicenseResponseDto responseDto = null;
 
         User user = userRepository.findById(id)
                 .orElse(null);
@@ -221,7 +217,9 @@ public class TrainerLicenseServiceImpl implements TrainerLicenseService {
 
         TrainerLicense license = trainerLicenseRepository.findTopByTrainerInfoIdOrderByIdDesc(trainer.getId());
 
-        responseDto = TrainerRecentLicenseResponseDto.builder()
+        responseDto = TrainerLicenseResponseDto.builder()
+                .id(license.getId())
+                .trainerId(license.getTrainerInfo().getId())
                 .licenseType(license.getLicenseType())
                 .licenseName(license.getLicenseName())
                 .build();

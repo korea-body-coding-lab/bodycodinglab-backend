@@ -4,7 +4,6 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
 import com.project.bcl_back.service.TrainerCareerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,8 @@ public class TrainerCareerController {
     private static final String PUT_TRAINER_CAREER = "/trainers/me/information/career";
     private static final String DELETE_TRAINER_CAREER = "/trainers/me/information/career/{careerId}";
     private static final String DELETE_ALL_TRAINER_CAREER = "/trainers/me/information/career/all";
-    private static final String GER_RECENT_TRAINER_CAREER = "/trainers/me/information/career/recent";
+    private static final String GET_TRAINER_CAREER_LIST = "/trainers/me/information/career";
+    private static final String GET_RECENT_TRAINER_CAREER = "/trainers/me/information/career/recent";
 
     // 트레이너 경력 생성
     @PreAuthorize("hasRole('TRAINER')")
@@ -69,13 +69,23 @@ public class TrainerCareerController {
         return ResponseEntity.noContent().build();
     }
 
-    // 트레이너 최근 경력 조회
+    // 트레이너 현재 경력 목록 조회
     @PreAuthorize("hasRole('TRAINER')")
-    @GetMapping(GER_RECENT_TRAINER_CAREER)
-    public ResponseEntity<ResponseDto<TrainerRecentCareerResponseDto>> getRecentCareer(
+    @GetMapping(GET_TRAINER_CAREER_LIST)
+    public ResponseEntity<ResponseDto<List<TrainerCareerResponseDto>>> getCareerList(
             @AuthenticationPrincipal Long id
     ){
-        ResponseDto<TrainerRecentCareerResponseDto> response = trainerCareerService.getRecentCareer(id);
+        ResponseDto<List<TrainerCareerResponseDto>> response = trainerCareerService.getCareerList(id);
+        return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
+    }
+
+    // 트레이너 최근 경력 조회
+    @PreAuthorize("hasRole('TRAINER')")
+    @GetMapping(GET_RECENT_TRAINER_CAREER)
+    public ResponseEntity<ResponseDto<TrainerCareerResponseDto>> getRecentCareer(
+            @AuthenticationPrincipal Long id
+    ){
+        ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.getRecentCareer(id);
         return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 

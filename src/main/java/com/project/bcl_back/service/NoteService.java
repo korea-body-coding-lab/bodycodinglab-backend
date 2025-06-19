@@ -4,6 +4,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,7 +13,6 @@ public interface NoteService {
     ResponseDto<NoteResponseDto> createNote(@Valid NoteRequestDto dto);
 
     // 쪽지 전체 조회
-    ResponseDto<List<NoteResponseDto>> getAllNotes();
 
     // 쪽지 단건 조회
     ResponseDto<NoteResponseDto> getNoteById(Long id);
@@ -21,6 +21,8 @@ public interface NoteService {
     ResponseDto<?> deleteNote(Long id);
 
     // 쪽지 분류
-//    ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId);
-//    ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId);
+    ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId);
+    ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId);
+
+    ResponseDto<List<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId);
 }

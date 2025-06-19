@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Date;
 import java.util.List;
 
@@ -12,11 +13,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class TrainerInfoResponseDto {
-    private Long trainerId;
+    private Long id;
     private String jobAddress;
     private String shortIntroduce;
     private String longIntroduce;
     private String educationName;
-    private Date educationEntrance;
-    private Date educationGraduate;
+    private String educationEntrance;
+    private String educationGraduate;
 }
