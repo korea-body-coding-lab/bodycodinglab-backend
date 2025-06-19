@@ -13,7 +13,6 @@ public interface NoteService {
     ResponseDto<NoteResponseDto> createNote(@Valid NoteRequestDto dto);
 
     // 쪽지 전체 조회
-    ResponseDto<List<NoteResponseDto>> getAllNotes();
 
     // 쪽지 단건 조회
     ResponseDto<NoteResponseDto> getNoteById(Long id);
@@ -24,4 +23,6 @@ public interface NoteService {
     // 쪽지 분류
     ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId);
     ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId);
+
+    ResponseDto<List<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId);
 }

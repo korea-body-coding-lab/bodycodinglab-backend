@@ -41,8 +41,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public ResponseDto<List<NoteResponseDto>> getAllNotes() {
-        List<NoteResponseDto> list = noteRepo.findAll().stream()
+    public ResponseDto<List<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId) {
+        userService.findById(userId);
+        List<NoteResponseDto> list = noteRepo.findByNoteWriterOrNoteReceiver(userId, userId).stream()
                 .map(this::toDto)
                 .toList();
         return ResponseDto.success(ResponseMessage.SUCCESS, "", list);
