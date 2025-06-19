@@ -14,5 +14,5 @@ public class SubscriptionResponseDto {
     private String memberName;
     private int price;
     private LocalDateTime paymentDate;
-    private MemberStatus staus;
+    private MemberStatus status;
 }
