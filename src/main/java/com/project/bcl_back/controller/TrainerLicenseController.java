@@ -4,7 +4,6 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import com.project.bcl_back.service.TrainerLicenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -85,10 +84,10 @@ public class TrainerLicenseController {
 
     // 트레이너 최근 등록 자격증 조회
     @GetMapping(GET_RECENT_TRAINER_LICENSE)
-    public ResponseEntity<ResponseDto<TrainerRecentLicenseResponseDto>> getRecentLicense(
+    public ResponseEntity<ResponseDto<TrainerLicenseResponseDto>> getRecentLicense(
             @AuthenticationPrincipal Long id
     ){
-        ResponseDto<TrainerRecentLicenseResponseDto> response = trainerLicenseService.getRecentLicense(id);
+        ResponseDto<TrainerLicenseResponseDto> response = trainerLicenseService.getRecentLicense(id);
         return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }

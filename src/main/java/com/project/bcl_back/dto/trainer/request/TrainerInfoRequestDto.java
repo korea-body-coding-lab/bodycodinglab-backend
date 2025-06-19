@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Date;
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -18,7 +20,7 @@ public class TrainerInfoRequestDto {
     private String jobAddress;
     private String shortIntroduce;
     private String longIntroduce;
-    private MultipartFile file;
+    private List<MultipartFile> file;
     private String educationName;
     private String educationEntrance;
     private String educationGraduate;

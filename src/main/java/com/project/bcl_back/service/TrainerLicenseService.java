@@ -3,7 +3,6 @@ package com.project.bcl_back.service;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerLicenseRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentLicenseResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +20,7 @@ public interface TrainerLicenseService {
 
     ResponseDto<Void> deleteAllTrainerLicense(Long id);
 
-    ResponseDto<TrainerRecentLicenseResponseDto> getRecentLicense(Long id);
+    ResponseDto<TrainerLicenseResponseDto> getRecentLicense(Long id);
 
     ResponseDto<List<TrainerLicenseResponseDto>> getLicenseList(Long id);
 }
