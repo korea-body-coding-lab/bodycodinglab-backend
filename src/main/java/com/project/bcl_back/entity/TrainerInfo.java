@@ -1,10 +1,14 @@
 package com.project.bcl_back.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
+import com.project.bcl_back.common.util.DateUtils;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,10 +49,10 @@ public class TrainerInfo {
     private String educationName;
 
     @Column(name = "education_entrance")
-    private Date educationEntrance;
+    private String educationEntrance;
 
     @Column(name = "education_graduate")
-    private Date educationGraduate;
+    private String educationGraduate;
 
     // user 테이블에 넣어야 할 것
 //    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -59,4 +63,9 @@ public class TrainerInfo {
 
     @OneToMany(mappedBy = "trainerInfo", cascade = CascadeType.ALL)
     private List<TrainerLicense> trainerLicenses;
+
+    public TrainerInfo(LocalDateTime entrance, LocalDateTime graduate) {
+        this.educationEntrance = DateUtils.yearDateFormat(entrance);
+        this.educationGraduate = DateUtils.yearDateFormat(graduate);
+    }
 }

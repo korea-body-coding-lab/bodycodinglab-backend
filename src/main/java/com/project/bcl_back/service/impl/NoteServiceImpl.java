@@ -1,3 +1,5 @@
+package com.project.bcl_back.service.impl;
+
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;

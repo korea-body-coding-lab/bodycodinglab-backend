@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface TrainerCareerRepository extends JpaRepository<TrainerCareer, Long> {
-    List<TrainerCareer> findByTrainerInfoId(Long trainerId);
+    Optional<List<TrainerCareer>> findByTrainerInfoId(Long trainerId);
 
     TrainerCareer findTopByTrainerInfoIdOrderByCompanyQuitDesc(Long id);
 }

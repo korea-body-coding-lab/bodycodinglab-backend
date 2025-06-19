@@ -13,7 +13,5 @@ import java.util.List;
 
 @Service
 public interface TrainerInfoService {
-    ResponseDto<TrainerInfoResponseDto> postTrainerInfo(Long id, @Valid TrainerInfoRequestDto dto, MultipartFile file) throws IOException;
-
     ResponseDto<TrainerInfoResponseDto> updateTrainerInfo(Long id, @Valid TrainerInfoRequestDto dto, MultipartFile file) throws IOException;
 }

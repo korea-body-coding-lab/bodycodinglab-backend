@@ -13,7 +13,4 @@ public interface TrainerLicenseRepository extends JpaRepository<TrainerLicense, 
     Optional<List<TrainerLicense>> findByTrainerInfoId(Long trainerId);
 
     TrainerLicense findTopByTrainerInfoIdOrderByIdDesc(Long id);
-
-//    List<TrainerLicense> findAllByTrainerInfoId(Long trainerInfoId);
-
 }
