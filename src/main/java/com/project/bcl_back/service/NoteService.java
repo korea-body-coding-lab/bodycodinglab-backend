@@ -21,6 +21,6 @@ public interface NoteService {
     ResponseDto<?> deleteNote(Long id);
 
     // 쪽지 분류
-//    ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId);
-//    ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId);
+    ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId);
+    ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId);
 }

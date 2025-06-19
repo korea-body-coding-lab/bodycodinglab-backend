@@ -1,3 +1,5 @@
+package com.project.bcl_back.service.impl;
+
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
@@ -59,25 +61,25 @@ public class NoteServiceImpl implements NoteService {
         return ResponseDto.success(ResponseMessage.SUCCESS, null);
     }
 
-//    @Override
-//    public ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId) {
-//        userService.findById(userId); // 존재 확인
-//        return ResponseDto.success(ResponseMessage.SUCCESS, "",
-//                noteRepo.findByNoteReceiver(userId).stream()
-//                        .map(this::toDto)
-//                        .toList()
-//        );
-//    }
-//
-//    @Override
-//    public ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId) {
-//        userService.findById(userId);
-//        return ResponseDto.success(ResponseMessage.SUCCESS, "",
-//                noteRepo.findByNoteWriter(userId).stream()
-//                        .map(this::toDto)
-//                        .toList()
-//        );
-//    }
+    @Override
+    public ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId) {
+        userService.findById(userId); // 존재 확인
+        return ResponseDto.success(ResponseMessage.SUCCESS, "",
+                noteRepo.findByNoteReceiver(userId).stream()
+                        .map(this::toDto)
+                        .toList()
+        );
+    }
+
+    @Override
+    public ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId) {
+        userService.findById(userId);
+        return ResponseDto.success(ResponseMessage.SUCCESS, "",
+                noteRepo.findByNoteWriter(userId).stream()
+                        .map(this::toDto)
+                        .toList()
+        );
+    }
 
     private NoteResponseDto toDto(Note note){
         return NoteResponseDto.builder()
