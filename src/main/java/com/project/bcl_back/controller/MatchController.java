@@ -22,15 +22,14 @@ import java.util.List;
 public class MatchController {
     private final MatchService matchService;
 
-    private static final String MEMBER_MATCH = "api/v1/members/me/match-success-lists";
-    private static final String TRAINER_MATCH = "api/v1/trainers/me/match-success-lists";
+    private static final String MEMBER_MATCH = "api/v1/users/members/me/match-success-lists";
+    private static final String TRAINER_MATCH = "api/v1/users/trainers/me/match-success-lists";
 
 
     @GetMapping(MEMBER_MATCH)
     public ResponseEntity<ResponseDto<TrainerMatchResponseDto>> findMatchTrainer(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Long userId
     ){
-        Long userId = user.getId();
         ResponseDto<TrainerMatchResponseDto> response = matchService.findMatchTrainer(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

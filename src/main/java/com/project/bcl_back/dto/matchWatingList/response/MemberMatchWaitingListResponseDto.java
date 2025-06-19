@@ -1,5 +1,6 @@
 package com.project.bcl_back.dto.matchWatingList.response;
 
+import com.project.bcl_back.common.enums.matchWaitingList.ApprovedStatus;
 import com.project.bcl_back.common.enums.user.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,4 +18,5 @@ public class MemberMatchWaitingListResponseDto {
     private int memberAge;
     private Gender memberGender;
     private LocalDateTime appliedAt;
+    private ApprovedStatus approvedStatus;
 }

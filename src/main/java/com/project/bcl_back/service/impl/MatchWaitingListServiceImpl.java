@@ -80,8 +80,10 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
                                     list.getMember().getName(),
                                     age,
                                     list.getMember().getGender(),
-                                    parse(nowFormated()));
-                        }
+                                    list.getAppliedAt(),
+                                    list.getApprovedStatus()
+                            );
+                }
                 ).collect(Collectors.toList());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
@@ -100,7 +102,8 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
                 list.getTrainer().getId(),
                 list.getTrainer().getName(),
                 list.getTrainer().getTrainerInfo().getJobAddress(),
-                list.getAppliedAt()
+                list.getAppliedAt(),
+                list.getApprovedStatus()
         );
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);

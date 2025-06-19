@@ -17,22 +17,19 @@ import org.springframework.web.bind.annotation.*;
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
-    @PostMapping("/api/v1/members/me/match-waiting-lists/{matchWaitingListId}/subscriptions")
-    public ResponseEntity<ResponseDto<Void>> createSubscriptionLog(
-            @AuthenticationPrincipal User user,
-            @PathVariable Long matchWaitingListId,
-            @Valid @RequestBody CreateSubscriptionRequestDto dto
+    @PostMapping("/api/v1/users/members/me/match-waiting-lists/{matchWaitingListId}/subscriptions")
+    public ResponseEntity<ResponseDto<Long>> createSubscriptionLog(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long matchWaitingListId
     ){
-        Long userId = user.getId();
-        ResponseDto<Void> response = subscriptionService.createSubscriptionLog(userId, matchWaitingListId,dto);
+        ResponseDto<Long> response = subscriptionService.createSubscriptionLog(userId, matchWaitingListId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/api/v1/members/me/subscriptions")
+    @GetMapping("/api/v1/users/members/me/subscriptions")
     public ResponseEntity<ResponseDto<SubscriptionResponseDto>> findSubscription(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Long userId
     ){
-        Long userId = user.getId();
         ResponseDto<SubscriptionResponseDto> response = subscriptionService.findSubscription(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

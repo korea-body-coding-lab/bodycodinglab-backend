@@ -6,6 +6,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public class CreateSubscriptionRequestDto {
-    @NotBlank
-    private int price;
+//    @NotBlank
+//    private int price;
 }
