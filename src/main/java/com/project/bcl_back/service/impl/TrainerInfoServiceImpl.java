@@ -35,7 +35,7 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
     private final UploadFileService uploadFileService;
 
     @Override
-    public ResponseDto<TrainerInfoResponseDto> updateTrainerInfo(Long id, TrainerInfoRequestDto dto, MultipartFile file) throws IOException {
+    public ResponseDto<TrainerInfoResponseDto> updateTrainerInfo(Long id, TrainerInfoRequestDto dto, List<MultipartFile> files) throws IOException {
         TrainerInfoResponseDto responseDto = null;
 
         User user = userRepository.findById(id)
@@ -68,9 +68,12 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
 
         TrainerInfo updateInfo = trainerInfoRepository.save(info);
 
-        if (file != null && !file.isEmpty()) {
-            uploadFileService.saveFile(file, user.getTrainerInfo().getId(), TargetType.INFOS);
-            trainerInfoRepository.save(info);
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    uploadFileService.saveFile(file, user.getTrainerInfo().getId(), TargetType.INFOS);
+                }
+            }
         }
 
         responseDto = TrainerInfoResponseDto.builder()

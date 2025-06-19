@@ -4,7 +4,6 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.trainer.request.TrainerCareerRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
-import com.project.bcl_back.dto.trainer.response.TrainerRecentCareerResponseDto;
 import com.project.bcl_back.service.TrainerCareerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -83,10 +82,10 @@ public class TrainerCareerController {
     // 트레이너 최근 경력 조회
     @PreAuthorize("hasRole('TRAINER')")
     @GetMapping(GET_RECENT_TRAINER_CAREER)
-    public ResponseEntity<ResponseDto<TrainerRecentCareerResponseDto>> getRecentCareer(
+    public ResponseEntity<ResponseDto<TrainerCareerResponseDto>> getRecentCareer(
             @AuthenticationPrincipal Long id
     ){
-        ResponseDto<TrainerRecentCareerResponseDto> response = trainerCareerService.getRecentCareer(id);
+        ResponseDto<TrainerCareerResponseDto> response = trainerCareerService.getRecentCareer(id);
         return  ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
