@@ -46,4 +46,10 @@ public class UploadFile {
 //        board.getImages().add(this);
 //    }
     // 파일 업로드 시스템이 필요한 부분마다 연결
+    public void updateFile(String originalName, String fileName, String fileType, Long fileSize) {
+        this.originalName = originalName;
+        this.fileName = fileName;
+        this.fileType = fileType;
+        this.fileSize = fileSize;
+    }
 }
