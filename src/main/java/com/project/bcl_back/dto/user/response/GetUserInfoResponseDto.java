@@ -1,19 +1,16 @@
-package com.project.bcl_back.dto.auth.response;
+package com.project.bcl_back.dto.user.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.core.io.Resource;
 
 @AllArgsConstructor
 @Getter
 @Builder
-public class LoginUserResponseDto {
+public class GetUserInfoResponseDto {
     private Long id;
     private String role;
     private String username;
     private String name;
     private String profileImageUrl;
-    private String token;
-    private int exprTime;
 }

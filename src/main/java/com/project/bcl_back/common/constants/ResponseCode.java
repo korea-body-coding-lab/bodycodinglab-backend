@@ -51,6 +51,7 @@ public interface ResponseCode {
     // 파일 관련
     String FILE_UPLOAD_FAIL = "FUF";
     String FILE_NOT_FOUND = "FNF";
+    String FILE_NOT_ATTACHED = "FNA";
 
     // 서버 오류
     String INTERNAL_SERVER_ERROR = "ISE";

@@ -6,6 +6,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchListResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchResponseDto;
 import com.project.bcl_back.dto.match.response.TrainerMatchResponseDto;
+import com.project.bcl_back.dto.memberFormDto.MemberFormDto;
 import com.project.bcl_back.entity.Match;
 import com.project.bcl_back.entity.Subscription;
 import com.project.bcl_back.entity.TrainerLicense;
@@ -16,6 +17,7 @@ import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.MatchService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,15 +35,18 @@ public class MatchServiceImpl implements MatchService {
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
-    public ResponseDto<TrainerMatchResponseDto> findMatchTrainer(Long userId) {
+    public ResponseDto<TrainerMatchResponseDto> findMemberMatch(Long userId) {
         TrainerMatchResponseDto response = null;
 
         User member = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + userId));
 
         response = new TrainerMatchResponseDto(
+                member.getMemberMatch().getId(),
                 member.getMemberMatch().getTrainer().getTrainerInfo().getId(),
-                member.getMemberMatch().getTrainer().getUsername(),
+                member.getMemberMatch().getTrainer().getName(),
+                member.getMemberMatch().getMatchedAt(),
+                member.getMemberMatch().getTrainer().getTrainerInfo().getJobAddress(),
                 member.getMemberMatch().getTrainer().getTrainerInfo().getTrainerLicenses().stream().map(
                         TrainerLicense::getLicenseName
                 ).collect(Collectors.toList())
@@ -51,7 +56,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public ResponseDto<List<MemberMatchListResponseDto>> findMatchMemberList(Long userId) {
+    public ResponseDto<List<MemberMatchListResponseDto>> findMatchTrainerList(Long userId) {
         List<MemberMatchListResponseDto> matchList = null;
 
         User trainer = userRepository.findById(userId)
@@ -64,6 +69,8 @@ public class MatchServiceImpl implements MatchService {
                     int age = Period.between(birthdate, LocalDate.now()).getYears();
 
                     return new MemberMatchListResponseDto(
+                            match.getId(),
+                            match.getMember().getId(),
                             match.getMember().getName(),
                             age,
                             match.getMember().getGender()
@@ -76,13 +83,32 @@ public class MatchServiceImpl implements MatchService {
 
 
     @Override
-    public ResponseDto<MemberMatchResponseDto> findMatchMember(Long matchId) {
+    public ResponseDto<MemberMatchResponseDto> findMatchTrainer(Long matchId) {
         MemberMatchResponseDto response = null;
         Match match  = matchRepository.findById(matchId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchId));
 
         LocalDate birthdate = match.getMember().getBirthdate();
         int age = Period.between(birthdate, LocalDate.now()).getYears();
+
+        MemberFormDto memberFormDto =  new MemberFormDto(
+                match.getMember().getMember().getMemberForm().getBodyForm(),
+                match.getMember().getMember().getMemberForm().getGoal(),
+                match.getMember().getMember().getMemberForm().getBmi(),
+                match.getMember().getMember().getMemberForm().getImprovedPart(),
+                match.getMember().getMember().getMemberForm().getPreferredDiet(),
+                match.getMember().getMember().getMemberForm().getSugarIntake(),
+                match.getMember().getMember().getMemberForm().getWaterIntake(),
+                match.getMember().getMember().getMemberForm().getHeight(),
+                match.getMember().getMember().getMemberForm().getWeight(),
+                match.getMember().getMember().getMemberForm().getWeightGoal(),
+                match.getMember().getMember().getMemberForm().getPhysicalLevel(),
+                match.getMember().getMember().getMemberForm().getExercisingProblem(),
+                match.getMember().getMember().getMemberForm().getPushupLevel(),
+                match.getMember().getMember().getMemberForm().getPullupLevel(),
+                match.getMember().getMember().getMemberForm().getExerciseFrequency(),
+                match.getMember().getMember().getMemberForm().getInvestableTime()
+        );
 
         if(match.getMember().getMember().getMemberForm() != null){
             response = new MemberMatchResponseDto(
@@ -91,7 +117,7 @@ public class MatchServiceImpl implements MatchService {
                     match.getMember().getGender(),
                     match.getMember().getPhone(),
                     match.getMember().getMember().getMemberAddress(),
-                    match.getMember().getMember().getMemberForm()
+                    memberFormDto
             );
         } else {
             response  = new MemberMatchResponseDto(
@@ -112,11 +138,17 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchId));
 
 
+        User member  = userRepository.findById(match.getMember().getId())
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+
+        member.setMemberMatch(null);
+        matchRepository.delete(match);
+
         Subscription subscription = match.getMember().getMember().getSubscription();
 
+        member.getMember().setSubscription(null);
         subscriptionRepository.delete(subscription);
 
-        matchRepository.delete(match);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

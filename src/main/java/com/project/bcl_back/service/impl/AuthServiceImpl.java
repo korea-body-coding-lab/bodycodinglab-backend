@@ -1,5 +1,6 @@
 package com.project.bcl_back.service.impl;
 
+import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
@@ -75,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
 
         Member member = Member.builder()
                 .user(user)
-                .memberAddress(dto.getAddress())
+                .memberAddress(dto.getMemberAddress())
                 .status(MemberStatus.NOT_PAYMENT)
                 .build();
         memberRepository.save(member);
@@ -170,6 +171,12 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.fail(ResponseCode.NOT_CORRECT_PASSWORD, ResponseMessage.NOT_CORRECT_PASSWORD);
         }
 
+        String profileImageUrl = null;
+        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(user.getId(), TargetType.PROFILE);
+        if (profileImage != null) {
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + TargetType.PROFILE;
+        }
+
         String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName().toString());
 
         data = LoginUserResponseDto.builder()
@@ -177,7 +184,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(user.getRole().getName().toString())
                 .username(user.getUsername())
                 .name(user.getName())
-//                .profileImage(uploadFileService.getProfileImage(user.getId(), TargetType.PROFILE))
+                .profileImageUrl(profileImageUrl)
                 .token(token)
                 .exprTime(jwtProvider.getExpiration())
                 .build();

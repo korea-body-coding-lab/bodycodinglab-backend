@@ -12,4 +12,6 @@ public interface ApiMappingPattern {
     String BOARD_API = "/api/v1/personal-community-boards";
     String BOARD_COMMENT_API = BOARD_API + "/{boardId}" + "/comments";
     String NOTE_API = "/api/v1/notes";
+
+    String FILE_API = "/api/v1/files";
 }

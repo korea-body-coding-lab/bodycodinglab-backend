@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class TrainerMatchResponseDto {
+    private Long matchId;
     private Long trainerId;
     private String trainerName;
+    private LocalDateTime matchedAt;
+    private String trainerJobAddress;
     private List<String> trainerLicensesName;
 }
