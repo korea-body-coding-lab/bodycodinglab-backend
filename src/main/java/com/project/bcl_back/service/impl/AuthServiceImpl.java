@@ -235,11 +235,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Mono<ResponseEntity<String>> resetPassword(String email, ResetPasswordRequestDto dto) {
+    public Mono<ResponseEntity<String>> resetPassword(String token, ResetPasswordRequestDto dto) {
+        String email = jwtProvider.generateEmailValidToken(token);
+
         if (email == null) {
             return Mono.just(ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseMessage.MAIL_AUTH_FAIL));
+                    .body(ResponseMessage.INVALID_TOKEN));
         }
 
         return Mono.fromCallable(() -> {

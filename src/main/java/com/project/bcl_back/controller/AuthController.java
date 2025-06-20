@@ -64,10 +64,10 @@ public class AuthController {
         return mailService.sendVerifyEmail(dto);
     }
 
-//    @GetMapping(VERIFY_EMAIL)
-//    public Mono<ServerResponse> verifyEmail(ServerRequest request) {
-//        return mailService.verifyEmail(request);
-//    }
+    @GetMapping(VERIFY_EMAIL)
+    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
+        return mailService.verifyEmail(token);
+    }
 
     @PostMapping(RESET_PASSWORD)
     public ResponseEntity<ResponseDto<GetUserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody GetUserInformationToResetPasswordRequestDto dto) {
@@ -75,8 +75,8 @@ public class AuthController {
     }
 
     @PostMapping(RESET_PASSWORD + "/setting")
-    public Mono<ResponseEntity<String>> resetPassword(@RequestParam String email, @Valid @RequestBody ResetPasswordRequestDto dto) {
-        return authService.resetPassword(email, dto);
+    public Mono<ResponseEntity<String>> resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordRequestDto dto) {
+        return authService.resetPassword(token, dto);
     }
 
     @PutMapping(TRAINER_REAPPLY)

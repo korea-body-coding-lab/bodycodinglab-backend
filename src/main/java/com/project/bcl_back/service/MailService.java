@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono;
 
 public interface MailService {
     Mono<ResponseEntity<String>> sendVerifyEmail(@Valid SendEmailRequestDto dto);
-    Mono<ServerResponse> verifyEmail(ServerRequest request);
+    Mono<ResponseEntity<String>> verifyEmail(String token);
     Mono<ResponseEntity<String>> sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailRequestDto dto);
 }
