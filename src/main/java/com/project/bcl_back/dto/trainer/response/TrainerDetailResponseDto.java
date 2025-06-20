@@ -25,4 +25,5 @@ public class TrainerDetailResponseDto {
     private String educationGraduate;
     private List<TrainerCareerResponseDto> careers;
     private List<TrainerLicenseResponseDto> licenses;
+    private String profileImage;
 }
