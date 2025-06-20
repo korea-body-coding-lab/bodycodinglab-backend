@@ -236,7 +236,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Mono<ResponseEntity<String>> resetPassword(String token, ResetPasswordRequestDto dto) {
-        String email = jwtProvider.generateEmailValidToken(token);
+        String email = jwtProvider.getEmailFromJwt(token);
 
         if (email == null) {
             return Mono.just(ResponseEntity
