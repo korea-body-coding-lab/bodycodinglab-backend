@@ -24,6 +24,7 @@ public class BoardController {
     // 게시글 등록
     @PostMapping(value="/{categoryId}" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<BoardResponseDto>> createPost(
+            @PathVariable Long matchId,
             @PathVariable Long categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
             @RequestPart(value = "file", required = false) MultipartFile file
@@ -35,6 +36,7 @@ public class BoardController {
     // 게시글 목록 조회
     @GetMapping("/{categoryId}")
     public ResponseEntity<ResponseDto<List<BoardResponseDto>>> getPostByCategory(
+            @PathVariable Long matchId,
             @PathVariable("categoryId") int categoryId
     ){
         ResponseDto<List<BoardResponseDto>> posts = boardDataService.getPostByCategory(categoryId);
@@ -44,6 +46,7 @@ public class BoardController {
     // 게시글 단건 조회
     @GetMapping("/{categoryId}/{id}")
     public ResponseEntity<ResponseDto<BoardResponseDto>> getPost(
+            @PathVariable Long matchId,
             @PathVariable("categoryId") int categoryId,
             @PathVariable Long id
     ) {
@@ -53,6 +56,7 @@ public class BoardController {
     // 게시글 수정
     @PutMapping("/{categoryId}/{id}")
     public ResponseEntity<ResponseDto<BoardResponseDto>> updatePost(
+            @PathVariable Long matchId,
             @PathVariable Long id,
             @PathVariable("categoryId") int categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
@@ -64,6 +68,7 @@ public class BoardController {
     // 게시글 삭제
     @DeleteMapping("/{categoryId}/{id}")
     public ResponseEntity<ResponseDto<?>> deletePost(
+            @PathVariable Long matchId,
             @PathVariable Long id,
             @PathVariable("categoryId") int categoryId
     ) {
