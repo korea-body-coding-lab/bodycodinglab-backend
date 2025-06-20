@@ -1,21 +1,20 @@
 package com.project.bcl_back.service.impl;
 
+import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchListResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchResponseDto;
 import com.project.bcl_back.dto.match.response.TrainerMatchResponseDto;
 import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
-import com.project.bcl_back.dto.memberFormDto.MemberFormDto;
-import com.project.bcl_back.entity.Match;
-import com.project.bcl_back.entity.Subscription;
-import com.project.bcl_back.entity.TrainerLicense;
-import com.project.bcl_back.entity.User;
+import com.project.bcl_back.entity.*;
 import com.project.bcl_back.repository.MatchRepository;
 import com.project.bcl_back.repository.SubscriptionRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.MatchService;
+import com.project.bcl_back.service.UploadFileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,7 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepository matchRepository;
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final UploadFileService uploadFileService;
 
     @Override
     public ResponseDto<TrainerMatchResponseDto> findMemberMatch(Long userId) {
@@ -42,9 +42,17 @@ public class MatchServiceImpl implements MatchService {
         User member = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + userId));
 
+
+        String profileImageUrl = null;
+        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(member.getMemberMatch().getTrainer().getId(), TargetType.PROFILE);
+        if (profileImage != null) {
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + member.getMemberMatch().getTrainer().getId() + "/" + TargetType.PROFILE;
+        }
+
         response = new TrainerMatchResponseDto(
                 member.getMemberMatch().getId(),
                 member.getMemberMatch().getTrainer().getTrainerInfo().getId(),
+                profileImageUrl,
                 member.getMemberMatch().getTrainer().getName(),
                 member.getMemberMatch().getMatchedAt(),
                 member.getMemberMatch().getTrainer().getTrainerInfo().getJobAddress(),
@@ -92,7 +100,11 @@ public class MatchServiceImpl implements MatchService {
         LocalDate birthdate = match.getMember().getBirthdate();
         int age = Period.between(birthdate, LocalDate.now()).getYears();
 
-
+        String profileImageUrl = null;
+        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(match.getTrainer().getId(), TargetType.PROFILE);
+        if (profileImage != null) {
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + match.getTrainer().getId() + "/" + TargetType.PROFILE;
+        }
 
         if(match.getMember().getMember().getMemberForm() != null){
             MemberFormResponseDto memberFormResponseDto =  new MemberFormResponseDto(
@@ -117,6 +129,7 @@ public class MatchServiceImpl implements MatchService {
             );
 
             response = new MemberMatchResponseDto(
+                    profileImageUrl,
                     match.getMember().getName(),
                     age,
                     match.getMember().getGender(),
@@ -128,6 +141,7 @@ public class MatchServiceImpl implements MatchService {
             return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
         } else {
             response  = new MemberMatchResponseDto(
+                    profileImageUrl,
                     match.getMember().getName(),
                     age,
                     match.getMember().getGender(),

@@ -13,6 +13,7 @@ import java.util.List;
 public class TrainerMatchResponseDto {
     private Long matchId;
     private Long trainerId;
+    private String profileImageUrl;
     private String trainerName;
     private LocalDateTime matchedAt;
     private String trainerJobAddress;
