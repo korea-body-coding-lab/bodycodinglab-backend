@@ -1,7 +1,9 @@
 package com.project.bcl_back.service.impl;
 
+import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.common.enums.matchWaitingList.ApprovedStatus;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
@@ -9,10 +11,12 @@ import com.project.bcl_back.dto.matchWatingList.request.MatchWaitingListRequestD
 import com.project.bcl_back.dto.matchWatingList.response.MemberMatchWaitingListResponseDto;
 import com.project.bcl_back.dto.matchWatingList.response.TrainerMatchWaitingListResponseDto;
 import com.project.bcl_back.entity.MatchWaitingList;
+import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.MatchWaitingListRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.MatchWaitingListService;
+import com.project.bcl_back.service.UploadFileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,7 @@ import static com.project.bcl_back.common.util.DateUtils.parse;
 public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     private final MatchWaitingListRepository matchWaitingListRepository;
     private final UserRepository userRepository;
+    private final UploadFileService uploadFileService;
 
 
     @Override
@@ -96,10 +101,15 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
         MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
 
-
+        String profileImageUrl = null;
+        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(list.getTrainer().getId(), TargetType.PROFILE);
+        if (profileImage != null) {
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + list.getTrainer().getId() + "/" + TargetType.PROFILE;
+        }
         response = new TrainerMatchWaitingListResponseDto(
                 list.getId(),
                 list.getTrainer().getId(),
+                profileImageUrl,
                 list.getTrainer().getName(),
                 list.getTrainer().getTrainerInfo().getJobAddress(),
                 list.getAppliedAt(),
