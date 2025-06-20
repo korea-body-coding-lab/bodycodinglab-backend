@@ -1,6 +1,7 @@
 package com.project.bcl_back.dto.match.response;
 
 import com.project.bcl_back.common.enums.user.Gender;
+import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
 import com.project.bcl_back.dto.memberFormDto.MemberFormDto;
 import com.project.bcl_back.entity.MemberForm;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ public class MemberMatchResponseDto {
     private Gender memberGender;
     private String memberPhone;
     private String memberAddress;
-    private MemberFormDto memberFormDto;
+    private MemberFormResponseDto memberFormResponseDto;
 
     public MemberMatchResponseDto(
             String memberName,
