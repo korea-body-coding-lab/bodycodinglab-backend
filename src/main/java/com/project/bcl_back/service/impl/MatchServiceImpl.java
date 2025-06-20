@@ -6,6 +6,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchListResponseDto;
 import com.project.bcl_back.dto.match.response.MemberMatchResponseDto;
 import com.project.bcl_back.dto.match.response.TrainerMatchResponseDto;
+import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
 import com.project.bcl_back.dto.memberFormDto.MemberFormDto;
 import com.project.bcl_back.entity.Match;
 import com.project.bcl_back.entity.Subscription;
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,34 +93,40 @@ public class MatchServiceImpl implements MatchService {
         LocalDate birthdate = match.getMember().getBirthdate();
         int age = Period.between(birthdate, LocalDate.now()).getYears();
 
-        MemberFormDto memberFormDto =  new MemberFormDto(
-                match.getMember().getMember().getMemberForm().getBodyForm(),
-                match.getMember().getMember().getMemberForm().getGoal(),
-                match.getMember().getMember().getMemberForm().getBmi(),
-                match.getMember().getMember().getMemberForm().getImprovedPart(),
-                match.getMember().getMember().getMemberForm().getPreferredDiet(),
-                match.getMember().getMember().getMemberForm().getSugarIntake(),
-                match.getMember().getMember().getMemberForm().getWaterIntake(),
-                match.getMember().getMember().getMemberForm().getHeight(),
-                match.getMember().getMember().getMemberForm().getWeight(),
-                match.getMember().getMember().getMemberForm().getWeightGoal(),
-                match.getMember().getMember().getMemberForm().getPhysicalLevel(),
-                match.getMember().getMember().getMemberForm().getExercisingProblem(),
-                match.getMember().getMember().getMemberForm().getPushupLevel(),
-                match.getMember().getMember().getMemberForm().getPullupLevel(),
-                match.getMember().getMember().getMemberForm().getExerciseFrequency(),
-                match.getMember().getMember().getMemberForm().getInvestableTime()
-        );
+
 
         if(match.getMember().getMember().getMemberForm() != null){
+            MemberFormResponseDto memberFormResponseDto =  new MemberFormResponseDto(
+                    match.getMember().getMember().getMemberId(),
+                    match.getMember().getName(),
+                    match.getMember().getMember().getMemberForm().getBodyForm(),
+                    match.getMember().getMember().getMemberForm().getGoal(),
+                    match.getMember().getMember().getMemberForm().getBmi(),
+                    match.getMember().getMember().getMemberForm().getImprovedPart(),
+                    match.getMember().getMember().getMemberForm().getPreferredDiet(),
+                    match.getMember().getMember().getMemberForm().getSugarIntake(),
+                    match.getMember().getMember().getMemberForm().getWaterIntake(),
+                    match.getMember().getMember().getMemberForm().getHeight(),
+                    match.getMember().getMember().getMemberForm().getWeight(),
+                    match.getMember().getMember().getMemberForm().getWeightGoal(),
+                    match.getMember().getMember().getMemberForm().getPhysicalLevel(),
+                    match.getMember().getMember().getMemberForm().getExercisingProblem(),
+                    match.getMember().getMember().getMemberForm().getPushupLevel(),
+                    match.getMember().getMember().getMemberForm().getPullupLevel(),
+                    match.getMember().getMember().getMemberForm().getExerciseFrequency(),
+                    match.getMember().getMember().getMemberForm().getInvestableTime()
+            );
+
             response = new MemberMatchResponseDto(
                     match.getMember().getName(),
                     age,
                     match.getMember().getGender(),
                     match.getMember().getPhone(),
                     match.getMember().getMember().getMemberAddress(),
-                    memberFormDto
+                    memberFormResponseDto
+
             );
+            return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
         } else {
             response  = new MemberMatchResponseDto(
                     match.getMember().getName(),
@@ -151,6 +159,16 @@ public class MatchServiceImpl implements MatchService {
 
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    @Override
+    public Optional<Match> findByUserId(Long userId, String role) {
+        if ("MEMBER".equals(role)) {
+            return matchRepository.findByMemberId(userId);
+        } else if ("TRAINER".equals(role)) {
+            return matchRepository.findByTrainerId(userId);
+        }
+        return Optional.empty();
     }
 
 }

@@ -5,6 +5,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.UserPrincipal;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
+import com.project.bcl_back.entity.User;
 import com.project.bcl_back.service.NoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,10 @@ public class NoteController {
     // 1. 노트 작성
     @PostMapping
     public ResponseEntity<ResponseDto<NoteResponseDto>> createNote(
-            @Valid @RequestBody NoteRequestDto dto
+            @Valid @RequestBody NoteRequestDto dto,
+             @AuthenticationPrincipal Long userId
     ) {
-        ResponseDto<NoteResponseDto> response = noteService.createNote(dto);
+        ResponseDto<NoteResponseDto> response = noteService.createNote(dto, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
