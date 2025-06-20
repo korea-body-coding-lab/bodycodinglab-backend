@@ -11,6 +11,7 @@ import com.project.bcl_back.dto.user.request.UpdateTrainerInfoRequestDto;
 import com.project.bcl_back.dto.user.response.DeleteUserResponseDto;
 import com.project.bcl_back.dto.user.response.GetMemberInfoResponseDto;
 import com.project.bcl_back.dto.user.response.GetTrainerInfoResponseDto;
+import com.project.bcl_back.dto.user.response.GetUserInfoResponseDto;
 import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.UserRepository;
@@ -167,6 +168,24 @@ public class UserServiceImpl implements UserService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
+    @Override
+    public ResponseDto<GetUserInfoResponseDto> getUserInformation(Long id) {
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        String profileImageUrl = null;
+        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(user.getId(), TargetType.PROFILE);
+
+        if (profileImage != null) {
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + TargetType.PROFILE;
+        }
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetUserInfoResponseDto(user, profileImageUrl));
+    }
+
     private GetMemberInfoResponseDto toGetMemberInfoResponseDto(User user) {
         return GetMemberInfoResponseDto.builder()
                 .username(user.getUsername())
@@ -193,6 +212,17 @@ public class UserServiceImpl implements UserService {
                 .status(user.getTrainerInfo().getTrainerStatus())
                 .build();
     }
+
+    private GetUserInfoResponseDto toGetUserInfoResponseDto(User user, String profileImageUrl) {
+        return GetUserInfoResponseDto.builder()
+                .id(user.getId())
+                .role(user.getRole().getName().toString())
+                .username(user.getUsername())
+                .name(user.getName())
+                .profileImageUrl(profileImageUrl)
+                .build();
+    }
+
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
