@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class TrainerMatchWaitingListResponseDto {
     private Long matchWaitingListId;
     private Long trainerId;
+    private String profileImageUrl;
     private String trainerName;
     private String trainerJobAddress;
     private LocalDateTime appliedAt;
