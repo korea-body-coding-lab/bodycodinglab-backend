@@ -17,7 +17,7 @@ public interface AuthService {
     ResponseDto<LoginUserResponseDto> login(@Valid LoginUserRequestDto dto) throws IOException;
     ResponseDto<FindUsernameResponseDto> findUserId(@Valid FindUsernameRequestDto dto);
     ResponseDto<GetUserInformationToResetPasswordResponseDto> findUserToResetPassword(@Valid GetUserInformationToResetPasswordRequestDto dto);
-    Mono<ResponseEntity<String>> resetPassword(String email, @Valid ResetPasswordRequestDto dto);
+    Mono<ResponseEntity<String>> resetPassword(String token, @Valid ResetPasswordRequestDto dto);
     ResponseDto<Void> reapplyTrainer(String email, @Valid ReapplyTrainerRequestDto dto, MultipartFile attachmentFile);
     boolean checkPassword(User user, String password);
     boolean checkEmail(String email);

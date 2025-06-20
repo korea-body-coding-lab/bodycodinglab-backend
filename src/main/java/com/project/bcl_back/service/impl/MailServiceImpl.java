@@ -53,26 +53,21 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public Mono<ServerResponse> verifyEmail(ServerRequest request) {
-        String token = request.queryParam("token").orElse(null);
-
+    public Mono<ResponseEntity<String>> verifyEmail(String token) {
+        System.out.println("token: " + token);
         if (token == null) {
-            return ServerResponse
-                    .badRequest()
-                    .bodyValue(ResponseMessage.MISSING_TOKEN);
+            return Mono.just(
+                    ResponseEntity.badRequest().body(ResponseMessage.INVALID_TOKEN)
+            );
         }
-
+        System.out.println("토큰 유효");
         return Mono.fromCallable(() -> {
-                    String email = jwtProvider.getEmailFromJwt(token);
-                    URI redirectUri = URI.create("https://localhost:5173/api/v1/auth/reset-password/setting?email=" + email);
-                    return redirectUri;
-                })
-                .flatMap(uri -> ServerResponse.temporaryRedirect(uri).build())
-                .onErrorResume(e -> ServerResponse
-                        .badRequest()
-                        .bodyValue(ResponseMessage.MAIL_AUTH_FAIL + ": " + e.getMessage())
-                )
-                .subscribeOn(Schedulers.boundedElastic());
+            String email = jwtProvider.getEmailFromJwt(token);
+            System.out.println("여기야!");
+            return ResponseEntity.ok("이메일 인증이 완료되었습니다. 사용자: " + email);
+        }).onErrorResume(e -> Mono.just(
+                ResponseEntity.badRequest().body("이메일 인증 실패: " + e.getMessage()))
+        ).subscribeOn(Schedulers.boundedElastic());
     }
 
     @Override
@@ -112,7 +107,7 @@ public class MailServiceImpl implements MailService {
                 <p>안녕하세요, Fit-Mate 입니다.</p>
                 <br />
                 <p>아래 이메일 인증 링크에 접속하여 인증을 완료해 주세요.</p>
-                <a href="http://localhost:8080/api/v1/auth/verify?token=%s">여기를 클릭하여 인증 페이지에 접속해 주세요.</a>
+                <a href="http://localhost:5173/auth/reset-password/setting?token=%s">여기를 클릭하여 인증 페이지에 접속해 주세요.</a>
                 <br />
                 <p>감사합니다.</p>
                 """.formatted(token);
