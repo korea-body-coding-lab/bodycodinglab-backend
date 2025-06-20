@@ -21,8 +21,8 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@OneToOne(mappedBy = "matches") -- 매칭 테이블과 1대1 대응
-    @JoinColumn(name = "match_id")
+
+    @JoinColumn(name = "match_id", nullable = false)
     private Long matchId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,8 +48,13 @@ public class Board {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "view_count")
-    private Long viewCount;
+    @Builder.Default
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount= 0L;
+
+    @Builder.Default
+    @Column(name = "post_like", nullable = false)
+    private Long postLike= 0L;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
