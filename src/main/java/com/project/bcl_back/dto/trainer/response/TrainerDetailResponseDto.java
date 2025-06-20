@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TrainerDetailResponseDto {
     private Long trainerId;
+    private String name;
     private String jobAddress;
     private String shortIntroduce;
     private String longIntroduce;
