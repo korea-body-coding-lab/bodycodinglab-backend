@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class MemberMatchListResponseDto {
+    private Long matchId;
+    private Long memberId;
     private String memberName;
     private int memberAge;
     private Gender memberGender;

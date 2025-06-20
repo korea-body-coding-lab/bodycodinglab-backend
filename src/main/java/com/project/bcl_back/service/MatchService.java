@@ -10,11 +10,11 @@ import java.util.List;
 
 @Service
 public interface MatchService {
-    ResponseDto<TrainerMatchResponseDto> findMatchTrainer(Long userId);
+    ResponseDto<TrainerMatchResponseDto> findMemberMatch(Long userId);
 
-    ResponseDto<List<MemberMatchListResponseDto>> findMatchMemberList(Long userId);
+    ResponseDto<List<MemberMatchListResponseDto>> findMatchTrainerList(Long userId);
 
-    ResponseDto<MemberMatchResponseDto> findMatchMember(Long matchId);
+    ResponseDto<MemberMatchResponseDto> findMatchTrainer(Long matchId);
 
     ResponseDto<Void> cancelMatch(Long matchId);
 }

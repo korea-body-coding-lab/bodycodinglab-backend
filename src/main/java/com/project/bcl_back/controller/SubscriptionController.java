@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
+    @PreAuthorize("hasRole('MEMBER')")
     @PostMapping("/api/v1/users/members/me/match-waiting-lists/{matchWaitingListId}/subscriptions")
     public ResponseEntity<ResponseDto<Long>> createSubscriptionLog(
             @AuthenticationPrincipal Long userId,
@@ -26,6 +28,7 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("hasRole('MEMBER')")
     @GetMapping("/api/v1/users/members/me/subscriptions")
     public ResponseEntity<ResponseDto<SubscriptionResponseDto>> findSubscription(
             @AuthenticationPrincipal Long userId
