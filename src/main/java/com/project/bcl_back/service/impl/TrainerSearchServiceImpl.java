@@ -105,6 +105,7 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
 
         responseDto = TrainerDetailResponseDto.builder()
                 .trainerId(trainer.getId())
+                .name(trainer.getUser().getName())
                 .jobAddress(trainer.getJobAddress())
                 .shortIntroduce(trainer.getShortIntroduce())
                 .longIntroduce(trainer.getLongIntroduce())
