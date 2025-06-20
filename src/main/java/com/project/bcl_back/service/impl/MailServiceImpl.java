@@ -54,16 +54,13 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public Mono<ResponseEntity<String>> verifyEmail(String token) {
-        System.out.println("token: " + token);
         if (token == null) {
             return Mono.just(
                     ResponseEntity.badRequest().body(ResponseMessage.INVALID_TOKEN)
             );
         }
-        System.out.println("토큰 유효");
         return Mono.fromCallable(() -> {
             String email = jwtProvider.getEmailFromJwt(token);
-            System.out.println("여기야!");
             return ResponseEntity.ok("이메일 인증이 완료되었습니다. 사용자: " + email);
         }).onErrorResume(e -> Mono.just(
                 ResponseEntity.badRequest().body("이메일 인증 실패: " + e.getMessage()))
@@ -101,13 +98,13 @@ public class MailServiceImpl implements MailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setFrom(senderEmail);
         message.setRecipients(MimeMessage.RecipientType.TO, email);
-        message.setSubject("[Fit-Mate] 이메일 인증 링크 발송");
+        message.setSubject("[Fit-Mate] 비밀번호 재설정 링크 발송");
 
         String body = """
                 <p>안녕하세요, Fit-Mate 입니다.</p>
                 <br />
-                <p>아래 이메일 인증 링크에 접속하여 인증을 완료해 주세요.</p>
-                <a href="http://localhost:5173/auth/reset-password/setting?token=%s">여기를 클릭하여 인증 페이지에 접속해 주세요.</a>
+                <p>아래 비밀번호 재설정 링크에 접속하여 인증을 완료해 주세요.</p>
+                <a href="http://localhost:5173/auth/reset-password/setting?token=%s">여기를 클릭하여 설정 페이지에 접속해 주세요.</a>
                 <br />
                 <p>감사합니다.</p>
                 """.formatted(token);
