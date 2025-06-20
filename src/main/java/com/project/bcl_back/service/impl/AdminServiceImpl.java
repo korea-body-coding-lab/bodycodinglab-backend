@@ -102,7 +102,7 @@ public class AdminServiceImpl implements AdminService {
         String profileImageUrl;
         UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(trainer.getUser().getId(), TargetType.PROFILE);
         if (profileImage != null) {
-            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + trainer.getUser().getId() + "/" + trainer.getUser().getProfileImage().getTargetType();
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + trainer.getUser().getId() + "/" + TargetType.PROFILE;
         } else {
             profileImageUrl = null;
         }
