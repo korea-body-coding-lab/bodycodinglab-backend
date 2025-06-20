@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -151,6 +152,16 @@ public class MatchServiceImpl implements MatchService {
 
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    @Override
+    public Optional<Match> findByUserId(Long userId, String role) {
+        if ("MEMBER".equals(role)) {
+            return matchRepository.findByMemberId(userId);
+        } else if ("TRAINER".equals(role)) {
+            return matchRepository.findByTrainerId(userId);
+        }
+        return Optional.empty();
     }
 
 }

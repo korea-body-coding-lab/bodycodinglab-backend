@@ -9,7 +9,7 @@ public interface ApiMappingPattern {
     String MEMBER_COUPON_API = "/api/v1/users/members/me/coupons";
     String TRAINER_COUPON_API = "/api/v1/users/trainers/me/coupons";
 
-    String BOARD_API = "/api/v1/personal-community-boards";
+    String BOARD_API = "/api/v1/personal-community-boards" + "/{matchId}";
     String BOARD_COMMENT_API = BOARD_API + "/{boardId}" + "/comments";
     String NOTE_API = "/api/v1/notes";
 
