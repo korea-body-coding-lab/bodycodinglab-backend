@@ -174,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
         String profileImageUrl = null;
         UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(user.getId(), TargetType.PROFILE);
         if (profileImage != null) {
-            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + user.getProfileImage().getTargetType();
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + TargetType.PROFILE;
         }
 
         String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName().toString());

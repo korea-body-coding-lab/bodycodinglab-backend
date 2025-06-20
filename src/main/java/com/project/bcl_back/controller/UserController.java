@@ -8,6 +8,7 @@ import com.project.bcl_back.dto.user.request.UpdateTrainerInfoRequestDto;
 import com.project.bcl_back.dto.user.response.DeleteUserResponseDto;
 import com.project.bcl_back.dto.user.response.GetMemberInfoResponseDto;
 import com.project.bcl_back.dto.user.response.GetTrainerInfoResponseDto;
+import com.project.bcl_back.dto.user.response.GetUserInfoResponseDto;
 import com.project.bcl_back.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
 
+    private static final String GET_USER_URL = "/me";
     private static final String MEMBER_MYPAGE_URL = "/members/me";
     private static final String TRAINER_MYPAGE_URL = "/trainers/me";
     private static final String DELETE_USER_URL = "/account-cancellation/me";
@@ -81,5 +83,10 @@ public class UserController {
     @DeleteMapping(value = UPDATE_PROFILE_URL)
     public ResponseEntity<ResponseDto<Void>> deleteProfileImage (@AuthenticationPrincipal Long id) throws IOException {
         return ResponseDto.toResponseEntity(HttpStatus.OK, userService.deleteProfileImage(id));
+    }
+
+    @GetMapping(GET_USER_URL)
+    public ResponseEntity<ResponseDto<GetUserInfoResponseDto>> getUserInformation (@AuthenticationPrincipal Long id) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, userService.getUserInformation(id));
     }
 }

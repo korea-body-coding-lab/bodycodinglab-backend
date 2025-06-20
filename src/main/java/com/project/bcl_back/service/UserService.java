@@ -7,6 +7,7 @@ import com.project.bcl_back.dto.user.request.UpdateTrainerInfoRequestDto;
 import com.project.bcl_back.dto.user.response.DeleteUserResponseDto;
 import com.project.bcl_back.dto.user.response.GetMemberInfoResponseDto;
 import com.project.bcl_back.dto.user.response.GetTrainerInfoResponseDto;
+import com.project.bcl_back.dto.user.response.GetUserInfoResponseDto;
 import com.project.bcl_back.entity.User;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,5 +22,6 @@ public interface UserService {
     ResponseDto<DeleteUserResponseDto> deleteUser(Long id, @Valid DeleteUserRequestDto dto);
     ResponseDto<Void> updateProfileImage(Long id, MultipartFile profile) throws IOException;
     ResponseDto<Void> deleteProfileImage(Long id) throws IOException;
+    ResponseDto<GetUserInfoResponseDto> getUserInformation(Long id);
     User findById(Long id);
 }
