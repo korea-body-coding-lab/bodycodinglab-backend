@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Long> {
-    Optional<Match> findByMemberId(Long memberId);
+    Optional<Match> findByMember_Id(Long memberId);
 
-    Optional<Match> findByTrainerId(Long trainerId);
+    Optional<Match> findByTrainer_Id(Long trainerId);
 }

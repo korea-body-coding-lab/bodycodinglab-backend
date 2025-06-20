@@ -162,13 +162,18 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Optional<Match> findByUserId(Long userId, String role) {
-        if ("MEMBER".equals(role)) {
-            return matchRepository.findByMemberId(userId);
-        } else if ("TRAINER".equals(role)) {
-            return matchRepository.findByTrainerId(userId);
+    public Long findByUserId(Long userId, String role) {
+        Optional<Match> match;
+
+        if (role.equals("ROLE_MEMBER")) {
+            match = matchRepository.findByMember_Id(userId);
+        } else if (role.equals("ROLE_TRAINER")) {
+            match = matchRepository.findByTrainer_Id(userId);
+        } else {
+            return null;
         }
-        return Optional.empty();
+
+        return match.map(Match::getId).orElse(null);
     }
 
 }
