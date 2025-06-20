@@ -9,6 +9,7 @@ import com.project.bcl_back.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,34 +27,38 @@ public class MatchController {
     private static final String TRAINER_MATCH = "api/v1/users/trainers/me/match-success-lists";
 
 
+    @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_MATCH)
-    public ResponseEntity<ResponseDto<TrainerMatchResponseDto>> findMatchTrainer(
+    public ResponseEntity<ResponseDto<TrainerMatchResponseDto>> findMemberMatch(
             @AuthenticationPrincipal Long userId
     ){
-        ResponseDto<TrainerMatchResponseDto> response = matchService.findMatchTrainer(userId);
+        ResponseDto<TrainerMatchResponseDto> response = matchService.findMemberMatch(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PreAuthorize("hasRole('TRAINER')")
     @GetMapping(TRAINER_MATCH)
-    public ResponseEntity<ResponseDto<List<MemberMatchListResponseDto>>> findMatchMemberList(
-            @AuthenticationPrincipal User user
+    public ResponseEntity<ResponseDto<List<MemberMatchListResponseDto>>> findMatchTrainerList(
+            @AuthenticationPrincipal Long userId
     ){
-        Long userId = user.getId();
-        ResponseDto<List<MemberMatchListResponseDto>> response = matchService.findMatchMemberList(userId);
+
+        ResponseDto<List<MemberMatchListResponseDto>> response = matchService.findMatchTrainerList(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PreAuthorize("hasRole('TRAINER')")
     @GetMapping(TRAINER_MATCH + "/{matchId}")
-    public ResponseEntity<ResponseDto<MemberMatchResponseDto>> findMatchMember(
+    public ResponseEntity<ResponseDto<MemberMatchResponseDto>> findMatchTrainer(
             @PathVariable Long matchId
     ){
-        ResponseDto<MemberMatchResponseDto> response = matchService.findMatchMember(matchId);
+        ResponseDto<MemberMatchResponseDto> response = matchService.findMatchTrainer(matchId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PreAuthorize("hasRole('MEMBER')")
     @DeleteMapping(MEMBER_MATCH + "/{matchId}")
     public ResponseEntity<ResponseDto<Void>> cancelMatch(
             @PathVariable Long matchId
