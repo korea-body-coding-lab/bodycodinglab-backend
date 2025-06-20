@@ -7,6 +7,7 @@ import com.project.bcl_back.dto.trainer.response.*;
 import com.project.bcl_back.entity.TrainerCareer;
 import com.project.bcl_back.entity.TrainerInfo;
 import com.project.bcl_back.entity.TrainerLicense;
+import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.repository.TrainerCareerRepository;
 import com.project.bcl_back.repository.TrainerInfoRepository;
 import com.project.bcl_back.repository.TrainerLicenseRepository;
@@ -103,6 +104,12 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
                         .build())
                 .collect(Collectors.toList());
 
+        String profileUrl = null;
+        if (trainer.getUser().getProfileImage() != null) {
+            UploadFile image = trainer.getUser().getProfileImage();
+            profileUrl = "/files/" + image.getFileName();
+        }
+
         responseDto = TrainerDetailResponseDto.builder()
                 .trainerId(trainer.getId())
                 .name(trainer.getUser().getName())
@@ -114,6 +121,7 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
                 .educationGraduate(trainer.getEducationGraduate())
                 .careers(careers)
                 .licenses(licenses)
+                .profileImage(profileUrl)
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
