@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     ResponseDto<GetMemberInfoResponseDto> getMemberInfo(Long id);
@@ -22,6 +24,11 @@ public interface UserService {
     ResponseDto<DeleteUserResponseDto> deleteUser(Long id, @Valid DeleteUserRequestDto dto);
     ResponseDto<Void> updateProfileImage(Long id, MultipartFile profile) throws IOException;
     ResponseDto<Void> deleteProfileImage(Long id) throws IOException;
+<<<<<<< Updated upstream
     ResponseDto<GetUserInfoResponseDto> getUserInformation(Long id);
+=======
+    String usernameFindById(Long id);
+    Map<Long, String> getNamesByIds(List<Long> userIds);
+>>>>>>> Stashed changes
     User findById(Long id);
 }
