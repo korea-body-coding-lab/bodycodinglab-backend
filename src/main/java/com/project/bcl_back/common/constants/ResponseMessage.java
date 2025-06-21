@@ -76,4 +76,6 @@ public interface ResponseMessage {
 
     // 체험권 관련
     String NOT_EXISTS_ONE_DAY_TICKET = "체험권이 존재하지 않습니다.";
+    String NOT_TRIAL_CHANCE_LEFT = "체험권 유효 횟수가 부족합니다.";
+    String INVALID_TICKET_STATUS = "체험권의 상태가 유효하지 않습니다.";
 }

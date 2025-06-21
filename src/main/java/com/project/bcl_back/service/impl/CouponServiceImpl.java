@@ -9,6 +9,7 @@ import com.project.bcl_back.dto.coupon.request.PutCouponRequestDto;
 import com.project.bcl_back.dto.coupon.response.TrainerCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
 import com.project.bcl_back.entity.Coupon;
+import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.CouponRepository;
 import com.project.bcl_back.service.CouponService;
 import jakarta.persistence.EntityNotFoundException;
