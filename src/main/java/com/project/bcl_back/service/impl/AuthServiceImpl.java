@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
         Member member = Member.builder()
                 .user(user)
                 .memberAddress(dto.getMemberAddress())
+                .oneDayTicketCount(3)
                 .status(MemberStatus.NOT_PAYMENT)
                 .build();
         memberRepository.save(member);

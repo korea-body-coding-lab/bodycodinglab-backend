@@ -35,6 +35,7 @@ public interface ResponseMessage {
     String NOT_CORRECT_PASSWORD = "비밀번호가 올바르지 않습니다";
     String NOT_MATCH_INFORMATION = "사용자 정보가 일치하지 않습니다.";
     String RESET_PASSWORD_FAIL = "비밀번호 변경에 실패하였습니다.";
+    String MEMBER_NOT_FOUND = "회원을 찾을 수 없습니다.";
 
     // 리소스 관련
     String NO_EXIST_TOOL = "존재하지 않는 도구입니다.";
@@ -76,4 +77,6 @@ public interface ResponseMessage {
 
     // 체험권 관련
     String NOT_EXISTS_ONE_DAY_TICKET = "체험권이 존재하지 않습니다.";
+    String NOT_TRIAL_CHANCE_LEFT = "체험권 유효 횟수가 부족합니다.";
+    String INVALID_TICKET_STATUS = "체험권의 상태가 유효하지 않습니다.";
 }
