@@ -152,6 +152,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setProfileImage(uploadFileService.updateFile(user.getId(), TargetType.PROFILE, profile));
+        userRepository.save(user);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

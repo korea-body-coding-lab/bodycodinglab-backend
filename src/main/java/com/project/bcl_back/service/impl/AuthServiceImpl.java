@@ -257,7 +257,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<Void> reapplyTrainer(String email, ReapplyTrainerRequestDto dto, MultipartFile attachmentFile) {
+    public ResponseDto<Void> reapplyTrainer(String token, ReapplyTrainerRequestDto dto, MultipartFile attachmentFile) throws IOException {
+        String email = jwtProvider.getEmailFromJwt(token);
+
         User user = userRepository.findByEmail(email)
                 .orElse(null);
 
@@ -270,8 +272,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.getTrainerInfo().setJobAddress(dto.getJobAddress());
-        // 이자리에 파일 업데이트 소스 구현 예정
         user.getTrainerInfo().setTrainerStatus(TrainerStatus.PENDING);
+        user.getTrainerInfo().setAttachmentFile(uploadFileService.updateFile(user.getTrainerInfo().getId(), TargetType.ATTACHMENT, attachmentFile));
         userRepository.save(user);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);

@@ -35,7 +35,7 @@ public class MailServiceImpl implements MailService {
     private String senderEmail;
 
     @Override
-    public Mono<ResponseEntity<ResponseDto<String>>> sendVerifyEmail(SendEmailRequestDto dto) {
+    public Mono<ResponseEntity<ResponseDto<String>>> sendResetPasswordEmail(SendEmailRequestDto dto) {
         boolean isEmailVerified = authService.checkEmail(dto.getEmail());
 
         if (!isEmailVerified) {
@@ -46,7 +46,7 @@ public class MailServiceImpl implements MailService {
         }
 
         return Mono.fromCallable(() -> {
-            String token = jwtProvider.generateEmailValidToken(dto.getEmail());
+            String token = jwtProvider.generateResetPasswordJwtToken(dto.getEmail());
             MimeMessage message = createVerifyMail(dto.getEmail(), token);
             javaMailSender.send(message);
 
@@ -87,18 +87,23 @@ public class MailServiceImpl implements MailService {
         }
 
         return Mono.fromCallable(() -> {
+            String token = jwtProvider.generateReapplyTrainerJwtToken(dto.getEmail());
+
             if (dto.getStatus().equals(TrainerStatus.APPROVE)) {
-                MimeMessage message = createTrainerApproveMail(dto.getEmail());
+                MimeMessage message = createTrainerApproveMail(token);
                 javaMailSender.send(message);
 
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (승인 메일 발송)"));
-            } else {
-                MimeMessage message = createTrainerReapplyMail(dto.getEmail(), dto.getChangeReason());
+            } else if (dto.getStatus().equals(TrainerStatus.REJECT)) {
+                MimeMessage message = createTrainerReapplyMail(dto.getEmail(), token, dto.getChangeReason());
                 javaMailSender.send(message);
 
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (재신청 메일 발송)"));
+            } else {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS));
             }
         }).onErrorResume(e -> Mono.just(
                 ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -125,7 +130,7 @@ public class MailServiceImpl implements MailService {
         return message;
     }
 
-    private MimeMessage createTrainerReapplyMail(String email, String changeReason) throws MessagingException {
+    private MimeMessage createTrainerReapplyMail(String email, String token, String changeReason) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setFrom(senderEmail);
         message.setRecipients(MimeMessage.RecipientType.TO, email);
@@ -138,15 +143,15 @@ public class MailServiceImpl implements MailService {
                 <br />
                 <p>트레이너 가입이 거부되어 재신청 절차 안내드립니다.</p>
                 <b>1. 거부 사유 확인</b><br />
-                <b>2. 서류 보완</b></br>
+                <b>2. 서류 보완</b></br />
                 <b>3. 아래 링크에 접속하여 재신청</b><br />
                 <b>4. 가입 승인 대기</b><br /></p>
                 <br />
                 <p>거부 사유: <strong>%s</strong><br />
-                <a href="http://localhost:5173/api/v1/auth/trainer-reapply?email=%s">여기를 클릭하여 재신청 페이지에 접속해 주세요.</a><br /></p>
+                <a href="http://localhost:5173/auth/trainer-reapply?token=%s">여기를 클릭하여 재신청 페이지에 접속해 주세요.</a><br /></p>
                 <br />
                 <p>감사합니다.</p>
-                """.formatted(changeReason, email);
+                """.formatted(changeReason, token);
 
         message.setText(body, "utf-8", "html");
         return message;

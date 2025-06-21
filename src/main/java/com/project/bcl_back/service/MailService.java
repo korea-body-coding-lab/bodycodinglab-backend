@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 public interface MailService {
-    Mono<ResponseEntity<ResponseDto<String>>> sendVerifyEmail(@Valid SendEmailRequestDto dto);
+    Mono<ResponseEntity<ResponseDto<String>>> sendResetPasswordEmail(@Valid SendEmailRequestDto dto);
     Mono<ResponseEntity<ResponseDto<String>>> verifyEmail(String token);
     Mono<ResponseEntity<ResponseDto<String>>> sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailRequestDto dto);
 }

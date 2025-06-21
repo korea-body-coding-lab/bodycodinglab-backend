@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class GetTrainerDetailResponseDto {
-    private Long userId;
     private Long trainerId;
     private String username;
     private String name;
