@@ -5,7 +5,6 @@ import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
-import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailRequestDto;
@@ -13,17 +12,17 @@ import com.project.bcl_back.dto.admin.request.UpdateTrainerStatusRequestDto;
 import com.project.bcl_back.dto.admin.response.GetAllTrainersResponseDto;
 import com.project.bcl_back.dto.admin.response.GetTrainerDetailResponseDto;
 import com.project.bcl_back.entity.*;
-import com.project.bcl_back.repository.RoleRepository;
-import com.project.bcl_back.repository.TrainerChangeLogRepository;
-import com.project.bcl_back.repository.TrainerInfoRepository;
-import com.project.bcl_back.repository.UserRepository;
+import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.AdminService;
 import com.project.bcl_back.service.MailService;
 import com.project.bcl_back.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -34,23 +33,26 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final TrainerInfoRepository trainerInfoRepository;
     private final TrainerChangeLogRepository trainerChangeLogRepository;
+    private final TrainerListViewRepository trainerListViewRepository;
     private final MailService mailService;
     private final UploadFileService uploadFileService;
 
     @Override
-    public ResponseDto<List<GetAllTrainersResponseDto>> getAllTrainers() {
-        List<GetAllTrainersResponseDto> data = null;
+    public ResponseDto<Page<GetAllTrainersResponseDto>> getAllTrainers(int page, int size, TrainerStatus status) {
+        Page<GetAllTrainersResponseDto> data = null;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("trainerId").descending());
+        Page<TrainerListView> trainerPage = null;
 
-        Role role = roleRepository.findByName(UserRole.TRAINER)
-                .orElseGet(() -> roleRepository.save(Role.builder().name(UserRole.TRAINER).build()));
+        if (status == null) {
+            trainerPage = trainerListViewRepository.findAll(pageable);
+        } else {
+            trainerPage = trainerListViewRepository.findByStatus(status, pageable);
+        }
 
-        data = userRepository.findByRole(role).stream()
-                .map(this::toGetAllTrainersResDto)
-                .collect(Collectors.toList());
+        data = trainerPage.map(this::toGetAllTrainersResDto);
+
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }
 
@@ -130,16 +132,15 @@ public class AdminServiceImpl implements AdminService {
                 });
     }
 
-    private GetAllTrainersResponseDto toGetAllTrainersResDto(User user) {
+    private GetAllTrainersResponseDto toGetAllTrainersResDto(TrainerListView view) {
         return GetAllTrainersResponseDto.builder()
-                .id(user.getId())
-                .trainerId(user.getTrainerInfo().getId())
-                .username(user.getUsername())
-                .name(user.getName())
-                .birthdate(user.getBirthdate())
-                .jobAddress(user.getTrainerInfo().getJobAddress())
-                .createdAt(DateUtils.format(user.getCreatedAt()))
-                .status(user.getTrainerInfo().getTrainerStatus())
+                .trainerId(view.getTrainerId())
+                .username(view.getUsername())
+                .name(view.getName())
+                .birthdate(view.getBirthdate())
+                .jobAddress(view.getJobAddress())
+                .createdAt(DateUtils.format(view.getCreatedAt()))
+                .status(view.getStatus())
                 .build();
     }
 
