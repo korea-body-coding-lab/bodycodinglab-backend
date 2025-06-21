@@ -23,6 +23,7 @@ import com.project.bcl_back.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -119,6 +120,7 @@ public class AdminServiceImpl implements AdminService {
         return mailService.sendTrainerApprovalResultEmail(sendEmailDto)
                 .flatMap(response -> {
                     if (response.getStatusCode().is2xxSuccessful()) {
+                        System.out.println("여기까지 왔드아아아!!");
                         return Mono.just(ResponseDto.toResponseEntity(HttpStatus.OK,
                                 ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetTrainerResDto(savedTrainer, attachmentFileUrl, profileImageUrl))));
                     } else {
@@ -143,7 +145,6 @@ public class AdminServiceImpl implements AdminService {
 
     private GetTrainerDetailResponseDto toGetTrainerResDto(TrainerInfo trainer, String attachmentFileUrl, String profileImageUrl) {
         return GetTrainerDetailResponseDto.builder()
-                .userId(trainer.getUser().getId())
                 .trainerId(trainer.getId())
                 .username(trainer.getUser().getUsername())
                 .name(trainer.getUser().getName())
