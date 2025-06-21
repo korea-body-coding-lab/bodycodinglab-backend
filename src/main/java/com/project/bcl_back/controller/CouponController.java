@@ -23,6 +23,18 @@ import java.util.List;
 public class CouponController {
     private final CouponService couponService;
 
+    @PostMapping("api/v1/coupons")
+    public ResponseEntity<ResponseDto<Long>> createCoupon(
+           Long memberId
+    ){
+        ResponseDto<Long> response = couponService.createCoupon(memberId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+
+
+
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(ApiMappingPattern.MEMBER_COUPON_API)
     public ResponseEntity<ResponseDto<List<TrainerCouponResponseDto>>> findNotUsedOrExpiredCoupon(
