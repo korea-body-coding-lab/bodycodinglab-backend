@@ -7,6 +7,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketIssueRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketUseRequest;
 import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResponseDto;
+import com.project.bcl_back.dto.oneDayTicket.response.GetTrainerAllTicketsResponseDto;
 import com.project.bcl_back.entity.Member;
 import com.project.bcl_back.entity.OneDayTicket;
 import com.project.bcl_back.entity.TrainerInfo;
@@ -14,6 +15,8 @@ import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.CouponService;
 import com.project.bcl_back.service.OneDayTicketService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +60,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
     }
 
     @Override
-    public ResponseDto<Void> issueOneDayTicket(Long id, TicketIssueRequest dto) throws Exception {
+    public ResponseDto<List<GetTrainerAllTicketsResponseDto>> GetTrainerAllTickets(Long id) {
         User user = userRepository.findById(id)
                 .orElse(null);
 
@@ -73,11 +76,54 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        Member member = memberRepository.findById(user.getMember().getMemberId())
+        List<OneDayTicket> tickets = oneDayTicketRepository.findByTrainerId(trainer.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_ONE_DAY_TICKET));
+
+        if (tickets == null || tickets.isEmpty()) {
+            return ResponseDto.fail(ResponseCode.NOT_EXISTS_ONE_DAY_TICKET, ResponseMessage.NOT_EXISTS_ONE_DAY_TICKET);
+        }
+
+        List<GetTrainerAllTicketsResponseDto> responseDto = tickets.stream()
+                .map(ticket -> GetTrainerAllTicketsResponseDto.builder()
+                        .id(ticket.getId())
+                        .trainerId(ticket.getTrainer().getId())
+                        .memberName(ticket.getMember().getName())
+                        .memberAddress(ticket.getMember().getMember().getMemberAddress())
+                        .issuedAt(ticket.getIssuedAt())
+                        .usedAt(ticket.getUsedAt())
+                        .canceledAt(ticket.getCanceledAt())
+                        .status(ticket.getStatus())
+                        .count(ticket.getMember().getMember().getOneDayTicketCount())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto<Void> issueOneDayTicket(Long id, TicketIssueRequest dto) throws Exception {
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        System.out.println("현재 로그인한 유저 ID: " + user.getId());
+
+        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
+                .orElse(null);
+
+        if (trainer == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        Member member = memberRepository.findById(dto.getMemberId())
                 .orElse(null);
 
         if (member == null) {
-            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.MEMBER_NOT_FOUND);
         }
 
         validateOneDayTicketCount(member);
@@ -92,6 +138,8 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
         oneDayTicketRepository.save(ticket);
 
         member.minusOneDayTicketCount();
+        memberRepository.save(member);
+
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
@@ -105,11 +153,12 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
         ticket.setUsedAt(dto.getUsedAt());
         ticket.setStatus(OneDayTicketStatus.USED);
 
-        couponServiceImpl.expireCoupons(ticket.getMember());
+        couponServiceImpl.createCoupon(ticket.getMember().getId());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
+    @Transactional
     @Override
     public ResponseDto<Void> cancelOneDayTicket(Long id, Long ticketId) throws Exception {
         OneDayTicket ticket = getTicket(ticketId);
@@ -122,6 +171,8 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
 
         Member member = ticket.getMember().getMember();
         member.plusOneDayTicketCount();
+
+        memberRepository.save(member);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
@@ -145,7 +196,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
 
     private void validateTicketStatus(OneDayTicket ticket, OneDayTicketStatus ISSUANCE) throws Exception {
         if (ticket.getStatus() != ISSUANCE) {
-            throw new Exception(ResponseMessage.INVALID_TICKET_STATUS);
+            throw new Exception(ResponseMessage.NOT_TRIAL_CHANCE_LEFT);
         }
     }
 }

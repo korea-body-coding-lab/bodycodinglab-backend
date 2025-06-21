@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
         Member member = Member.builder()
                 .user(user)
                 .memberAddress(dto.getMemberAddress())
+                .oneDayTicketCount(3)
                 .status(MemberStatus.NOT_PAYMENT)
                 .build();
         memberRepository.save(member);
@@ -235,33 +236,24 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Mono<ResponseEntity<String>> resetPassword(String token, ResetPasswordRequestDto dto) {
+    public ResponseDto<String> resetPassword(String token, ResetPasswordRequestDto dto) {
         String email = jwtProvider.getEmailFromJwt(token);
 
         if (email == null) {
-            return Mono.just(ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseMessage.INVALID_TOKEN));
+            return ResponseDto.fail(ResponseCode.INVALID_TOKEN, ResponseMessage.INVALID_TOKEN);
         }
 
-        return Mono.fromCallable(() -> {
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.NO_EXIST_EMAIL));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.NO_EXIST_EMAIL));
 
-            if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(ResponseMessage.NOT_MATCH_PASSWORD);
-            }
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            return ResponseDto.fail(ResponseCode.NOT_MATCH_PASSWORD, ResponseMessage.NOT_MATCH_PASSWORD);
+        }
 
-            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-            userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
 
-            return ResponseEntity.ok(ResponseCode.SUCCESS + " (비밀번호 재설정)");
-        }).onErrorResume(e -> Mono.just(ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ResponseMessage.RESET_PASSWORD_FAIL))
-        ).subscribeOn(Schedulers.boundedElastic());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
     @Override

@@ -20,5 +20,5 @@ public interface MatchService {
 
     ResponseDto<Void> cancelMatch(Long matchId);
 
-    Optional<Match> findByUserId(Long userId, String role);
+    Long findByUserId(Long userId, String role);
 }
