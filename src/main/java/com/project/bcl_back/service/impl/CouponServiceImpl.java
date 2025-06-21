@@ -3,13 +3,17 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.coupon.CouponStatus;
+import com.project.bcl_back.common.enums.onedayTicket.OneDayTicketStatus;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.coupon.request.PutCouponRequestDto;
 import com.project.bcl_back.dto.coupon.response.TrainerCouponResponseDto;
 import com.project.bcl_back.dto.coupon.response.MemberCouponResponseDto;
 import com.project.bcl_back.entity.Coupon;
+import com.project.bcl_back.entity.OneDayTicket;
+import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.CouponRepository;
+import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.CouponService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+    private final UserRepository userRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void expireCoupons() {
@@ -38,6 +43,34 @@ public class CouponServiceImpl implements CouponService {
         for (Coupon coupon : couponsToExpire) {
             coupon.setStatus(CouponStatus.EXPIRED);
         }
+    }
+
+    @Override
+    public ResponseDto<Long> createCoupon(Long memberId) {
+
+      User member = userRepository.findById(memberId)
+              .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
+
+
+        OneDayTicket ticket = member.getMemberOneDayTickets().stream()
+                .filter(t -> t.getStatus() == OneDayTicketStatus.USED)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("사용 가능한 OneDayTicket이 없습니다."));
+
+        User trainer = ticket.getTrainer();
+
+       Coupon coupon = new Coupon(
+               null,
+               member,
+               trainer,
+               LocalDate.now().plusMonths(3),
+               null,
+               CouponStatus.NOT_USED
+       );
+
+       couponRepository.save(coupon);
+
+       return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, coupon.getCouponId());
     }
 
     @Override
