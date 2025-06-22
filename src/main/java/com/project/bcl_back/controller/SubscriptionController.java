@@ -1,11 +1,9 @@
 package com.project.bcl_back.controller;
 
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.subscription.request.CreateSubscriptionRequestDto;
+import com.project.bcl_back.dto.payment.request.ConfirmPaymentRequestDto;
 import com.project.bcl_back.dto.subscription.response.SubscriptionResponseDto;
-import com.project.bcl_back.entity.User;
 import com.project.bcl_back.service.SubscriptionService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +17,12 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PreAuthorize("hasRole('MEMBER')")
-    @PostMapping("/api/v1/users/members/me/match-waiting-lists/{matchWaitingListId}/subscriptions")
+    @PostMapping("/api/v1/users/members/me/match-waiting-lists/subscriptions")
     public ResponseEntity<ResponseDto<Long>> createSubscriptionLog(
             @AuthenticationPrincipal Long userId,
-            @PathVariable Long matchWaitingListId
+            @RequestBody ConfirmPaymentRequestDto dto
     ){
-        ResponseDto<Long> response = subscriptionService.createSubscriptionLog(userId, matchWaitingListId);
+        ResponseDto<Long> response = subscriptionService.createSubscriptionLog(userId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

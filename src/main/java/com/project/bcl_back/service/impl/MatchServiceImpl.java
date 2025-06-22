@@ -11,6 +11,7 @@ import com.project.bcl_back.dto.match.response.TrainerMatchResponseDto;
 import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
 import com.project.bcl_back.entity.*;
 import com.project.bcl_back.repository.MatchRepository;
+import com.project.bcl_back.repository.PaymentRepository;
 import com.project.bcl_back.repository.SubscriptionRepository;
 import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.MatchService;
@@ -35,6 +36,7 @@ public class MatchServiceImpl implements MatchService {
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final UploadFileService uploadFileService;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public ResponseDto<TrainerMatchResponseDto> findMemberMatch(Long userId) {
@@ -52,15 +54,13 @@ public class MatchServiceImpl implements MatchService {
 
         response = new TrainerMatchResponseDto(
                 member.getMemberMatch().getId(),
-                member.getMemberMatch().getTrainer().getTrainerInfo().getId(),
+                member.getMemberMatch().getTrainer().getId(),
                 profileImageUrl,
                 member.getMemberMatch().getTrainer().getName(),
                 member.getMemberMatch().getMatchedAt(),
-                member.getMemberMatch().getTrainer().getTrainerInfo().getJobAddress(),
-                member.getMemberMatch().getTrainer().getTrainerInfo().getTrainerLicenses().stream().map(
-                        TrainerLicense::getLicenseName
-                ).collect(Collectors.toList())
-        );
+                member.getMemberMatch().getTrainer().getTrainerInfo().getJobAddress()
+                );
+
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
     }
@@ -171,6 +171,9 @@ public class MatchServiceImpl implements MatchService {
         member.getMember().setSubscription(null);
         subscriptionRepository.delete(subscription);
 
+        Payment payment = match.getMember().getMember().getPayment();
+        member.getMember().setPayment(null);
+        paymentRepository.delete(payment);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

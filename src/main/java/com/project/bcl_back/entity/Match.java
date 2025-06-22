@@ -16,6 +16,7 @@ import java.util.Date;
 )
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter @Setter
 public class Match {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

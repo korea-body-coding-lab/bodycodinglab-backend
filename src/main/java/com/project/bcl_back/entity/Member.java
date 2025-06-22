@@ -44,6 +44,9 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Subscription subscription;
 
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private Payment payment;
+
     @Builder
     public Member(User user, String memberAddress, MemberStatus status) {
         this.user = user;

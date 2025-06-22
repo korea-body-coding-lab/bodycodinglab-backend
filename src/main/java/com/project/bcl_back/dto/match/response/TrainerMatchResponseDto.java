@@ -17,5 +17,4 @@ public class TrainerMatchResponseDto {
     private String trainerName;
     private LocalDateTime matchedAt;
     private String trainerJobAddress;
-    private List<String> trainerLicensesName;
 }
