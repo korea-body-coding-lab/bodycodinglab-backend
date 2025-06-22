@@ -57,10 +57,10 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
         ticketsResponseDtos = tickets.stream()
                 .map(ticket -> {
                     String trainerProfileImageUrl = null;
-
                     UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(ticket.getTrainer().getId(), TargetType.PROFILE);
+                    
                     if (profileImage != null) {
-                        trainerProfileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + TargetType.PROFILE;
+                        trainerProfileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + ticket.getTrainer().getId() + "/" + TargetType.PROFILE;
                     }
 
                     return GetMemberAllTicketsResponseDto.builder()
