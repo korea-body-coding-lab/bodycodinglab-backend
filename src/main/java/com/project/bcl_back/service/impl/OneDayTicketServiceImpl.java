@@ -1,7 +1,9 @@
 package com.project.bcl_back.service.impl;
 
+import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.common.enums.onedayTicket.OneDayTicketStatus;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
@@ -9,14 +11,13 @@ import com.project.bcl_back.dto.oneDayTicket.request.TicketCancelRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketIssueRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketUseRequest;
 import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResponseDto;
+import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResultDto;
 import com.project.bcl_back.dto.oneDayTicket.response.GetTrainerAllTicketsResponseDto;
-import com.project.bcl_back.entity.Member;
-import com.project.bcl_back.entity.OneDayTicket;
-import com.project.bcl_back.entity.TrainerInfo;
-import com.project.bcl_back.entity.User;
+import com.project.bcl_back.entity.*;
 import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.CouponService;
 import com.project.bcl_back.service.OneDayTicketService;
+import com.project.bcl_back.service.UploadFileService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,20 +34,36 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
     private final MemberRepository memberRepository;
     private final TrainerInfoRepository trainerInfoRepository;
     private final OneDayTicketRepository oneDayTicketRepository;
+    private final UploadFileService uploadFileService;
     private final CouponServiceImpl couponServiceImpl;
     private final NoteServiceImpl noteServiceImpl;
 
     @Override
-    public ResponseDto<List<GetMemberAllTicketsResponseDto>> getMemberAllTickets(Long id) {
-        List<GetMemberAllTicketsResponseDto> data = null;
-        List<OneDayTicket> tickets = oneDayTicketRepository.findByMemberId(id);
+    public ResponseDto<GetMemberAllTicketsResultDto> getMemberAllTickets(Long id) {
+        GetMemberAllTicketsResultDto data = null;
+        List<GetMemberAllTicketsResponseDto> ticketsResponseDtos = null;
 
-        if (tickets == null || tickets.isEmpty()) {
-            return ResponseDto.fail(ResponseCode.NOT_EXISTS_ONE_DAY_TICKET, ResponseMessage.NOT_EXISTS_ONE_DAY_TICKET);
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-        data = tickets.stream()
-                .map(ticket -> GetMemberAllTicketsResponseDto.builder()
+        List<OneDayTicket> tickets = oneDayTicketRepository.findByMemberId(id);
+
+
+
+        ticketsResponseDtos = tickets.stream()
+                .map(ticket -> {
+                    String trainerProfileImageUrl = null;
+
+                    UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(ticket.getTrainer().getId(), TargetType.PROFILE);
+                    if (profileImage != null) {
+                        trainerProfileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + TargetType.PROFILE;
+                    }
+
+                    return GetMemberAllTicketsResponseDto.builder()
                         .id(ticket.getId())
                         .trainerId(ticket.getTrainer().getId())
                         .trainerName(ticket.getTrainer().getName())
@@ -54,10 +71,17 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
                         .issuedAt(ticket.getIssuedAt())
                         .usedAt(ticket.getUsedAt())
                         .canceledAt(ticket.getCanceledAt())
+                        .cancelReason(ticket.getCancelReason())
                         .status(ticket.getStatus())
-                        .count(ticket.getMember().getMember().getOneDayTicketCount())
-                        .build())
+                        .trainerProfileImageUrl(trainerProfileImageUrl)
+                        .build();
+                })
                 .collect(Collectors.toList());
+
+        data = GetMemberAllTicketsResultDto.builder()
+                .count(user.getMember().getOneDayTicketCount())
+                .tickets(ticketsResponseDtos)
+                .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }

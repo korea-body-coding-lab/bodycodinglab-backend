@@ -5,7 +5,7 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketCancelRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketIssueRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketUseRequest;
-import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResponseDto;
+import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResultDto;
 import com.project.bcl_back.dto.oneDayTicket.response.GetTrainerAllTicketsResponseDto;
 import com.project.bcl_back.service.OneDayTicketService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class OneDayTicketController {
 
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_ONE_DAY_TICKET)
-    public ResponseEntity<ResponseDto<List<GetMemberAllTicketsResponseDto>>> getMemberAllTickets(@AuthenticationPrincipal Long id) {
+    public ResponseEntity<ResponseDto<GetMemberAllTicketsResultDto>> getMemberAllTickets(@AuthenticationPrincipal Long id) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, oneDayTicketService.getMemberAllTickets(id));
     }
 
