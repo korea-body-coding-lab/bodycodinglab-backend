@@ -121,7 +121,7 @@ public class CouponServiceImpl implements CouponService {
             responseCoupons = trainerCoupons.stream()
                     .map(coupon -> new MemberCouponResponseDto(
                             coupon.getCouponId(),
-                            coupon.getMember().getUsername(),
+                            coupon.getMember().getName(),
                             coupon.getExpirationPeriod(),
                             coupon.getStatus()
                     )).collect(Collectors.toList());
