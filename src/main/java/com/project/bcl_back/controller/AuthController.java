@@ -26,7 +26,7 @@ public class AuthController {
     private static final String SIGN_UP = "/sign-up";
     private static final String LOGIN = "/login";
     private static final String FIND_USERNAME = "/finding-id";
-    private static final String SEND_EMAIL = "/send-email";
+    private static final String SEND_EMAIL = "/send-reset-password-email";
     private static final String VERIFY_EMAIL = "/verify";
     private static final String RESET_PASSWORD = "/reset-password";
     private static final String TRAINER_REAPPLY = "/trainer-reapply";
@@ -60,12 +60,12 @@ public class AuthController {
     }
 
     @PostMapping(SEND_EMAIL)
-    public Mono<ResponseEntity<String>> sendVerifyEmail(@Valid @RequestBody SendEmailRequestDto dto) {
-        return mailService.sendVerifyEmail(dto);
+    public Mono<ResponseEntity<ResponseDto<String>>> sendResetPasswordEmail(@Valid @RequestBody SendEmailRequestDto dto) {
+        return mailService.sendResetPasswordEmail(dto);
     }
 
     @GetMapping(VERIFY_EMAIL)
-    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
+    public Mono<ResponseEntity<ResponseDto<String>>> verifyEmail(@RequestParam String token) {
         return mailService.verifyEmail(token);
     }
 
@@ -75,18 +75,17 @@ public class AuthController {
     }
 
     @PostMapping(RESET_PASSWORD + "/setting")
-    public Mono<ResponseEntity<String>> resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordRequestDto dto) {
-        return authService.resetPassword(token, dto);
+    public ResponseEntity<ResponseDto<String>> resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordRequestDto dto) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.resetPassword(token, dto));
     }
 
     @PutMapping(TRAINER_REAPPLY)
     public ResponseEntity<ResponseDto<Void>> reapplyTrainer(
-            @RequestParam String email,
+            @RequestPart(value = "token") String token,
             @Valid @RequestPart(value = "dto") ReapplyTrainerRequestDto dto,
-            @RequestPart(value = "attachmentFile", required = false) MultipartFile attachmentFile
-            // 파일 업데이트 기능 완료되면 required = false 제거
+            @RequestPart(value = "attachmentFile") MultipartFile attachmentFile
     ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.reapplyTrainer(email, dto, attachmentFile));
+        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.reapplyTrainer(token, dto, attachmentFile));
     }
 
 }

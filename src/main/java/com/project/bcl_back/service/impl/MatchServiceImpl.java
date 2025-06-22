@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -175,6 +176,21 @@ public class MatchServiceImpl implements MatchService {
         paymentRepository.delete(payment);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    @Override
+    public Long findByUserId(Long userId, String role) {
+        Optional<Match> match;
+
+        if (role.equals("ROLE_MEMBER")) {
+            match = matchRepository.findByMember_Id(userId);
+        } else if (role.equals("ROLE_TRAINER")) {
+            match = matchRepository.findByTrainer_Id(userId);
+        } else {
+            return null;
+        }
+
+        return match.map(Match::getId).orElse(null);
     }
 
 }

@@ -16,7 +16,8 @@ import java.util.Date;
 public class JwtProvider {
     private final Key key;
     private final int jwtExpirationMs;
-    private final long jwtEmailExpirationMs;
+    private final long jwtResetPasswordExpirationMs;
+    private final long jwtReapplyTrainerExpirationMs;
 
     public int getExpiration() {
         return jwtExpirationMs;
@@ -25,11 +26,13 @@ public class JwtProvider {
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") int jwtExpirationMs,
-            @Value("${jwt.email-expiration-ms}") long jwtEmailExpirationMs
+            @Value("${jwt.reset-password-expiration-ms}") long jwtResetPasswordExpirationMs,
+            @Value("${jwt.reapply-trainer-expiration-ms}") long jwtReapplyTrainerExpirationMs
     ) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.jwtExpirationMs = jwtExpirationMs;
-        this.jwtEmailExpirationMs = jwtEmailExpirationMs;
+        this.jwtResetPasswordExpirationMs = jwtResetPasswordExpirationMs;
+        this.jwtReapplyTrainerExpirationMs = jwtReapplyTrainerExpirationMs;
     }
 
     public String generateJwtToken(Long userId, String role) {
@@ -42,11 +45,19 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateEmailValidToken(String email) {
+    public String generateResetPasswordJwtToken(String email) {
+        return generateEmailValidToken(email, jwtResetPasswordExpirationMs);
+    }
+
+    public String generateReapplyTrainerJwtToken(String email) {
+        return generateEmailValidToken(email, jwtReapplyTrainerExpirationMs);
+    }
+
+    public String generateEmailValidToken(String email, Long expirationMs) {
         return Jwts.builder()
                 .claim("email", email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtEmailExpirationMs))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }

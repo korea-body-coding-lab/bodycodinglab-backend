@@ -1,5 +1,6 @@
 package com.project.bcl_back.entity;
 
+import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.member.MemberStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -51,6 +52,17 @@ public class Member {
         this.user = user;
         this.memberAddress = memberAddress;
         this.status = status;
+    }
+
+    public void minusOneDayTicketCount() throws Exception {
+        if (this.oneDayTicketCount <= 0) {
+            throw new Exception(ResponseMessage.NOT_TRIAL_CHANCE_LEFT);
+        }
+        this.oneDayTicketCount--;
+    }
+
+    public void plusOneDayTicketCount() {
+        this.oneDayTicketCount++;
     }
 
 }

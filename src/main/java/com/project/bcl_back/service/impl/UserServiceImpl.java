@@ -25,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -149,6 +152,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setProfileImage(uploadFileService.updateFile(user.getId(), TargetType.PROFILE, profile));
+        userRepository.save(user);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
@@ -223,6 +227,18 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public String usernameFindById(Long id) {
+        return userRepository.findById(id)
+                .map(User::getUsername)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+    @Override
+    public Map<Long, String> getNamesByIds(List<Long> userIds) {
+        List<User> users = userRepository.findAllById(userIds);
+        return users.stream()
+                .collect(Collectors.toMap(User::getId, User::getName));
+    }
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)

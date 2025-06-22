@@ -24,14 +24,14 @@ public class NoteServiceImpl implements NoteService {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Override
-    public ResponseDto<NoteResponseDto> createNote(NoteRequestDto dto) {
+    public ResponseDto<NoteResponseDto> createNote(NoteRequestDto dto, Long writerId) {
         // 유효한 사용자 검증
-        userService.findById(dto.getNoteWriter());
+        userService.findById(writerId);
         userService.findById(dto.getNoteReceiver());
 
         Note note = Note.builder()
                 .noteText(dto.getNoteText())
-                .noteWriter(dto.getNoteWriter())
+                .noteWriter(writerId)
                 .noteReceiver(dto.getNoteReceiver())
                 .noteCreateTime(LocalDateTime.now())
                 .build();

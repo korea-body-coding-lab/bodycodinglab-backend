@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +39,7 @@ public class UploadFileController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(uploadFile.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + uploadFile.getOriginalName(), StandardCharsets.UTF_8 + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
                 .body(resource);
     }
 
@@ -49,9 +50,12 @@ public class UploadFileController {
         Path path = Paths.get(uploadFile.getFilePath(), uploadFile.getFileName());
         Resource resource = new FileSystemResource(path);
 
+        String encodedFilename = URLEncoder.encode(uploadFile.getOriginalName(), StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + uploadFile.getOriginalName(), StandardCharsets.UTF_8 + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
                 .body(resource);
     }
 
