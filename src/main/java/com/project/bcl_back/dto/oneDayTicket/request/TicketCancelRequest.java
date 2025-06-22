@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class TicketIssueRequest {
-    private Long userId;
-    private Long trainerId;
+public class TicketCancelRequest {
+    private String cancelReason;
 }
