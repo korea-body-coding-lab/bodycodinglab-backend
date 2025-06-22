@@ -2,6 +2,7 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
+import com.project.bcl_back.dto.oneDayTicket.request.TicketCancelRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketIssueRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketUseRequest;
 import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResponseDto;
@@ -22,7 +23,7 @@ public class OneDayTicketController {
     private final OneDayTicketService oneDayTicketService;
 
     private static final String MEMBER_ONE_DAY_TICKET = ApiMappingPattern.USER_API + "/members/me/one-day-tickets";
-    private static final String TRAINER_ONE_DAY_TICKET = ApiMappingPattern.TRAINER_API + "/me/one-day-tickets";
+    private static final String TRAINER_ONE_DAY_TICKET = ApiMappingPattern.USER_API + "/trainers/me/one-day-tickets";
 
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_ONE_DAY_TICKET)
@@ -40,7 +41,7 @@ public class OneDayTicketController {
     }
 
     @PreAuthorize("hasRole('TRAINER')")
-    @PostMapping(TRAINER_ONE_DAY_TICKET + "/issue")
+    @PostMapping(TRAINER_ONE_DAY_TICKET + "/issued")
     public ResponseEntity<ResponseDto<Void>> issueOneDayTicket(
             @AuthenticationPrincipal Long id,
             @RequestBody TicketIssueRequest dto) throws Exception {
@@ -49,7 +50,7 @@ public class OneDayTicketController {
     }
 
     @PreAuthorize("hasRole('TRAINER')")
-    @PostMapping(TRAINER_ONE_DAY_TICKET + "/{ticketId}/use")
+    @PostMapping(TRAINER_ONE_DAY_TICKET + "/{ticketId}/used")
     public ResponseEntity<ResponseDto<Void>> useOneDayTicket(
             @AuthenticationPrincipal Long id,
             @PathVariable Long ticketId,
@@ -59,11 +60,12 @@ public class OneDayTicketController {
     }
 
     @PreAuthorize("hasRole('TRAINER')")
-    @PostMapping(TRAINER_ONE_DAY_TICKET + "/{ticketId}/cancel")
+    @PostMapping(TRAINER_ONE_DAY_TICKET + "/{ticketId}/canceled")
     public ResponseEntity<ResponseDto<Void>> cancelOneDayTicket(
             @AuthenticationPrincipal Long id,
-            @PathVariable Long ticketId) throws Exception {
-        ResponseDto<Void> response = oneDayTicketService.cancelOneDayTicket(id, ticketId);
+            @PathVariable Long ticketId,
+            @RequestBody TicketCancelRequest dto) throws Exception {
+        ResponseDto<Void> response = oneDayTicketService.cancelOneDayTicket(id, ticketId, dto);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }

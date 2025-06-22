@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class GetTrainerAllTicketsResponseDto {
     private Long id;
     private Long trainerId;
+    private Long memberId;
     private String memberName;
     private String memberAddress;
     private LocalDate issuedAt;

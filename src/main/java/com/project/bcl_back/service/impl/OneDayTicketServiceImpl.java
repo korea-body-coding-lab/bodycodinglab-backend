@@ -4,6 +4,8 @@ import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.onedayTicket.OneDayTicketStatus;
 import com.project.bcl_back.dto.ResponseDto;
+import com.project.bcl_back.dto.note.request.NoteRequestDto;
+import com.project.bcl_back.dto.oneDayTicket.request.TicketCancelRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketIssueRequest;
 import com.project.bcl_back.dto.oneDayTicket.request.TicketUseRequest;
 import com.project.bcl_back.dto.oneDayTicket.response.GetMemberAllTicketsResponseDto;
@@ -32,6 +34,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
     private final TrainerInfoRepository trainerInfoRepository;
     private final OneDayTicketRepository oneDayTicketRepository;
     private final CouponServiceImpl couponServiceImpl;
+    private final NoteServiceImpl noteServiceImpl;
 
     @Override
     public ResponseDto<List<GetMemberAllTicketsResponseDto>> getMemberAllTickets(Long id) {
@@ -87,6 +90,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
                 .map(ticket -> GetTrainerAllTicketsResponseDto.builder()
                         .id(ticket.getId())
                         .trainerId(ticket.getTrainer().getId())
+                        .memberId(ticket.getMember().getId())
                         .memberName(ticket.getMember().getName())
                         .memberAddress(ticket.getMember().getMember().getMemberAddress())
                         .issuedAt(ticket.getIssuedAt())
@@ -110,8 +114,6 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-        System.out.println("현재 로그인한 유저 ID: " + user.getId());
-
         TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
                 .orElse(null);
 
@@ -119,7 +121,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        Member member = memberRepository.findById(dto.getMemberId())
+        Member member = memberRepository.findByUserId(dto.getUserId())
                 .orElse(null);
 
         if (member == null) {
@@ -153,6 +155,11 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
         ticket.setUsedAt(dto.getUsedAt());
         ticket.setStatus(OneDayTicketStatus.USED);
 
+        User memberUser = ticket.getMember();
+        Member member = memberRepository.findByUserId(memberUser.getId())
+                .orElseThrow(() -> new Exception(ResponseMessage.MEMBER_NOT_FOUND));
+
+
         couponServiceImpl.createCoupon(ticket.getMember().getId());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
@@ -160,19 +167,34 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
 
     @Transactional
     @Override
-    public ResponseDto<Void> cancelOneDayTicket(Long id, Long ticketId) throws Exception {
+    public ResponseDto<Void> cancelOneDayTicket(Long id, Long ticketId, TicketCancelRequest dto) throws Exception {
         OneDayTicket ticket = getTicket(ticketId);
 
         validateTrainer(ticket, id);
         validateTicketStatus(ticket, OneDayTicketStatus.ISSUANCE);
 
         ticket.setCanceledAt(LocalDate.now());
+        ticket.setCancelReason(dto.getCancelReason());
         ticket.setStatus(OneDayTicketStatus.CANCEL);
 
-        Member member = ticket.getMember().getMember();
+        User memberUser = ticket.getMember();
+        Member member = memberRepository.findByUserId(memberUser.getId())
+                .orElseThrow(() -> new Exception(ResponseMessage.MEMBER_NOT_FOUND));
         member.plusOneDayTicketCount();
-
         memberRepository.save(member);
+
+        User trainer = ticket.getTrainer();
+
+        String title = "체험권이 취소되었습니다.";
+        String content = "트레이너 [" + trainer.getName() + "]님이 체험권을 취소했습니다.\n"
+                + "사유: " + dto.getCancelReason();
+
+        NoteRequestDto noteDto = NoteRequestDto.builder()
+                .noteReceiver(memberUser.getId())
+                .noteText("[" + title + "]\n" + content)
+                .build();
+
+        noteServiceImpl.createNote(noteDto, trainer.getId());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
