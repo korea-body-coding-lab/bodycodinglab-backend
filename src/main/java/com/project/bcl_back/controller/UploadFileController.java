@@ -2,11 +2,9 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.enums.TargetType;
-import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
