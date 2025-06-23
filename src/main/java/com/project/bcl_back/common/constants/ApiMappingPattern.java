@@ -5,12 +5,13 @@ public interface ApiMappingPattern {
     String ADMIN_API = "/api/v1/admin";
     String USER_API = "/api/v1/users";
     String TRAINER_API = "/api/v1/trainers";
+    String MEMBER_API = "/api/v1/members";
 
     String MEMBER_COUPON_API = "/api/v1/users/members/me/coupons";
     String TRAINER_COUPON_API = "/api/v1/users/trainers/me/coupons";
 
     String BOARD_API = "/api/v1/personal-community-boards" + "/{matchId}";
-    String BOARD_COMMENT_API = BOARD_API + "/{boardId}" + "/comments";
+    String BOARD_COMMENT_API = BOARD_API +"/{categoryId}"+ "/{boardId}" + "/comments";
     String NOTE_API = "/api/v1/notes";
 
     String FILE_API = "/api/v1/files";

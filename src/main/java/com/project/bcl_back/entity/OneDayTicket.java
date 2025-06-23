@@ -34,6 +34,9 @@ public class OneDayTicket {
     @Column(name = "canceled_at")
     private LocalDate canceledAt;
 
+    @Column(name = "cancel_reason")
+    private String cancelReason;
+
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
     private OneDayTicketStatus status;

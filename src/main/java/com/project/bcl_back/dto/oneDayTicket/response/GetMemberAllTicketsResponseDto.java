@@ -18,7 +18,7 @@ public class GetMemberAllTicketsResponseDto {
     private LocalDate issuedAt;
     private LocalDate usedAt;
     private LocalDate canceledAt;
+    private String cancelReason;
     private OneDayTicketStatus status;
-    private int count;
-//    private String trainerProfileUrl;
+    private String trainerProfileImageUrl;
 }
