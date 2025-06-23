@@ -102,9 +102,9 @@ public class MatchServiceImpl implements MatchService {
         int age = Period.between(birthdate, LocalDate.now()).getYears();
 
         String profileImageUrl = null;
-        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(match.getTrainer().getId(), TargetType.PROFILE);
+        UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(match.getMember().getId(), TargetType.PROFILE);
         if (profileImage != null) {
-            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + match.getTrainer().getId() + "/" + TargetType.PROFILE;
+            profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + match.getMember().getId() + "/" + TargetType.PROFILE;
         }
 
         if(match.getMember().getMember().getMemberForm() != null){
