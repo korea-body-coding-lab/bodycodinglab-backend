@@ -50,6 +50,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .amount(dto.getAmount())
                 .build();
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, response);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
     }
 }
