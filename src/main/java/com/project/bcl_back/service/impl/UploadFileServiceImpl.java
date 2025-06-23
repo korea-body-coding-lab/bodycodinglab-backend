@@ -27,9 +27,6 @@ public class UploadFileServiceImpl implements UploadFileService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @Value("${spring.web.resources.static-locations}")
-    private String staticLocations;
-
     @Override
     public UploadFile saveFile(MultipartFile file, Long targetId, TargetType targetType) {
         try {
@@ -44,7 +41,7 @@ public class UploadFileServiceImpl implements UploadFileService {
             UploadFile uf = UploadFile.builder()
                     .originalName(original)
                     .fileName(uuidName)
-                    .filePath(staticLocations)
+                    .filePath(uploadDir + "/")
                     .fileSize(file.getSize())
                     .fileType(file.getContentType())
                     .targetId(targetId)
