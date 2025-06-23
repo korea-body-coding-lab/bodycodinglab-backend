@@ -95,20 +95,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-
-        TrainerInfo trainer = trainerInfoRepository.findById(user.getTrainerInfo().getId())
-                .orElse(null);
-
-        if (trainer == null) {
-            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
-        }
-
-        List<OneDayTicket> tickets = oneDayTicketRepository.findByTrainerId(trainer.getId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_ONE_DAY_TICKET));
-
-        if (tickets == null || tickets.isEmpty()) {
-            return ResponseDto.fail(ResponseCode.NOT_EXISTS_ONE_DAY_TICKET, ResponseMessage.NOT_EXISTS_ONE_DAY_TICKET);
-        }
+        List<OneDayTicket> tickets = oneDayTicketRepository.findByTrainerId(id);
 
         List<GetTrainerAllTicketsResponseDto> responseDto = tickets.stream()
                 .map(ticket -> GetTrainerAllTicketsResponseDto.builder()
@@ -145,12 +132,20 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
-        Member member = memberRepository.findByUserId(dto.getUserId())
+        User memberUser = userRepository.findByUsernameAndName(dto.getUsername(), dto.getName())
+                .orElse(null);
+
+        if (memberUser == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.MEMBER_NOT_FOUND);
+        }
+
+        Member member = memberRepository.findByUser(memberUser)
                 .orElse(null);
 
         if (member == null) {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.MEMBER_NOT_FOUND);
         }
+
 
         validateOneDayTicketCount(member);
 
@@ -170,6 +165,7 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
     }
 
     @Override
+    @Transactional
     public ResponseDto<Void> useOneDayTicket(Long id, Long ticketId, TicketUseRequest dto) throws Exception {
         OneDayTicket ticket = getTicket(ticketId);
 
@@ -179,10 +175,11 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
         ticket.setUsedAt(dto.getUsedAt());
         ticket.setStatus(OneDayTicketStatus.USED);
 
-        User memberUser = ticket.getMember();
-        Member member = memberRepository.findByUserId(memberUser.getId())
-                .orElseThrow(() -> new Exception(ResponseMessage.MEMBER_NOT_FOUND));
+        oneDayTicketRepository.save(ticket);
 
+        User memberUser = ticket.getMember();
+        memberRepository.findByUserId(memberUser.getId())
+                .orElseThrow(() -> new Exception(ResponseMessage.MEMBER_NOT_FOUND));
 
         couponServiceImpl.createCoupon(ticket.getMember().getId());
 
@@ -201,24 +198,26 @@ public class OneDayTicketServiceImpl implements OneDayTicketService {
         ticket.setCancelReason(dto.getCancelReason());
         ticket.setStatus(OneDayTicketStatus.CANCEL);
 
+        oneDayTicketRepository.save(ticket);
+
         User memberUser = ticket.getMember();
         Member member = memberRepository.findByUserId(memberUser.getId())
                 .orElseThrow(() -> new Exception(ResponseMessage.MEMBER_NOT_FOUND));
         member.plusOneDayTicketCount();
         memberRepository.save(member);
 
-        User trainer = ticket.getTrainer();
-
-        String title = "체험권이 취소되었습니다.";
-        String content = "트레이너 [" + trainer.getName() + "]님이 체험권을 취소했습니다.\n"
-                + "사유: " + dto.getCancelReason();
-
-        NoteRequestDto noteDto = NoteRequestDto.builder()
-                .noteReceiver(memberUser.getId())
-                .noteText("[" + title + "]\n" + content)
-                .build();
-
-        noteServiceImpl.createNote(noteDto, trainer.getId());
+//        User trainer = ticket.getTrainer();
+//
+//        String title = "체험권이 취소되었습니다.";
+//        String content = "트레이너 [" + trainer.getName() + "]님이 체험권을 취소했습니다.\n"
+//                + "사유: " + dto.getCancelReason();
+//
+//        NoteRequestDto noteDto = NoteRequestDto.builder()
+//                .noteReceiver(memberUser.getId())
+//                .noteText("[" + title + "]\n" + content)
+//                .build();
+//
+//        noteServiceImpl.createNote(noteDto, trainer.getId());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
