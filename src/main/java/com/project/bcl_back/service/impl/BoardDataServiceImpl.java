@@ -55,6 +55,8 @@ public class BoardDataServiceImpl implements BoardDataService {
                 .build();
         board = boardRepo.save(board);
 
+        board = boardRepo.findById(board.getId())
+                .orElseThrow(() -> new RuntimeException("게시글 조회 실패"));
         // 첨부파일 저장
         if (file != null && !file.isEmpty()) {
             saveFile(file, board.getId(), "Board");
@@ -121,13 +123,13 @@ public class BoardDataServiceImpl implements BoardDataService {
     // Post -> DTO 변환
     private BoardResponseDto toDto(Board board){
         String writerName = null;
-//        if (board.getWriter() != null) {
-//            writerName = board.getWriter().getName();
-//        }
+        if (board.getWriter() != null) {
+            writerName = board.getWriter().getName();
+        }
         return BoardResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getWriterId())
-//                .writerName(writerName)
+                .writerName(writerName)
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt().format(FORMAT))

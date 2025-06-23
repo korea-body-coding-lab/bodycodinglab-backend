@@ -1,10 +1,10 @@
 package com.project.bcl_back.controller;
 
 import com.project.bcl_back.dto.ResponseDto;
+import com.project.bcl_back.dto.matchWatingList.request.MatchWaitingListRejectRequestDto;
 import com.project.bcl_back.dto.matchWatingList.request.MatchWaitingListRequestDto;
 import com.project.bcl_back.dto.matchWatingList.response.MemberMatchWaitingListResponseDto;
 import com.project.bcl_back.dto.matchWatingList.response.TrainerMatchWaitingListResponseDto;
-import com.project.bcl_back.entity.User;
 import com.project.bcl_back.service.MatchWaitingListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,7 +48,7 @@ public class MatchWaitListController {
     }
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_MATCH_WAITING_LIST)
-    public ResponseEntity<ResponseDto<TrainerMatchWaitingListResponseDto>> findTMemberMatchWaitingList(
+    public ResponseEntity<ResponseDto<TrainerMatchWaitingListResponseDto>> findMemberMatchWaitingList(
             @AuthenticationPrincipal Long memberId
     )
     {
@@ -74,7 +74,7 @@ public class MatchWaitListController {
     @PutMapping(TRAINER_MATCH_WAITING_LIST + "/{matchWaitingListId}/rejects")
     public ResponseEntity<ResponseDto<Void>> matchReject(
             @PathVariable Long matchWaitingListId,
-            @RequestBody MatchWaitingListRequestDto dto
+            @RequestBody MatchWaitingListRejectRequestDto dto
     ){
 
         ResponseDto<Void> response = matchWaitingListService.matchReject(matchWaitingListId, dto);
@@ -84,13 +84,12 @@ public class MatchWaitListController {
 
 
     @PreAuthorize("hasRole('MEMBER')")
-    @PutMapping(MEMBER_MATCH_WAITING_LIST + "/cancels")
+    @DeleteMapping(MEMBER_MATCH_WAITING_LIST + "/cancels")
     public ResponseEntity<ResponseDto<Void>> matchCancel(
-            @AuthenticationPrincipal Long memberId,
-            @RequestBody MatchWaitingListRequestDto dto
+            @AuthenticationPrincipal Long memberId
     ){
 
-        ResponseDto<Void> response =  matchWaitingListService.matchCancel(memberId, dto);
+        ResponseDto<Void> response =  matchWaitingListService.matchCancel(memberId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
