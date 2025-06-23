@@ -18,4 +18,5 @@ public class TrainerMatchWaitingListResponseDto {
     private String trainerJobAddress;
     private LocalDateTime appliedAt;
     private ApprovedStatus approvedStatus;
+    private String rejectResponse;
 }
