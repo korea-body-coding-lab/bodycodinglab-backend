@@ -8,6 +8,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TicketIssueRequest {
-    private Long userId;
-    private Long trainerId;
+    private String username;
+    private String name;
 }
