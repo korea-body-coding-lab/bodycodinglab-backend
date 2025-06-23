@@ -6,19 +6,27 @@ import com.project.bcl_back.dto.board.request.CommentRequestDto;
 import com.project.bcl_back.dto.board.response.CommentResponseDto;
 import com.project.bcl_back.entity.Board;
 import com.project.bcl_back.entity.Comment;
+import com.project.bcl_back.entity.User;
 import com.project.bcl_back.repository.BoardRepository;
 import com.project.bcl_back.repository.CommentRepository;
+import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -28,9 +36,19 @@ public class CommentServiceImpl implements CommentService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(()-> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_POST + boardId));
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("로그인이 필요합니다.");
+        }
+        Long userId = Long.parseLong(authentication.getName());
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+
         Comment newComment = Comment.builder()
                 .commentContent(dto.getCommentContent())
-                .commenterId(dto.getCommenterId())
+                .commenterId(user.getId())
                 .build();
 
         board.addComment(newComment);
