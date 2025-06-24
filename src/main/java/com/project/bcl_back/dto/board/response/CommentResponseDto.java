@@ -1,5 +1,6 @@
 package com.project.bcl_back.dto.board.response;
 
+import com.project.bcl_back.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
