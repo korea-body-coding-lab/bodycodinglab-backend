@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(ApiMappingPattern.BOARD_COMMENT_API)
 @RequiredArgsConstructor
@@ -47,5 +49,13 @@ public class CommentController {
     ){
         ResponseDto<Void> response = commentService.deleteComment(boardId, commentId);
         return ResponseEntity.noContent().build();
+    }
+    // 4.댓글 목록 조회
+    @GetMapping("")
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getComments(
+            @PathVariable Long boardId
+    ) {
+        ResponseDto<List<CommentResponseDto>> response = commentService.getComments(boardId);
+        return ResponseEntity.ok(response);
     }
 }

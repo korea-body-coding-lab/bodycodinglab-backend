@@ -3,6 +3,7 @@ package com.project.bcl_back.entity;
 import com.project.bcl_back.common.enums.matchWaitingList.ApprovedStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -10,11 +11,11 @@ import java.time.LocalDateTime;
 @Table(
         name = "match_waiting_list",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"member_Id", "trainer_id"}),
                 @UniqueConstraint(columnNames = {"member_Id"})}
 )
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter @Setter
 public class MatchWaitingList {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +36,8 @@ public class MatchWaitingList {
     @Enumerated(EnumType.STRING)
     @Column(name = "approved_status", nullable = false)
     private ApprovedStatus approvedStatus ;
+
+    @Column(name = "reject_response", nullable = true)
+    private String rejectResponse;
+
 }

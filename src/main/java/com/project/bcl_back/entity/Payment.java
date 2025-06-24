@@ -20,6 +20,9 @@ public class Payment {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "payment_key", unique = true, nullable = true)
+    private String paymentKey;
+
     @Column(name = "order_id", nullable = false, unique = true)
     private String orderId;
 

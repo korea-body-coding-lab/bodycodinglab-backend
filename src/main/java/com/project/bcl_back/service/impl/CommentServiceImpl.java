@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+
+    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Override
     @Transactional(readOnly = false)
@@ -101,5 +106,21 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
 
         return ResponseDto.success(ResponseMessage.SUCCESS, "", null);
+    }
+
+    @Override
+    public ResponseDto<List<CommentResponseDto>> getComments(Long boardId) {
+        List<Comment> comments = commentRepository.findByBoardId(boardId);
+        List<CommentResponseDto> responseDto = comments.stream()
+                .map(comment -> CommentResponseDto.builder()
+                        .id(comment.getId())
+                        .postId(comment.getBoard().getId())
+                        .commentContent(comment.getCommentContent())
+                        .commenterId(comment.getBoard().getWriterId())
+                        .createdAt(comment.getCreatedAt().format(FORMAT))
+                        .build()
+                )
+                .collect(Collectors.toList());
+        return ResponseDto.success(ResponseMessage.SUCCESS, "", responseDto);
     }
 }
