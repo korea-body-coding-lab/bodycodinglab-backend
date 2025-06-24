@@ -16,4 +16,5 @@ public class CommentResponseDto {
 
     private final String commentContent;
     private final Long commenterId;
+    private String createdAt;
 }
