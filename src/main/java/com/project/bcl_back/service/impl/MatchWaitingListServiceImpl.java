@@ -49,6 +49,9 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
         User member = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException((ResponseMessage.USER_NOT_FOUND + trainerId)));
 
+        if(member.getMemberMatch() != null){
+            throw new IllegalStateException("이미 매칭된 트레이너가 존재합니다.");
+        }
 
         MatchWaitingList existing = matchWaitingListRepository.findByMember_Id(member.getId()).orElse(null);
         if(existing != null && existing.getApprovedStatus() == ApprovedStatus.REJECT){
