@@ -31,6 +31,10 @@ public class UploadFile {
 //    @JoinColumn(name = "board_id")
 //    private Board board;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "trainer_info_id")
+//    private TrainerInfo trainerInfo;
+
     @Builder
     public UploadFile(String originalName, String fileName, String filePath, String fileType, Long fileSize, Long targetId, TargetType targetType){
         this.originalName = originalName;
@@ -51,5 +55,9 @@ public class UploadFile {
         this.fileName = fileName;
         this.fileType = fileType;
         this.fileSize = fileSize;
+    }
+
+    public String getFullUrl() {
+        return "/files/" + this.fileName;
     }
 }

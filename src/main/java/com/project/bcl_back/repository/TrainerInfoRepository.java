@@ -15,4 +15,7 @@ public interface TrainerInfoRepository extends JpaRepository<TrainerInfo, Long> 
 
     @Query("SELECT t FROM TrainerInfo t WHERE t.jobAddress LIKE %:jobAddress%")
     List<TrainerInfo> findTrainerByAddress(@Param("jobAddress") String jobAddress);
+
+    @Query("SELECT t FROM TrainerInfo t JOIN FETCH t.user u LEFT JOIN FETCH u.profileImage")
+    List<TrainerInfo> findAllWithUserAndProfileImage();
 }

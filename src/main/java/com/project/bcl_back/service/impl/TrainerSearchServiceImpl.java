@@ -68,13 +68,19 @@ public class TrainerSearchServiceImpl implements TrainerSearchService {
     public ResponseDto<List<TrainerListResponseDto>> getAllTrainers() {
         List<TrainerListResponseDto> responseDtos = null;
 
-        List<TrainerInfo> trainers = trainerInfoRepository.findAll();
+        List<TrainerInfo> trainers = trainerInfoRepository.findAllWithUserAndProfileImage();
 
         responseDtos =  trainers.stream()
                 .map(trainer -> TrainerListResponseDto.builder()
                                 .trainerId(trainer.getId())
                                 .name(trainer.getUser().getName())
                                 .shortIntroduce(trainer.getShortIntroduce())
+                        .jobAddress(trainer.getJobAddress())
+                        .profileImage(
+                                trainer.getUser().getProfileImage() != null
+                                        ? trainer.getUser().getProfileImage().getFullUrl()
+                                        : null
+                        )
                                 .build())
                 .collect(Collectors.toList());
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);

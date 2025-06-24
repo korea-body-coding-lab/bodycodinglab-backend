@@ -2,6 +2,7 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.enums.TargetType;
+import com.project.bcl_back.dto.FileResponseDto;
 import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(ApiMappingPattern.FILE_API)
@@ -27,6 +30,7 @@ public class UploadFileController {
 
     private static final String PROFILE_URL = "/profile";
     private static final String TRAINER_ATTACHMENT_URL = "/trainer-attachment";
+    private static final String TRAINER_INFO_URL = "/trainer-info";
 
     @GetMapping(PROFILE_URL + "/{targetId}/{targetType}")
     public ResponseEntity<Resource> getProfileImage(@PathVariable Long targetId, @PathVariable TargetType targetType) {
@@ -57,6 +61,20 @@ public class UploadFileController {
                 .body(resource);
     }
 
+    @GetMapping(TRAINER_INFO_URL + "/{targetId}/{targetType}")
+    public ResponseEntity<List<FileResponseDto>> getInfoImages(
+            @PathVariable Long targetId,
+            @PathVariable TargetType targetType
+    ) {
+        List<UploadFile> uploadFiles = uploadFileService.findAllByTargetIdAndTargetType(targetId, targetType);
+
+        List<FileResponseDto> response = uploadFiles.stream()
+                .map(FileResponseDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{targetId}/{targetType}")
     public ResponseEntity<UploadFile> updateFile(
             @PathVariable Long targetId,
@@ -73,6 +91,21 @@ public class UploadFileController {
             @PathVariable TargetType targetType
     ) throws IOException {
         uploadFileService.deleteFile(targetId, targetType);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/multi/{targetId}/{targetType}")
+    public ResponseEntity<List<UploadFile>> uploadMultipleFiles(
+            @PathVariable Long targetId,
+            @PathVariable TargetType targetType,
+            @RequestPart("files") List<MultipartFile> files) {
+        List<UploadFile> savedFiles = uploadFileService.saveFiles(files, targetId, targetType);
+        return ResponseEntity.ok(savedFiles);
+    }
+
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<Void> deleteFileById(@PathVariable Long fileId) throws IOException {
+        uploadFileService.deleteFileById(fileId);
         return ResponseEntity.noContent().build();
     }
 

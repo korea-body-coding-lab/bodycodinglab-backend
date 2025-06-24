@@ -7,10 +7,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public interface UploadFileService {
     UploadFile saveFile(MultipartFile file, Long targetId, TargetType targetType) throws IOException;
     UploadFile updateFile(Long targetId, TargetType targetType, MultipartFile newFile) throws IOException;
     void deleteFile(Long targetId, TargetType targetType) throws IOException;
     UploadFile findByTargetIdAndTargetType(Long targetId, TargetType targetType);
+
+    List<UploadFile> findAllByTargetIdAndTargetType(Long targetId, TargetType targetType);
+
+    List<UploadFile> saveFiles(List<MultipartFile> files, Long targetId, TargetType targetType);
+    void deleteFileById(Long uploadFileId) throws IOException;
 }
