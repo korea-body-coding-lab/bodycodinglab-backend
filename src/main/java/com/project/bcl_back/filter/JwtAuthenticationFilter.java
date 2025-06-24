@@ -1,9 +1,9 @@
 package com.project.bcl_back.filter;
 
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.provider.JwtProvider;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) throws IOException {
         try {
             String authorizationHeader = request.getHeader("Authorization");
 
@@ -39,26 +39,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     ? jwtProvider.removeBearer(authorizationHeader)
                     : null;
 
-            if (token == null || !jwtProvider.isValidToken(token)) {
-                filterChain.doFilter(request, response);
-                return;
+            if (token != null && jwtProvider.isValidToken(token)) {
+                Long userId = jwtProvider.getUserIdFromJwt(token);
+                UserRole role = jwtProvider.getRoleFromJwt(token);
+
+                setAuthenticationContext(request, userId, role);
             }
 
-            Long userId = jwtProvider.getUserIdFromJwt(token);
-            String role = jwtProvider.getRoleFromJwt(token);
+            filterChain.doFilter(request, response);
 
-            setAuthenticationContext(request, userId, role);
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(ResponseMessage.INVALID_TOKEN);
         }
-        filterChain.doFilter(request, response);
     }
 
-    private void setAuthenticationContext(HttpServletRequest request, Long userId, String role) {
+    private void setAuthenticationContext(HttpServletRequest request, Long userId, UserRole role) {
 
-        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
 
         AbstractAuthenticationToken authenticationToken
             = new UsernamePasswordAuthenticationToken(userId, null, authorities);

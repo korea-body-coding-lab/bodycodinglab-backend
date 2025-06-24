@@ -21,14 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -82,16 +76,16 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public Mono<ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>>> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
+    public ResponseDto<GetTrainerDetailResponseDto> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
 
         if (trainer == null) {
-            return Mono.just(ResponseDto.toResponseEntity(HttpStatus.BAD_REQUEST, ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND)));
+            return ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
         }
 
         if (trainer.getTrainerStatus().equals(dto.getNewStatus())) {
-            return Mono.just(ResponseDto.toResponseEntity(HttpStatus.BAD_REQUEST, ResponseDto.fail(ResponseCode.ALREADY_EQUAL_STATUS, ResponseMessage.ALREADY_EQUAL_STATUS)));
+            return ResponseDto.fail(ResponseCode.ALREADY_EQUAL_STATUS, ResponseMessage.ALREADY_EQUAL_STATUS);
         }
 
         String attachmentFileUrl;
@@ -118,18 +112,9 @@ public class AdminServiceImpl implements AdminService {
         createLog(id, savedTrainer,prevStatus,dto.getChangeReason());
 
         SendTrainerApprovalResultEmailRequestDto sendEmailDto = new SendTrainerApprovalResultEmailRequestDto(savedTrainer.getUser().getEmail(), dto.getNewStatus(), dto.getChangeReason());
+        mailService.sendTrainerApprovalResultEmail(sendEmailDto).subscribe();
 
-        return mailService.sendTrainerApprovalResultEmail(sendEmailDto)
-                .flatMap(response -> {
-                    if (response.getStatusCode().is2xxSuccessful()) {
-                        System.out.println("여기까지 왔드아아아!!");
-                        return Mono.just(ResponseDto.toResponseEntity(HttpStatus.OK,
-                                ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetTrainerResDto(savedTrainer, attachmentFileUrl, profileImageUrl))));
-                    } else {
-                        return Mono.just(ResponseDto.toResponseEntity(HttpStatus.BAD_REQUEST,
-                                ResponseDto.fail(ResponseCode.MAIL_SEND_FAIL, ResponseMessage.MAIL_SEND_FAIL)));
-                    }
-                });
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetTrainerResDto(savedTrainer, attachmentFileUrl, profileImageUrl));
     }
 
     private GetAllTrainersResponseDto toGetAllTrainersResDto(TrainerListView view) {
