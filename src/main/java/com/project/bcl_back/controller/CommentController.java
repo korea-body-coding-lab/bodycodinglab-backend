@@ -51,7 +51,7 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
     // 4.댓글 목록 조회
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getComments(
             @PathVariable Long boardId
     ) {
