@@ -2,10 +2,7 @@ package com.project.bcl_back.entity;
 
 import com.project.bcl_back.common.enums.TargetType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "upload_files")
@@ -25,7 +22,7 @@ public class UploadFile {
     private Long targetId;
 
     @Enumerated(EnumType.STRING)
-    private TargetType targetType;// 커몬 > 이넘 > 타겟타입에 파일저장소와 연결할 부분 추가
+    private TargetType targetType;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "board_id")
@@ -45,7 +42,7 @@ public class UploadFile {
 //        this.board = board;
 //        board.getImages().add(this);
 //    }
-    // 파일 업로드 시스템이 필요한 부분마다 연결
+
     public void updateFile(String originalName, String fileName, String fileType, Long fileSize) {
         this.originalName = originalName;
         this.fileName = fileName;

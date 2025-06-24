@@ -16,7 +16,6 @@ public class MailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
-    // 인증 정보
     @Value("${spring.mail.username}")
     private String username;
     @Value("${spring.mail.password}")

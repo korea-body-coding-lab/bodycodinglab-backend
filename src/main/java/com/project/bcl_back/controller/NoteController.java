@@ -2,10 +2,8 @@ package com.project.bcl_back.controller;
 
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
-import com.project.bcl_back.dto.UserPrincipal;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
-import com.project.bcl_back.entity.User;
 import com.project.bcl_back.service.NoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
