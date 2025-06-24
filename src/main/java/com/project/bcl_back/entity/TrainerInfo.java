@@ -41,6 +41,10 @@ public class TrainerInfo {
     @Column(name = "long_introduce")
     private String longIntroduce;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "info_image_id")
+    private List<UploadFile> longIntroduceFiles = new ArrayList<>();
+
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
     private TrainerStatus trainerStatus;

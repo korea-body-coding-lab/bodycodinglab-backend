@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -100,5 +102,37 @@ public class UploadFileServiceImpl implements UploadFileService {
     @Override
     public UploadFile findByTargetIdAndTargetType(Long targetId, TargetType targetType) {
         return uploadFileRepository.findByTargetIdAndTargetType(targetId, targetType);
+    }
+
+    @Override
+    public List<UploadFile> findAllByTargetIdAndTargetType(Long targetId, TargetType targetType) {
+        return uploadFileRepository.findAllByTargetIdAndTargetType(targetId, targetType);
+    }
+
+    @Override
+    @Transactional
+    public List<UploadFile> saveFiles(List<MultipartFile> files, Long targetId, TargetType targetType) {
+        List<UploadFile> savedFiles = new ArrayList<>();
+        if (files == null || files.isEmpty()) {
+            return savedFiles;
+        }
+        for (MultipartFile file : files) {
+            if (file != null && !file.isEmpty()) {
+                savedFiles.add(saveFile(file, targetId, targetType));
+            }
+        }
+        return savedFiles;
+    }
+
+    @Override
+    @Transactional
+    public void deleteFileById(Long uploadFileId) throws IOException {
+        UploadFile existing = uploadFileRepository.findById(uploadFileId)
+                .orElseThrow(() -> new FileNotFoundException(ResponseMessage.FILE_NOT_FOUND));
+
+        Path filePath = Paths.get(existing.getFilePath() + existing.getFileName());
+        Files.deleteIfExists(filePath);
+
+        uploadFileRepository.delete(existing);
     }
 }

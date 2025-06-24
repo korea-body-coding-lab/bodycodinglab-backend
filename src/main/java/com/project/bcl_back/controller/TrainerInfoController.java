@@ -32,7 +32,7 @@ public class TrainerInfoController {
     public ResponseEntity<ResponseDto<TrainerInfoResponseDto>> updateTrainerInfo (
             @AuthenticationPrincipal Long id,
             @ModelAttribute TrainerInfoRequestDto dto,
-            @RequestPart(value = "file", required = false) List<MultipartFile> files
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) throws IOException {
         ResponseDto<TrainerInfoResponseDto> response = trainerInfoService.updateTrainerInfo(id, dto, files);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);

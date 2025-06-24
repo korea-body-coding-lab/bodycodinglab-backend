@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsFilter()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/files/**").permitAll()
                         .requestMatchers("/api/v1/files/**").permitAll()
                         .requestMatchers("/api/v1/trainers/**").permitAll()
                         .requestMatchers("/api/v1/members/**").permitAll()
