@@ -46,7 +46,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new IllegalStateException("이미 처리된 결제입니다.");
         }
 
-        //payment.setPaymentKey(dto.getPaymentKey());
+        payment.setPaymentKey(dto.getPaymentKey());
         payment.setPaymentStatus(PaymentStatus.SUCCESS);
         payment.setPaymentMethod(method);
 
@@ -64,6 +64,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         member.setSubscription(subscription);
         member.setStatus(MemberStatus.PAYMENT);
         subscriptionRepository.save(subscription);
+        paymentRepository.save(payment);
 
 
 
