@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConfirmPaymentRequestDto {
+    private String paymentKey;
     private String orderId;
     private String provider;
     private Long matchWaitingListId;
