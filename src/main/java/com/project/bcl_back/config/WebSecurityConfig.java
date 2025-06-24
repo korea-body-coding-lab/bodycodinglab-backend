@@ -18,7 +18,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
@@ -32,7 +31,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();  // 자동으로 DaoAuthenticationProvider 구성됨
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -56,14 +55,13 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/files/**").permitAll()
-                        .requestMatchers("/api/v1/personal-community-boards/**").hasAnyRole("MEMBER","TRAINER","ADMIN")
-                        .requestMatchers("/api/v1/notes/**").hasAnyRole("MEMBER","TRAINER","ADMIN")
-                        .requestMatchers("/api/v1/users/members/**").hasRole("MEMBER")
-                        .requestMatchers("/api/v1/users/trainers/**").hasRole("TRAINER")
                         .requestMatchers("/api/v1/trainers/**").permitAll()
                         .requestMatchers("/api/v1/members/**").permitAll()
+                        .requestMatchers("/api/v1/users/members/**").hasRole("MEMBER")
+                        .requestMatchers("/api/v1/users/trainers/**").hasRole("TRAINER")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/common/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/v1/personal-community-boards/**").hasAnyRole("MEMBER","TRAINER","ADMIN")
+                        .requestMatchers("/api/v1/notes/**").hasAnyRole("MEMBER","TRAINER","ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)

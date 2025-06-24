@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(ApiMappingPattern.ADMIN_API)
@@ -38,17 +37,17 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(GET_TRAINERS + "/{trainerId}")
     public ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>> getTrainer(@PathVariable Long trainerId) {
-        return ResponseDto.toResponseEntity(HttpStatus.OK,adminService.getTrainer(trainerId));
+        return ResponseDto.toResponseEntity(HttpStatus.OK, adminService.getTrainer(trainerId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(GET_TRAINERS + "/{trainerId}")
-    public Mono<ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>>> updateTrainerStatus(
+    public ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>> updateTrainerStatus(
             @AuthenticationPrincipal Long id,
             @PathVariable Long trainerId,
             @Valid @RequestBody UpdateTrainerStatusRequestDto dto
     ) {
-        return adminService.updateTrainerStatus(id, trainerId, dto);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, adminService.updateTrainerStatus(id, trainerId, dto));
     }
 
 }

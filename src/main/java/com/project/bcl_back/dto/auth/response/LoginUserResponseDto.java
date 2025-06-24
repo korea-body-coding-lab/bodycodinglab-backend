@@ -1,16 +1,16 @@
 package com.project.bcl_back.dto.auth.response;
 
+import com.project.bcl_back.common.enums.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.core.io.Resource;
 
 @AllArgsConstructor
 @Getter
 @Builder
 public class LoginUserResponseDto {
     private Long id;
-    private String role;
+    private UserRole role;
     private String username;
     private String name;
     private String profileImageUrl;
