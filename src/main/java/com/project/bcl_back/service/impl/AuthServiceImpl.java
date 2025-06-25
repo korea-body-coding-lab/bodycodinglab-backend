@@ -155,8 +155,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<LoginUserResponseDto> login(LoginUserRequestDto dto) throws IOException {
-        LoginUserResponseDto data = null;
+    public ResponseDto<? extends LoginUserResponseDto> login(LoginUserRequestDto dto) throws IOException {
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElse(null);
 
@@ -176,14 +175,29 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName());
 
-        data = LoginUserResponseDto.builder()
+        if (user.getRole().getName().equals(UserRole.TRAINER) && user.getTrainerInfo().getTrainerStatus() == TrainerStatus.REJECT) {
+            LoginRejectedTrainerResponseDto data = new LoginRejectedTrainerResponseDto(
+                    token,
+                    jwtProvider.getExpiration(),
+                    user.getId(),
+                    user.getRole().getName(),
+                    user.getUsername(),
+                    user.getName(),
+                    profileImageUrl,
+                    user.getTrainerInfo().getTrainerStatus()
+            );
+
+            return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
+        }
+
+        LoginUserResponseDto data = LoginUserResponseDto.builder()
+                .token(token)
+                .exprTime(jwtProvider.getExpiration())
                 .id(user.getId())
                 .role(user.getRole().getName())
                 .username(user.getUsername())
                 .name(user.getName())
                 .profileImageUrl(profileImageUrl)
-                .token(token)
-                .exprTime(jwtProvider.getExpiration())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
@@ -247,29 +261,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        userRepository.save(user);
-
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
-    }
-
-    @Override
-    public ResponseDto<Void> reapplyTrainer(String token, ReapplyTrainerRequestDto dto, MultipartFile attachmentFile) throws IOException {
-        String email = jwtProvider.getEmailFromJwt(token);
-
-        User user = userRepository.findByEmail(email)
-                .orElse(null);
-
-        if (user == null) {
-            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
-        }
-
-        if (!user.getRole().getName().equals(UserRole.TRAINER)) {
-            return ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
-        }
-
-        user.getTrainerInfo().setJobAddress(dto.getJobAddress());
-        user.getTrainerInfo().setTrainerStatus(TrainerStatus.PENDING);
-        user.getTrainerInfo().setAttachmentFile(uploadFileService.updateFile(user.getTrainerInfo().getId(), TargetType.ATTACHMENT, attachmentFile));
         userRepository.save(user);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);

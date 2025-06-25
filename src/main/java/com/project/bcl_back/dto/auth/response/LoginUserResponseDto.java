@@ -9,11 +9,11 @@ import lombok.Getter;
 @Getter
 @Builder
 public class LoginUserResponseDto {
+    private String token;
+    private int exprTime;
     private Long id;
     private UserRole role;
     private String username;
     private String name;
     private String profileImageUrl;
-    private String token;
-    private int exprTime;
 }

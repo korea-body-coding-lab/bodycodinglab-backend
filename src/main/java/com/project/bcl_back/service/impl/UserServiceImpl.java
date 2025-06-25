@@ -4,6 +4,7 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
+import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.user.request.DeleteUserRequestDto;
 import com.project.bcl_back.dto.user.request.UpdateMemberInfoRequestDto;
@@ -224,6 +225,11 @@ public class UserServiceImpl implements UserService {
                 .username(user.getUsername())
                 .name(user.getName())
                 .profileImageUrl(profileImageUrl)
+                .trainerStatus(
+                        user.getRole().getName().equals(UserRole.TRAINER)
+                            ? user.getTrainerInfo().getTrainerStatus()
+                            : null
+                )
                 .build();
     }
 

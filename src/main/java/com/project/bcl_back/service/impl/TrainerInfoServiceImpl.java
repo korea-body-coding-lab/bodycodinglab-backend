@@ -3,8 +3,11 @@ package com.project.bcl_back.service.impl;
 import com.project.bcl_back.common.constants.ResponseCode;
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
+import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
+import com.project.bcl_back.common.enums.user.UserRole;
 import com.project.bcl_back.common.util.DateUtils;
 import com.project.bcl_back.dto.ResponseDto;
+import com.project.bcl_back.dto.auth.request.ReapplyTrainerRequestDto;
 import com.project.bcl_back.dto.trainer.request.TrainerInfoRequestDto;
 import com.project.bcl_back.dto.trainer.response.TrainerCareerResponseDto;
 import com.project.bcl_back.dto.trainer.response.TrainerLicenseResponseDto;
@@ -18,6 +21,7 @@ import com.project.bcl_back.repository.UserRepository;
 import com.project.bcl_back.service.TrainerInfoService;
 import com.project.bcl_back.service.UploadFileService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,4 +94,28 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
+
+    @Override
+    @Transactional
+    public ResponseDto<Void> reapplyTrainer(Long id, ReapplyTrainerRequestDto dto, MultipartFile attachmentFile) throws IOException {
+
+        User user = userRepository.findById(id)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        }
+
+        if (!user.getRole().getName().equals(UserRole.TRAINER)) {
+            return ResponseDto.fail(ResponseCode.TRAINER_NOT_FOUND, ResponseMessage.TRAINER_NOT_FOUND);
+        }
+
+        user.getTrainerInfo().setJobAddress(dto.getJobAddress());
+        user.getTrainerInfo().setTrainerStatus(TrainerStatus.PENDING);
+        user.getTrainerInfo().setAttachmentFile(uploadFileService.updateFile(user.getTrainerInfo().getId(), TargetType.ATTACHMENT, attachmentFile));
+        userRepository.save(user);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
 }

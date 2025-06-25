@@ -83,16 +83,15 @@ public class MailServiceImpl implements MailService {
         }
 
         return Mono.fromCallable(() -> {
-            String token = jwtProvider.generateReapplyTrainerJwtToken(dto.getEmail());
 
             if (dto.getStatus().equals(TrainerStatus.APPROVE)) {
-                MimeMessage message = createTrainerApproveMail(token);
+                MimeMessage message = createTrainerApproveMail(dto.getEmail());
                 javaMailSender.send(message);
 
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (승인 메일 발송)"));
             } else if (dto.getStatus().equals(TrainerStatus.REJECT)) {
-                MimeMessage message = createTrainerReapplyMail(dto.getEmail(), token, dto.getChangeReason());
+                MimeMessage message = createTrainerReapplyMail(dto.getEmail(), dto.getChangeReason());
                 javaMailSender.send(message);
 
                 return ResponseEntity.status(HttpStatus.OK)
@@ -115,10 +114,8 @@ public class MailServiceImpl implements MailService {
 
         String body = """
                 <p>안녕하세요, Fit-Mate 입니다.</p>
-                <br />
                 <p>아래 비밀번호 재설정 링크에 접속하여 인증을 완료해 주세요.</p>
                 <a href="http://localhost:5173/auth/reset-password/setting?token=%s">여기를 클릭하여 설정 페이지에 접속해 주세요.</a>
-                <br />
                 <p>감사합니다.</p>
                 """.formatted(token);
 
@@ -126,7 +123,7 @@ public class MailServiceImpl implements MailService {
         return message;
     }
 
-    private MimeMessage createTrainerReapplyMail(String email, String token, String changeReason) throws MessagingException {
+    private MimeMessage createTrainerReapplyMail(String email, String changeReason) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setFrom(senderEmail);
         message.setRecipients(MimeMessage.RecipientType.TO, email);
@@ -140,28 +137,17 @@ public class MailServiceImpl implements MailService {
                 <ol>
                   <li><strong>거부 사유 확인</strong></li>
                   <li><strong>서류 보완</strong></li>
-                  <li><strong>아래 링크에 접속하여 재신청</strong></li>
+                  <li><strong>재신청</strong></li>
                   <li><strong>가입 승인 대기</strong></li>
                 </ol>
                 
                 <p>
-                  거부 사유: <strong style="color: red;">%s</strong>
+                  [ 거부 사유 ] <strong style="color: red;">%s</strong>
                 </p>
                 
-                <p>
-                  아래 링크에서 바로 재신청 가능합니다.<br/>
-                  <span style="color: red;">※ 메일 링크는 3일간 유효합니다.<br/>
-                  접속이 어려운 경우, 홈페이지에 로그인 후 재신청해 주세요.</span>
-                </p>
-                
-                <p>
-                  <a href="http://localhost:5173/auth/trainer-reapply?token=%s" target="_blank" style="font-weight: bold; color: blue;">
-                  여기를 클릭하여 재신청 페이지로 이동
-                  </a>
-                </p>
-                
+                <p>홈페이지에 방문하여 재신청 해주시길 바랍니다.</p>
                 <p>감사합니다.</p>
-                """.formatted(changeReason, token);
+                """.formatted(changeReason);
 
         message.setText(body, "utf-8", "html");
         return message;
@@ -174,13 +160,11 @@ public class MailServiceImpl implements MailService {
 
         String body = """
                 <p>안녕하세요, Fit-Mate 입니다.</p>
-                <br />
                 <p>저희 서비스를 이용해 주셔서 감사드립니다.</p>
-                <br />
-                <p>트레이너 가입이 승인되었습니다.<br />
-                홈페이지에 방문하시면, 서비스 이용이 가능합니다. <br />
-                이용 중 불편함이 있으시면 고객센터로 연락 바랍니다.</p>
-                <br />
+                <p>
+                    트레이너 가입이 승인되었습니다.<br />
+                    홈페이지에 방문하시면, 서비스 이용이 가능합니다. <br />
+                </p>
                 <p>감사합니다.</p>
                 """;
 

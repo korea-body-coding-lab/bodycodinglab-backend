@@ -14,11 +14,10 @@ import java.io.IOException;
 public interface AuthService {
     ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto, MultipartFile profile) throws IOException;
     ResponseDto<SignUpTrainerResponseDto> trainerSignup(@Valid SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException;
-    ResponseDto<LoginUserResponseDto> login(@Valid LoginUserRequestDto dto) throws IOException;
+    ResponseDto<? extends LoginUserResponseDto> login(@Valid LoginUserRequestDto dto) throws IOException;
     ResponseDto<FindUsernameResponseDto> findUserId(@Valid FindUsernameRequestDto dto);
     ResponseDto<GetUserInformationToResetPasswordResponseDto> findUserToResetPassword(@Valid GetUserInformationToResetPasswordRequestDto dto);
     ResponseDto<String> resetPassword(String token, @Valid ResetPasswordRequestDto dto);
-    ResponseDto<Void> reapplyTrainer(String email, @Valid ReapplyTrainerRequestDto dto, MultipartFile attachmentFile) throws IOException;
     boolean checkPassword(User user, String password);
     boolean checkEmail(String email);
 }

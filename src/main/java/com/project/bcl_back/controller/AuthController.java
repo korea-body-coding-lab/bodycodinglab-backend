@@ -29,7 +29,7 @@ public class AuthController {
     private static final String SEND_EMAIL = "/send-reset-password-email";
     private static final String VERIFY_EMAIL = "/verify";
     private static final String RESET_PASSWORD = "/reset-password";
-    private static final String TRAINER_REAPPLY = "/trainer-reapply";
+
 
 
     @PostMapping(SIGN_UP + "/member")
@@ -50,8 +50,8 @@ public class AuthController {
     }
 
     @PostMapping(LOGIN)
-    public ResponseEntity<ResponseDto<LoginUserResponseDto>> login(@Valid @RequestBody LoginUserRequestDto dto) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.login(dto));
+    public ResponseEntity<ResponseDto<? extends LoginUserResponseDto>> login(@Valid @RequestBody LoginUserRequestDto dto) throws IOException {
+        return ResponseEntity.ok(authService.login(dto));
     }
 
     @PostMapping(FIND_USERNAME)
@@ -78,14 +78,4 @@ public class AuthController {
     public ResponseEntity<ResponseDto<String>> resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordRequestDto dto) {
         return ResponseDto.toResponseEntity(HttpStatus.OK, authService.resetPassword(token, dto));
     }
-
-    @PutMapping(TRAINER_REAPPLY)
-    public ResponseEntity<ResponseDto<Void>> reapplyTrainer(
-            @RequestPart(value = "token") String token,
-            @Valid @RequestPart(value = "dto") ReapplyTrainerRequestDto dto,
-            @RequestPart(value = "attachmentFile") MultipartFile attachmentFile
-    ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.reapplyTrainer(token, dto, attachmentFile));
-    }
-
 }
