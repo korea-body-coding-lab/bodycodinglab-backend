@@ -3,6 +3,8 @@ package com.project.bcl_back.service;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.board.request.BoardRequestDto;
 import com.project.bcl_back.dto.board.response.BoardResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -13,7 +15,7 @@ public interface BoardDataService {
     ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, Long matchId, MultipartFile file)throws IOException;
 
     // 전체 게시글 조회
-    ResponseDto<List<BoardResponseDto>> getPostByCategoryAndMatchId(int categoryId, Long matchId);
+    ResponseDto<Page<BoardResponseDto>> getPostByCategoryAndMatchId(int categoryId, Long matchId, Pageable pageable);
 
     // 단건 게시글 조회
     ResponseDto<BoardResponseDto> getPostById(Long id, Long matchId);
