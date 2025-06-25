@@ -24,4 +24,6 @@ public interface BoardDataService {
     // 게시글 삭제
     ResponseDto<?> deletePost(Long id);
 
+    boolean isPostWriter(Long userId, Long postId);
+
 }
