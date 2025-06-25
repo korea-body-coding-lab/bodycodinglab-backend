@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,10 +28,16 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public ResponseDto<CreatePaymentResponseDto> createPayment(CreatePaymentRequestDto dto, Long userId) {
+
+
         Member member = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + userId))
                 .getMember();
 
+        List<Payment> pendingPayments = paymentRepository.findByMemberAndStatus(member.getMemberId(), PaymentStatus.READY);
+        for (Payment p : pendingPayments) {
+            paymentRepository.delete(p);
+        }
 
         String orderId = "ORDER-" + UUID.randomUUID();
 

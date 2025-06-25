@@ -17,12 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import java.net.URI;
 
 @Service
 @RequiredArgsConstructor
@@ -138,18 +134,32 @@ public class MailServiceImpl implements MailService {
 
         String body = """
                 <p>안녕하세요, Fit-Mate 입니다.</p>
-                <br />
                 <p>저희 서비스를 이용해 주셔서 감사드립니다.</p>
-                <br />
-                <p>트레이너 가입이 거부되어 재신청 절차 안내드립니다.</p>
-                <b>1. 거부 사유 확인</b><br />
-                <b>2. 서류 보완</b></br />
-                <b>3. 아래 링크에 접속하여 재신청</b><br />
-                <b>4. 가입 승인 대기</b><br /></p>
-                <br />
-                <p>거부 사유: <strong>%s</strong><br />
-                <a href="http://localhost:5173/auth/trainer-reapply?token=%s">여기를 클릭하여 재신청 페이지에 접속해 주세요.</a><br /></p>
-                <br />
+                <p>트레이너 가입이 거부되어 재신청 절차를 안내드립니다.</p>
+                
+                <ol>
+                  <li><strong>거부 사유 확인</strong></li>
+                  <li><strong>서류 보완</strong></li>
+                  <li><strong>아래 링크에 접속하여 재신청</strong></li>
+                  <li><strong>가입 승인 대기</strong></li>
+                </ol>
+                
+                <p>
+                  거부 사유: <strong style="color: red;">%s</strong>
+                </p>
+                
+                <p>
+                  아래 링크에서 바로 재신청 가능합니다.<br/>
+                  <span style="color: red;">※ 메일 링크는 3일간 유효합니다.<br/>
+                  접속이 어려운 경우, 홈페이지에 로그인 후 재신청해 주세요.</span>
+                </p>
+                
+                <p>
+                  <a href="http://localhost:5173/auth/trainer-reapply?token=%s" target="_blank" style="font-weight: bold; color: blue;">
+                  여기를 클릭하여 재신청 페이지로 이동
+                  </a>
+                </p>
+                
                 <p>감사합니다.</p>
                 """.formatted(changeReason, token);
 

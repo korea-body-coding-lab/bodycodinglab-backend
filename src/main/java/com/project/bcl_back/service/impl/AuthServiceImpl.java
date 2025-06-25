@@ -17,13 +17,9 @@ import com.project.bcl_back.service.AuthService;
 import com.project.bcl_back.service.UploadFileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 
@@ -40,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile file) throws IOException {
+    public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile profile) throws IOException {
         SignUpMemberResponseDto data = null;
 
         if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
@@ -82,8 +78,8 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         memberRepository.save(member);
 
-        if (file != null && !file.isEmpty()) {
-            user.setProfileImage(uploadFileService.saveFile(file, user.getId(), TargetType.PROFILE));
+        if (profile != null && !profile.isEmpty()) {
+            user.setProfileImage(uploadFileService.saveFile(profile, user.getId(), TargetType.PROFILE));
             userRepository.save(user);
         }
 
@@ -178,11 +174,11 @@ public class AuthServiceImpl implements AuthService {
             profileImageUrl = ApiMappingPattern.FILE_API + "/profile/" + user.getId() + "/" + TargetType.PROFILE;
         }
 
-        String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName().toString());
+        String token = jwtProvider.generateJwtToken(user.getId(), user.getRole().getName());
 
         data = LoginUserResponseDto.builder()
                 .id(user.getId())
-                .role(user.getRole().getName().toString())
+                .role(user.getRole().getName())
                 .username(user.getUsername())
                 .name(user.getName())
                 .profileImageUrl(profileImageUrl)

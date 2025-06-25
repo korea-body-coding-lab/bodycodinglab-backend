@@ -35,9 +35,9 @@ public class AuthController {
     @PostMapping(SIGN_UP + "/member")
     public ResponseEntity<ResponseDto<SignUpMemberResponseDto>> memberSignup(
             @Valid @RequestPart(value = "dto") SignUpMemberRequestDto dto,
-            @RequestPart(value = "profile", required = false) MultipartFile file
+            @RequestPart(value = "profile", required = false) MultipartFile profile
     ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.memberSignup(dto, file));
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.memberSignup(dto, profile));
     }
 
     @PostMapping(SIGN_UP + "/trainer")

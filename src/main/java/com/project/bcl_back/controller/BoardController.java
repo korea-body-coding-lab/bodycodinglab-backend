@@ -4,9 +4,17 @@ import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.board.request.BoardRequestDto;
 import com.project.bcl_back.dto.board.response.BoardResponseDto;
+import com.project.bcl_back.provider.JwtProvider;
+import com.project.bcl_back.repository.MatchRepository;
 import com.project.bcl_back.service.BoardDataService;
+import com.project.bcl_back.service.MatchService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,25 +29,56 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardDataService boardDataService;
+    private final MatchService matchService;
+    private final JwtProvider jwtProvider;
+
     // 게시글 등록
     @PostMapping(value="/{categoryId}" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<BoardResponseDto>> createPost(
             @PathVariable Long matchId,
             @PathVariable Long categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            HttpServletRequest request
     )throws IOException {
-        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, file);
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String token = authHeader.substring(7);
+        Long userId = jwtProvider.getUserIdFromJwt(token);
+        if (!matchService.isUserInMatch(userId, matchId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, matchId, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 게시글 목록 조회
     @GetMapping("/{categoryId}")
-    public ResponseEntity<ResponseDto<List<BoardResponseDto>>> getPostByCategory(
+    public ResponseEntity<ResponseDto<Page<BoardResponseDto>>> getPostByCategory(
             @PathVariable Long matchId,
-            @PathVariable("categoryId") int categoryId
+            @PathVariable("categoryId") int categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request
     ){
-        ResponseDto<List<BoardResponseDto>> posts = boardDataService.getPostByCategory(categoryId);
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String token = authHeader.substring(7);
+        Long userId = jwtProvider.getUserIdFromJwt(token);
+        if (!matchService.isUserInMatch(userId, matchId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        ResponseDto<Page<BoardResponseDto>> posts = boardDataService.getPostByCategoryAndMatchId(categoryId, matchId, pageable);
         return ResponseEntity.ok(posts);
     }
 
@@ -48,9 +87,21 @@ public class BoardController {
     public ResponseEntity<ResponseDto<BoardResponseDto>> getPost(
             @PathVariable Long matchId,
             @PathVariable("categoryId") int categoryId,
-            @PathVariable Long id
+            @PathVariable Long id,
+            HttpServletRequest request
     ) {
-        return ResponseEntity.ok(boardDataService.getPostById(id));
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String token = authHeader.substring(7);
+        Long userId = jwtProvider.getUserIdFromJwt(token);
+        if (!matchService.isUserInMatch(userId, matchId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(boardDataService.getPostById(id, matchId));
     }
 
     // 게시글 수정
@@ -60,9 +111,16 @@ public class BoardController {
             @PathVariable Long id,
             @PathVariable("categoryId") int categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            HttpServletRequest request
     )throws IOException {
-        return ResponseEntity.ok(boardDataService.updatePost(id, dto, file));
+        String token = request.getHeader("Authorization").substring(7);
+        Long userId = jwtProvider.getUserIdFromJwt(token);
+
+        if (!boardDataService.isPostWriter(userId, id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(boardDataService.updatePost(id,matchId, dto, file));
     }
 
     // 게시글 삭제
@@ -70,8 +128,15 @@ public class BoardController {
     public ResponseEntity<ResponseDto<?>> deletePost(
             @PathVariable Long matchId,
             @PathVariable Long id,
-            @PathVariable("categoryId") int categoryId
+            @PathVariable("categoryId") int categoryId,
+            HttpServletRequest request
     ) {
-        return ResponseEntity.ok(boardDataService.deletePost(id));
+        String token = request.getHeader("Authorization").substring(7);
+        Long userId = jwtProvider.getUserIdFromJwt(token);
+
+        if (!boardDataService.isPostWriter(userId, id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(boardDataService.deletePost(id, matchId));
     }
 }

@@ -19,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
@@ -34,6 +35,7 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void expireCoupons() {
         LocalDate today = LocalDate.now();
@@ -43,6 +45,33 @@ public class CouponServiceImpl implements CouponService {
         for (Coupon coupon : couponsToExpire) {
             coupon.setStatus(CouponStatus.EXPIRED);
         }
+
+        couponRepository.saveAll(couponsToExpire);
+    }
+
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteExpiredCouponsAfterSixMonths() {
+        LocalDate sixMonthsAgo = LocalDate.now().minusMonths(6);
+
+        List<Coupon> expiredCouponsToDelete = couponRepository
+                .findByStatusAndExpirationPeriodBefore(CouponStatus.EXPIRED, sixMonthsAgo);
+
+        couponRepository.deleteAll(expiredCouponsToDelete);
+    }
+
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteOldCompleteCoupons() {
+        LocalDate sixMonthsAgo = LocalDate.now().minusMonths(6);
+        LocalDateTime cutoffDateTime = sixMonthsAgo.atStartOfDay();
+
+        List<Coupon> oldCompleteCoupons = couponRepository
+                .findByStatusAndUsedDateBefore(CouponStatus.COMPLETE, cutoffDateTime);
+
+        couponRepository.deleteAll(oldCompleteCoupons);
     }
 
     @Override

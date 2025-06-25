@@ -1,5 +1,6 @@
 package com.project.bcl_back.provider;
 
+import com.project.bcl_back.common.enums.user.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -35,10 +36,10 @@ public class JwtProvider {
         this.jwtReapplyTrainerExpirationMs = jwtReapplyTrainerExpirationMs;
     }
 
-    public String generateJwtToken(Long userId, String role) {
+    public String generateJwtToken(Long userId, UserRole role) {
         return Jwts.builder()
                 .claim("userId", userId)
-                .claim("role", role)
+                .claim("role", role.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -90,9 +91,9 @@ public class JwtProvider {
         return claims.get("userId", Long.class);
     }
 
-    public String getRoleFromJwt(String token) {
+    public UserRole getRoleFromJwt(String token) {
         Claims claims = getClaims(token);
-        return claims.get("role", String.class);
+        return UserRole.valueOf(claims.get("role", String.class));
     }
 
     public String getEmailFromJwt(String token) {

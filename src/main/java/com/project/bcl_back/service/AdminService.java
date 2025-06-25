@@ -7,11 +7,9 @@ import com.project.bcl_back.dto.admin.response.GetAllTrainersResponseDto;
 import com.project.bcl_back.dto.admin.response.GetTrainerDetailResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
 
 public interface AdminService {
     ResponseDto<Page<GetAllTrainersResponseDto>> getAllTrainers(int page, int size, TrainerStatus status);
     ResponseDto<GetTrainerDetailResponseDto> getTrainer(Long trainerId);
-    Mono<ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>>> updateTrainerStatus(Long id, Long trainerId, @Valid UpdateTrainerStatusRequestDto dto);
+    ResponseDto<GetTrainerDetailResponseDto> updateTrainerStatus(Long id, Long trainerId, @Valid UpdateTrainerStatusRequestDto dto);
 }

@@ -112,7 +112,7 @@ public class UploadFileController {
             @RequestParam Long targetId,
             @RequestParam TargetType targetType,
             @RequestParam List<Long> keepIds,
-            @RequestParam("files") List<MultipartFile> newFiles 
+            @RequestParam("files") List<MultipartFile> newFiles
     ) {
         List<FileResponseDto> result = uploadFileService.replaceFiles(targetId, targetType, keepIds, newFiles);
         return ResponseEntity.ok(result);
