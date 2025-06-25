@@ -22,5 +22,7 @@ public class BoardDetailResponseDto {
 
     private List<CommentResponseDto> comments;
 
+    private Long matchId;
+
     //private List<FileResponseDto> images;
 }

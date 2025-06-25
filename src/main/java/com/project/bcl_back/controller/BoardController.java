@@ -49,7 +49,7 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, file);
+        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, matchId, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -71,7 +71,7 @@ public class BoardController {
         if (!matchService.isUserInMatch(userId, matchId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        ResponseDto<List<BoardResponseDto>> posts = boardDataService.getPostByCategory(categoryId);
+        ResponseDto<List<BoardResponseDto>> posts = boardDataService.getPostByCategoryAndMatchId(categoryId, matchId);
         return ResponseEntity.ok(posts);
     }
 
@@ -94,7 +94,7 @@ public class BoardController {
         if (!matchService.isUserInMatch(userId, matchId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.getPostById(id));
+        return ResponseEntity.ok(boardDataService.getPostById(id, matchId));
     }
 
     // 게시글 수정
@@ -113,7 +113,7 @@ public class BoardController {
         if (!boardDataService.isPostWriter(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.updatePost(id, dto, file));
+        return ResponseEntity.ok(boardDataService.updatePost(id,matchId, dto, file));
     }
 
     // 게시글 삭제
@@ -130,6 +130,6 @@ public class BoardController {
         if (!boardDataService.isPostWriter(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.deletePost(id));
+        return ResponseEntity.ok(boardDataService.deletePost(id, matchId));
     }
 }
