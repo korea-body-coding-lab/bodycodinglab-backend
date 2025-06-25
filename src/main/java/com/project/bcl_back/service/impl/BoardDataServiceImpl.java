@@ -14,6 +14,8 @@ import com.project.bcl_back.service.BoardDataService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,13 +75,15 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public ResponseDto<List<BoardResponseDto>> getPostByCategoryAndMatchId(int categoryId, Long matchId) {
-        List<Board> boards = boardRepo.findByCategoryIdAndMatchId(categoryId, matchId);
+    public ResponseDto<Page<BoardResponseDto>> getPostByCategoryAndMatchId(int categoryId, Long matchId, Pageable pageable) {
 
-        List<BoardResponseDto> list = boards.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-        return ResponseDto.success(ResponseMessage.SUCCESS, "", list);
+        Page<Board> boardPage = boardRepo.findByCategoryIdAndMatchId(categoryId, matchId, pageable);
+
+
+        Page<BoardResponseDto> dtoPage = boardPage.map(this::toDto);
+
+
+        return ResponseDto.success(ResponseMessage.SUCCESS, "", dtoPage);
     }
 
     @Override

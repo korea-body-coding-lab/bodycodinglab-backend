@@ -9,6 +9,8 @@ import com.project.bcl_back.repository.NoteRepository;
 import com.project.bcl_back.service.NoteService;
 import com.project.bcl_back.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,12 +43,12 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public ResponseDto<List<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId) {
+    public ResponseDto<Page<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId, Pageable pageable) {
         userService.findById(userId);
-        List<NoteResponseDto> list = noteRepo.findByNoteWriterOrNoteReceiver(userId, userId).stream()
-                .map(this::toDto)
-                .toList();
-        return ResponseDto.success(ResponseMessage.SUCCESS, "", list);
+        Page<Note> notePage = noteRepo.findByNoteWriterOrNoteReceiver(userId, userId, pageable);
+
+        Page<NoteResponseDto> page = notePage.map(this::toDto);
+        return ResponseDto.success(ResponseMessage.SUCCESS, "", page);
     }
 
     @Override
@@ -63,23 +65,21 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId) {
-        userService.findById(userId); // 존재 확인
-        return ResponseDto.success(ResponseMessage.SUCCESS, "",
-                noteRepo.findByNoteReceiver(userId).stream()
-                        .map(this::toDto)
-                        .toList()
-        );
+    public ResponseDto<Page<NoteResponseDto>> getReceivedNotes(Long userId, Pageable pageable) {
+        userService.findById(userId);
+        Page<Note> notePage = noteRepo.findByNoteReceiver(userId, pageable);
+        Page<NoteResponseDto> dtoPage = notePage.map(this::toDto);
+
+        return ResponseDto.success(ResponseMessage.SUCCESS, "", dtoPage);
     }
 
     @Override
-    public ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId) {
+    public ResponseDto<Page<NoteResponseDto>> getSentNotes(Long userId, Pageable pageable) {
         userService.findById(userId);
-        return ResponseDto.success(ResponseMessage.SUCCESS, "",
-                noteRepo.findByNoteWriter(userId).stream()
-                        .map(this::toDto)
-                        .toList()
-        );
+        Page<Note> notePage = noteRepo.findByNoteWriter(userId, pageable);
+        Page<NoteResponseDto> dtoPage = notePage.map(this::toDto);
+
+        return ResponseDto.success(ResponseMessage.SUCCESS, "", dtoPage);
     }
 
     private NoteResponseDto toDto(Note note){

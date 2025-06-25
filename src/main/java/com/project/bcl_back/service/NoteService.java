@@ -4,6 +4,8 @@ import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.note.request.NoteRequestDto;
 import com.project.bcl_back.dto.note.response.NoteResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,8 +22,8 @@ public interface NoteService {
     ResponseDto<?> deleteNote(Long id);
 
     // 쪽지 분류
-    ResponseDto<List<NoteResponseDto>> getReceivedNotes(Long userId);
-    ResponseDto<List<NoteResponseDto>> getSentNotes(Long userId);
+    ResponseDto<Page<NoteResponseDto>> getReceivedNotes(Long userId, Pageable pageable);
+    ResponseDto<Page<NoteResponseDto>> getSentNotes(Long userId, Pageable pageable);
 
-    ResponseDto<List<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId);
+    ResponseDto<Page<NoteResponseDto>> findByNoteWriterOrNoteReceiver(Long userId, Pageable pageable);
 }
