@@ -25,7 +25,7 @@ public class Comment {
     @Column(name = "commenter_id",nullable = false)
     private Long commenterId;
 
-    @Column(name = "comment_content ", nullable = false)
+    @Column(name = "comment_content", nullable = false)
     private String commentContent;
 
     @Column(name = "created_at", nullable = false)
