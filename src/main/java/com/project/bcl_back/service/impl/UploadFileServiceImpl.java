@@ -2,10 +2,12 @@ package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.TargetType;
+import com.project.bcl_back.dto.FileResponseDto;
 import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.repository.UploadFileRepository;
 import com.project.bcl_back.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UploadFileServiceImpl implements UploadFileService {
@@ -85,19 +89,19 @@ public class UploadFileServiceImpl implements UploadFileService {
         return existing;
     }
 
-    @Override
-    public void deleteFile(Long targetId, TargetType targetType) throws IOException {
-        UploadFile existing = uploadFileRepository.findByTargetIdAndTargetType(targetId, targetType);
-
-        if (existing == null) {
-            throw new FileNotFoundException(ResponseMessage.FILE_NOT_FOUND);
-        }
-
-        Path oldPath = Paths.get(existing.getFilePath() + existing.getFileName());
-        Files.deleteIfExists(oldPath);
-
-        uploadFileRepository.delete(existing);
-    }
+//    @Override
+//    public void deleteFile(Long targetId, TargetType targetType) throws IOException {
+//        UploadFile existing = uploadFileRepository.findByTargetIdAndTargetType(targetId, targetType);
+//
+//        if (existing == null) {
+//            throw new FileNotFoundException(ResponseMessage.FILE_NOT_FOUND);
+//        }
+//
+//        Path oldPath = Paths.get(existing.getFilePath() + existing.getFileName());
+//        Files.deleteIfExists(oldPath);
+//
+//        uploadFileRepository.delete(existing);
+//    }
 
     @Override
     public UploadFile findByTargetIdAndTargetType(Long targetId, TargetType targetType) {
@@ -105,34 +109,102 @@ public class UploadFileServiceImpl implements UploadFileService {
     }
 
     @Override
-    public List<UploadFile> findAllByTargetIdAndTargetType(Long targetId, TargetType targetType) {
-        return uploadFileRepository.findAllByTargetIdAndTargetType(targetId, targetType);
-    }
-
-    @Override
     @Transactional
-    public List<UploadFile> saveFiles(List<MultipartFile> files, Long targetId, TargetType targetType) {
-        List<UploadFile> savedFiles = new ArrayList<>();
-        if (files == null || files.isEmpty()) {
-            return savedFiles;
-        }
-        for (MultipartFile file : files) {
-            if (file != null && !file.isEmpty()) {
-                savedFiles.add(saveFile(file, targetId, targetType));
+    public List<FileResponseDto> uploadMultiple(List<MultipartFile> files, Long targetId, TargetType targetType) {
+        List<UploadFile> savedEntities = new ArrayList<>();
+
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            boolean created = dir.mkdirs();
+            if (!created) {
+                throw new IllegalStateException("업로드 디렉토리를 생성할 수 없습니다.");
             }
         }
-        return savedFiles;
+
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) continue;
+
+            try {
+                String original = file.getOriginalFilename();
+                String uuidName = UUID.randomUUID() + "_" + original;
+                String fullPath = uploadDir + File.separator + uuidName;
+
+                file.transferTo(new File(fullPath));
+
+                UploadFile uploadFile = UploadFile.builder()
+                        .originalName(original)
+                        .fileName(uuidName)
+                        .filePath(uploadDir + File.separator)
+                        .fileSize(file.getSize())
+                        .fileType(file.getContentType())
+                        .targetId(targetId)
+                        .targetType(targetType)
+                        .build();
+
+                savedEntities.add(uploadFile);
+
+            } catch (IOException e) {
+                throw new IllegalStateException("파일 저장 중 오류 발생", e);
+            }
+        }
+
+        List<UploadFile> saved = uploadFileRepository.saveAll(savedEntities);
+
+        return saved.stream()
+                .map(FileResponseDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public void deleteFileById(Long uploadFileId) throws IOException {
-        UploadFile existing = uploadFileRepository.findById(uploadFileId)
-                .orElseThrow(() -> new FileNotFoundException(ResponseMessage.FILE_NOT_FOUND));
-
-        Path filePath = Paths.get(existing.getFilePath() + existing.getFileName());
-        Files.deleteIfExists(filePath);
-
-        uploadFileRepository.delete(existing);
+    @Transactional(readOnly = true)
+    public List<FileResponseDto> getFileList(Long targetId, TargetType targetType) {
+        List<UploadFile> files = uploadFileRepository.findAllByTargetIdAndTargetType(targetId, targetType);
+        return files.stream()
+                .map(FileResponseDto::fromEntity)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FileResponseDto getFile(Long fileId) {
+        UploadFile file = uploadFileRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다. id: " + fileId));
+        return FileResponseDto.fromEntity(file);
+    }
+
+
+    @Override
+    @Transactional
+    public List<FileResponseDto> replaceFiles(Long targetId, TargetType targetType, List<Long> keepIds, List<MultipartFile> newFiles) {
+        if (keepIds == null) {
+            keepIds = List.of();
+        }
+        uploadFileRepository.deleteByTargetIdAndTargetTypeAndIdNotIn(targetId, targetType, keepIds);
+
+        List<FileResponseDto> savedNewFiles = uploadMultiple(newFiles, targetId, targetType);
+
+        List<UploadFile> finalFiles = uploadFileRepository.findAllByTargetIdAndTargetType(targetId, targetType);
+
+        return finalFiles.stream()
+                .map(FileResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    @Transactional
+    public void deleteFile(Long fileId) {
+        UploadFile file = uploadFileRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("파일이 존재하지 않습니다. id: " + fileId));
+
+        File physicalFile = new File(file.getFilePath() + file.getFileName());
+        if (physicalFile.exists()) {
+            physicalFile.delete();
+        }
+
+        uploadFileRepository.deleteById(fileId);
+    }
+
+
 }

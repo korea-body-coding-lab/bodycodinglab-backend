@@ -83,11 +83,11 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
-    public ResponseDto<List<MemberMatchWaitingListResponseDto>> findTrainerWaitingList(Long trainerId) {
+    public ResponseDto<List<MemberMatchWaitingListResponseDto>> findTrainerWaitingList(Long userId) {
         List<MemberMatchWaitingListResponseDto> response = null;
 
-        List<MatchWaitingList> lists = matchWaitingListRepository.findByTrainer_Id(trainerId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + trainerId));
+        List<MatchWaitingList> lists = matchWaitingListRepository.findByTrainer_Id(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + userId));
 
         response = lists.stream()
                 .map(list ->{
@@ -111,11 +111,11 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
-    public ResponseDto<TrainerMatchWaitingListResponseDto> findMemberMatchWaitingList(Long memberId) {
+    public ResponseDto<TrainerMatchWaitingListResponseDto> findMemberMatchWaitingList(Long userId) {
         TrainerMatchWaitingListResponseDto response = null;
 
-        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
+        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + userId));
 
         String profileImageUrl = null;
         UploadFile profileImage = uploadFileService.findByTargetIdAndTargetType(list.getTrainer().getId(), TargetType.PROFILE);
@@ -137,7 +137,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
-    public  ResponseDto<Void> matchApprove(Long matchWaitingListId, MatchWaitingListRequestDto dto) {
+    public  ResponseDto<Void> matchApprove(Long userId, Long matchWaitingListId, MatchWaitingListRequestDto dto) {
         MatchWaitingList matchWaitingList = matchWaitingListRepository.findById(matchWaitingListId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchWaitingListId));
 
@@ -149,7 +149,7 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
     }
 
     @Override
-    public ResponseDto<Void> matchReject(Long matchWaitingListId, MatchWaitingListRejectRequestDto dto) {
+    public ResponseDto<Void> matchReject(Long userId, Long matchWaitingListId, MatchWaitingListRejectRequestDto dto) {
         MatchWaitingList matchWaitingList  = matchWaitingListRepository.findById(matchWaitingListId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchWaitingListId));
 
@@ -163,15 +163,15 @@ public class MatchWaitingListServiceImpl implements MatchWaitingListService {
 
     @Override
     @Transactional
-    public ResponseDto<Void> matchCancel(Long memberId) {
+    public ResponseDto<Void> matchCancel(Long userId) {
 
-        User member = userRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException((ResponseMessage.USER_NOT_FOUND + memberId)));
+        User member = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException((ResponseMessage.USER_NOT_FOUND + userId)));
 
 
 
-        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + memberId));
+        MatchWaitingList list = matchWaitingListRepository.findByMember_Id(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + userId));
 
         User trainer = userRepository.findById(list.getTrainer().getId())
                         .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + list.getTrainer().getId()));

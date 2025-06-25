@@ -3,9 +3,11 @@ package com.project.bcl_back.controller;
 import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.common.enums.TargetType;
 import com.project.bcl_back.dto.FileResponseDto;
+import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.entity.UploadFile;
 import com.project.bcl_back.service.UploadFileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -61,20 +63,6 @@ public class UploadFileController {
                 .body(resource);
     }
 
-    @GetMapping(TRAINER_INFO_URL + "/{targetId}/{targetType}")
-    public ResponseEntity<List<FileResponseDto>> getInfoImages(
-            @PathVariable Long targetId,
-            @PathVariable TargetType targetType
-    ) {
-        List<UploadFile> uploadFiles = uploadFileService.findAllByTargetIdAndTargetType(targetId, targetType);
-
-        List<FileResponseDto> response = uploadFiles.stream()
-                .map(FileResponseDto::fromEntity)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
-    }
-
     @PutMapping("/{targetId}/{targetType}")
     public ResponseEntity<UploadFile> updateFile(
             @PathVariable Long targetId,
@@ -85,28 +73,55 @@ public class UploadFileController {
         return ResponseEntity.ok(updatedFile);
     }
 
-    @DeleteMapping (value = "/{targetId}/{targetType}")
-    public ResponseEntity<Void> deleteFile(
-            @PathVariable Long targetId,
-            @PathVariable TargetType targetType
-    ) throws IOException {
-        uploadFileService.deleteFile(targetId, targetType);
-        return ResponseEntity.noContent().build();
+//    @DeleteMapping (value = "/{targetId}/{targetType}")
+//    public ResponseEntity<Void> deleteFile(
+//            @PathVariable Long targetId,
+//            @PathVariable TargetType targetType
+//    ) throws IOException {
+//        uploadFileService.deleteFile(targetId, targetType);
+//        return ResponseEntity.noContent().build();
+//    }
+
+    @PostMapping("/multi")
+    public ResponseEntity<ResponseDto<List<FileResponseDto>>> uploadMultipleFiles(
+            @RequestParam("files") List<MultipartFile> files,
+            @RequestParam("targetId") Long targetId,
+            @RequestParam("targetType") TargetType targetType
+    ) {
+        List<FileResponseDto> savedFiles = uploadFileService.uploadMultiple(files, targetId, targetType);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, ResponseDto.success("SU", "파일 업로드 성공", savedFiles));
     }
 
-    @PostMapping("/multi/{targetId}/{targetType}")
-    public ResponseEntity<List<UploadFile>> uploadMultipleFiles(
-            @PathVariable Long targetId,
-            @PathVariable TargetType targetType,
-            @RequestPart("files") List<MultipartFile> files) {
-        List<UploadFile> savedFiles = uploadFileService.saveFiles(files, targetId, targetType);
-        return ResponseEntity.ok(savedFiles);
+    @GetMapping("/multi")
+    public ResponseEntity<ResponseDto<List<FileResponseDto>>> getMultipleFiles(
+            @RequestParam("targetId") Long targetId,
+            @RequestParam("targetType") TargetType targetType
+    ) {
+        List<FileResponseDto> files = uploadFileService.getFileList(targetId, targetType);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, ResponseDto.success("SU", "파일 조회 성공", files));
     }
 
-    @DeleteMapping("/{fileId}")
-    public ResponseEntity<Void> deleteFileById(@PathVariable Long fileId) throws IOException {
-        uploadFileService.deleteFileById(fileId);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/multi/{fileId}")
+    public ResponseEntity<FileResponseDto> getSingleMultiFile(@PathVariable Long fileId) {
+        FileResponseDto file = uploadFileService.getFile(fileId);
+        return ResponseEntity.ok(file);
+    }
+
+    @PutMapping("/multi/replace")
+    public ResponseEntity<List<FileResponseDto>> replaceFiles(
+            @RequestParam Long targetId,
+            @RequestParam TargetType targetType,
+            @RequestParam List<Long> keepIds,
+            @RequestParam("files") List<MultipartFile> newFiles
+    ) {
+        List<FileResponseDto> result = uploadFileService.replaceFiles(targetId, targetType, keepIds, newFiles);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/multi/{fileId}")
+    public ResponseEntity<ResponseDto<Void>> deleteMultiFile(@PathVariable Long fileId) {
+        uploadFileService.deleteFile(fileId);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, ResponseDto.success("SU", "파일 삭제 성공", null));
     }
 
 }

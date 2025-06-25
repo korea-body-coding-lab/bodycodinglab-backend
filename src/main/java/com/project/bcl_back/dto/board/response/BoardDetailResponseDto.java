@@ -13,14 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardDetailResponseDto {
     private Long id;
-
     private Long writerId;
-
     private String title;
-
     private String content;
-
     private List<CommentResponseDto> comments;
+    private Long matchId;
 
     //private List<FileResponseDto> images;
 }

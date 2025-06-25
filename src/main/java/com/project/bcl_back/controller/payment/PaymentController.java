@@ -1,5 +1,6 @@
-package com.project.bcl_back.controller;
+package com.project.bcl_back.controller.payment;
 
+import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.payment.request.CreatePaymentRequestDto;
 import com.project.bcl_back.dto.payment.response.CreatePaymentResponseDto;
@@ -18,7 +19,9 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/api/v1/users/members/me/match-waiting-lists/payments")
+    private static final String POST_PAYMENT = "/payments";
+
+        @PostMapping(ApiMappingPattern.MEMBER_MATCH_WAITING_LIST_API + POST_PAYMENT)
     public ResponseEntity<ResponseDto<CreatePaymentResponseDto>> createPayment(
             @RequestBody CreatePaymentRequestDto dto,
             @AuthenticationPrincipal Long userId

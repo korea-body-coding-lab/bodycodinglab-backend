@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileResponseDto {
+    private Long fileId;
     private String originalName;
     private String fileName;
     private String filePath;
@@ -19,6 +20,7 @@ public class FileResponseDto {
 
     public static FileResponseDto fromEntity(UploadFile file) {
         return new FileResponseDto(
+                file.getId(),
                 file.getOriginalName(),
                 file.getFileName(),
                 file.getFilePath(),

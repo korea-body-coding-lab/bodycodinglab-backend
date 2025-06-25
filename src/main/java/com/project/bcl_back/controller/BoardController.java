@@ -11,6 +11,10 @@ import com.project.bcl_back.service.MatchService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,15 +53,17 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, file);
+        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, matchId, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 게시글 목록 조회
     @GetMapping("/{categoryId}")
-    public ResponseEntity<ResponseDto<List<BoardResponseDto>>> getPostByCategory(
+    public ResponseEntity<ResponseDto<Page<BoardResponseDto>>> getPostByCategory(
             @PathVariable Long matchId,
             @PathVariable("categoryId") int categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             HttpServletRequest request
     ){
         String authHeader = request.getHeader("Authorization");
@@ -71,7 +77,8 @@ public class BoardController {
         if (!matchService.isUserInMatch(userId, matchId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        ResponseDto<List<BoardResponseDto>> posts = boardDataService.getPostByCategory(categoryId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        ResponseDto<Page<BoardResponseDto>> posts = boardDataService.getPostByCategoryAndMatchId(categoryId, matchId, pageable);
         return ResponseEntity.ok(posts);
     }
 
@@ -94,7 +101,7 @@ public class BoardController {
         if (!matchService.isUserInMatch(userId, matchId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.getPostById(id));
+        return ResponseEntity.ok(boardDataService.getPostById(id, matchId));
     }
 
     // 게시글 수정
@@ -113,7 +120,7 @@ public class BoardController {
         if (!boardDataService.isPostWriter(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.updatePost(id, dto, file));
+        return ResponseEntity.ok(boardDataService.updatePost(id,matchId, dto, file));
     }
 
     // 게시글 삭제
@@ -130,6 +137,6 @@ public class BoardController {
         if (!boardDataService.isPostWriter(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.deletePost(id));
+        return ResponseEntity.ok(boardDataService.deletePost(id, matchId));
     }
 }

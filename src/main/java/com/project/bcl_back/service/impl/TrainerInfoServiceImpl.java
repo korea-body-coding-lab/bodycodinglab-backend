@@ -73,10 +73,12 @@ public class TrainerInfoServiceImpl implements TrainerInfoService {
         TrainerInfo updateInfo = trainerInfoRepository.save(info);
 
         if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    uploadFileService.saveFile(file, user.getTrainerInfo().getId(), TargetType.INFOS);
-                }
+            List<MultipartFile> nonEmptyFiles = files.stream()
+                    .filter(file -> !file.isEmpty())
+                    .collect(Collectors.toList());
+
+            if (!nonEmptyFiles.isEmpty()) {
+                uploadFileService.uploadMultiple(nonEmptyFiles, user.getTrainerInfo().getId(), TargetType.INFOS);
             }
         }
 
