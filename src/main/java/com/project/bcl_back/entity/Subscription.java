@@ -29,6 +29,4 @@ public class Subscription {
     private LocalDateTime paymentDate;
 
 
-    @OneToOne(mappedBy = "subscription", fetch = FetchType.LAZY)
-    private Payment payment;
 }

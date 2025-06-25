@@ -16,9 +16,9 @@ public interface MatchService {
 
     ResponseDto<List<MemberMatchListResponseDto>> findMatchTrainerList(Long userId);
 
-    ResponseDto<MemberMatchResponseDto> findMatchTrainer(Long matchId);
+    ResponseDto<MemberMatchResponseDto> findMatchTrainer(Long userId, Long matchId);
 
-    ResponseDto<Void> cancelMatch(Long matchId);
+    ResponseDto<Void> cancelMatch(Long userId, Long matchId);
 
     Long findByUserId(Long userId, String role);
 }

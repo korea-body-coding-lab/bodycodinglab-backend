@@ -60,11 +60,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .paymentDate(DateUtils.parse(DateUtils.nowFormated()))
                 .build();
 
+
+        subscriptionRepository.save(subscription);
+
+
         payment.setSubscription(subscription);
+        paymentRepository.save(payment);
+
         member.setSubscription(subscription);
         member.setStatus(MemberStatus.PAYMENT);
-        subscriptionRepository.save(subscription);
-        paymentRepository.save(payment);
 
 
 

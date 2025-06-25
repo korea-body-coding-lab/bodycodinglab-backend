@@ -1,5 +1,6 @@
-package com.project.bcl_back.controller;
+package com.project.bcl_back.controller.subscription;
 
+import com.project.bcl_back.common.constants.ApiMappingPattern;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.payment.request.ConfirmPaymentRequestDto;
 import com.project.bcl_back.dto.subscription.response.SubscriptionResponseDto;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
+    private static final String POST_SUBSCRIPTION = "/subscriptions";
+
     @PreAuthorize("hasRole('MEMBER')")
-    @PostMapping("/api/v1/users/members/me/match-waiting-lists/subscriptions")
+    @PostMapping( ApiMappingPattern.MEMBER_MATCH_WAITING_LIST_API + POST_SUBSCRIPTION)
     public ResponseEntity<ResponseDto<Long>> createSubscriptionLog(
             @AuthenticationPrincipal Long userId,
             @RequestBody ConfirmPaymentRequestDto dto
@@ -27,7 +30,7 @@ public class SubscriptionController {
     }
 
     @PreAuthorize("hasRole('MEMBER')")
-    @GetMapping("/api/v1/users/members/me/subscriptions")
+    @GetMapping(ApiMappingPattern.SUBSCRIPTION_API)
     public ResponseEntity<ResponseDto<SubscriptionResponseDto>> findSubscription(
             @AuthenticationPrincipal Long userId
     ){

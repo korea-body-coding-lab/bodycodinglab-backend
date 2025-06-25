@@ -13,13 +13,13 @@ import java.util.List;
 public interface MatchWaitingListService {
     ResponseDto<Long> createMatchWaitingList(Long trainerId, Long userId);
 
-    ResponseDto<List<MemberMatchWaitingListResponseDto>> findTrainerWaitingList(Long trainerId);
+    ResponseDto<List<MemberMatchWaitingListResponseDto>> findTrainerWaitingList(Long userId);
 
-    ResponseDto<TrainerMatchWaitingListResponseDto> findMemberMatchWaitingList(Long memberId);
+    ResponseDto<TrainerMatchWaitingListResponseDto> findMemberMatchWaitingList(Long userId);
 
-    ResponseDto<Void> matchReject(Long matchWaitingListId, MatchWaitingListRejectRequestDto dto);
+    ResponseDto<Void> matchReject( Long userId, Long matchWaitingListId, MatchWaitingListRejectRequestDto dto);
 
-    ResponseDto<Void> matchCancel(Long memberId);
+    ResponseDto<Void> matchCancel(Long userId);
 
-    ResponseDto<Void> matchApprove(Long matchWaitingListId, MatchWaitingListRequestDto dto);
+    ResponseDto<Void> matchApprove(Long userId, Long matchWaitingListId, MatchWaitingListRequestDto dto);
 }
