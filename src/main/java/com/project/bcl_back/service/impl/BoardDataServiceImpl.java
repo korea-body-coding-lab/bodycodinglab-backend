@@ -148,18 +148,26 @@ public class BoardDataServiceImpl implements BoardDataService {
     // Post -> DTO 변환
     private BoardResponseDto toDto(Board board){
         String writerName = null;
+        String profileImageUrl = null;
+
         if (board.getWriter() != null) {
             writerName = board.getWriter().getName();
+            UploadFile profileImage = board.getWriter().getProfileImage();
+            if(profileImage != null){
+                profileImageUrl = profileImage.getFullUrl();
+            }
         }
         return BoardResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getWriterId())
                 .writerName(writerName)
+                .profileImageUrl(profileImageUrl)
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt().format(FORMAT))
                 .build();
     }
+
 
     // 파일 저장 및 메타데이터 기록
     private void saveFile(MultipartFile file, Long targetId, String type)throws IOException{

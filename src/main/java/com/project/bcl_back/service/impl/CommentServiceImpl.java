@@ -40,7 +40,6 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(()-> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_POST + boardId));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AccessDeniedException("로그인이 필요합니다.");
         }
@@ -62,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
                 .id(savedComment.getId())
                 .postId(savedComment.getBoard().getId())
                 .build();
+
 
         return ResponseDto.success(ResponseMessage.SUCCESS, "", responseDto);
     }
@@ -114,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
                         .id(comment.getId())
                         .postId(comment.getBoard().getId())
                         .commentContent(comment.getCommentContent())
-                        .commenterId(comment.getBoard().getWriterId())
+                        .commenterId(comment.getCommenterId())
                         .createdAt(comment.getCreatedAt().format(FORMAT))
                         .build()
                 )
