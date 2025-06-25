@@ -21,4 +21,6 @@ public interface MatchService {
     ResponseDto<Void> cancelMatch(Long matchId);
 
     Long findByUserId(Long userId, String role);
+
+    boolean isUserInMatch(Long userId, Long matchId);
 }

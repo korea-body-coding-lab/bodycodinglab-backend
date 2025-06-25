@@ -11,4 +11,6 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
     Optional<Match> findByMember_Id(Long memberId);
 
     Optional<Match> findByTrainer_Id(Long trainerId);
+
+    boolean existsByIdAndMemberIdOrTrainerId(Long matchId, Long memberId, Long trainerId);
 }

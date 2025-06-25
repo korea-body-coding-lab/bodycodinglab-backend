@@ -11,6 +11,7 @@ import com.project.bcl_back.repository.BoardRepository;
 import com.project.bcl_back.repository.CategoryRepository;
 import com.project.bcl_back.repository.UploadFileRepository;
 import com.project.bcl_back.service.BoardDataService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -157,5 +158,12 @@ public class BoardDataServiceImpl implements BoardDataService {
                 .targetId(targetId)
                 .build();
         fileRepo.save(uploadFile);
+    }
+    @Override
+    public boolean isPostWriter(Long userId, Long postId) {
+        Board post = boardRepo.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+
+        return post.getWriter().getId().equals(userId);
     }
 }

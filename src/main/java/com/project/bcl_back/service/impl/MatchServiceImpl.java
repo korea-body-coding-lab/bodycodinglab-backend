@@ -192,5 +192,9 @@ public class MatchServiceImpl implements MatchService {
 
         return match.map(Match::getId).orElse(null);
     }
+    @Override
+    public boolean isUserInMatch(Long userId, Long matchId) {
+        return matchRepository.existsByIdAndMemberIdOrTrainerId(matchId, userId, userId);
+    }
 
 }
