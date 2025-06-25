@@ -13,4 +13,8 @@ public interface UploadFileRepository extends JpaRepository<UploadFile, Long> {
     UploadFile findByTargetIdAndTargetType(Long targetId, TargetType targetType);
 
     List<UploadFile> findAllByTargetIdAndTargetType(Long targetId, TargetType targetType);
+
+    void deleteAllByTargetIdAndTargetType(Long targetId, TargetType targetType);
+
+    void deleteByTargetIdAndTargetTypeAndIdNotIn(Long targetId, TargetType targetType, List<Long> keepIds);
 }

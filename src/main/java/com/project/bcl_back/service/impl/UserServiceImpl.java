@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
             return ResponseDto.fail(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
         }
 
-        uploadFileService.deleteFile(user.getId(), TargetType.PROFILE);
+        uploadFileService.deleteFile(user.getId());
         user.setProfileImage(null);
         userRepository.save(user);
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
