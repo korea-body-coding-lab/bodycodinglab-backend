@@ -12,16 +12,16 @@ import java.util.List;
 
 @Service
 public interface CouponService {
-    ResponseDto<Long> createCoupon(Long memberId);
+    ResponseDto<Long> createCoupon(Long userId);
 
-    ResponseDto<List<TrainerCouponResponseDto>> findNotUsedOrExpiredCoupon(Long memberId, CouponStatus status);
+    ResponseDto<List<TrainerCouponResponseDto>> findNotUsedOrExpiredCoupon(Long userId, CouponStatus status);
 
-    ResponseDto<List<MemberCouponResponseDto>> findApplicationOrCompleteCoupon(Long trainerId, CouponStatus status);
+    ResponseDto<List<MemberCouponResponseDto>> findApplicationOrCompleteCoupon(Long userId, CouponStatus status);
 
-    ResponseDto<Void> memberPutCoupon(Long couponId);
+    ResponseDto<Void> memberPutCoupon(Long userId, Long couponId);
 
 
-    ResponseDto<Void> trainerPutCoupon(Long couponId, PutCouponRequestDto dto);
+    ResponseDto<Void> trainerPutCoupon(Long userId, Long couponId, PutCouponRequestDto dto);
 
 
 }

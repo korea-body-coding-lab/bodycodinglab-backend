@@ -10,10 +10,7 @@ import com.project.bcl_back.dto.match.response.MemberMatchResponseDto;
 import com.project.bcl_back.dto.match.response.TrainerMatchResponseDto;
 import com.project.bcl_back.dto.memberForm.response.MemberFormResponseDto;
 import com.project.bcl_back.entity.*;
-import com.project.bcl_back.repository.MatchRepository;
-import com.project.bcl_back.repository.PaymentRepository;
-import com.project.bcl_back.repository.SubscriptionRepository;
-import com.project.bcl_back.repository.UserRepository;
+import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.MatchService;
 import com.project.bcl_back.service.UploadFileService;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,6 +34,7 @@ public class MatchServiceImpl implements MatchService {
     private final SubscriptionRepository subscriptionRepository;
     private final UploadFileService uploadFileService;
     private final PaymentRepository paymentRepository;
+    private final MemberFormRepository memberFormRepository;
 
     @Override
     public ResponseDto<TrainerMatchResponseDto> findMemberMatch(Long userId) {
@@ -93,7 +91,7 @@ public class MatchServiceImpl implements MatchService {
 
 
     @Override
-    public ResponseDto<MemberMatchResponseDto> findMatchTrainer(Long matchId) {
+    public ResponseDto<MemberMatchResponseDto> findMatchTrainer(Long userId, Long matchId) {
         MemberMatchResponseDto response = null;
         Match match  = matchRepository.findById(matchId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchId));
@@ -155,7 +153,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     @Transactional
-    public ResponseDto<Void> cancelMatch(Long matchId) {
+    public ResponseDto<Void> cancelMatch(Long userId, Long matchId) {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + matchId));
 
@@ -174,6 +172,13 @@ public class MatchServiceImpl implements MatchService {
         Payment payment = match.getMember().getMember().getPayment();
         member.getMember().setPayment(null);
         paymentRepository.delete(payment);
+
+        MemberForm memberForm = match.getMember().getMember().getMemberForm();
+        if(memberForm != null){
+            member.getMember().setMemberForm(null);
+            memberFormRepository.delete(memberForm);
+        }
+
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

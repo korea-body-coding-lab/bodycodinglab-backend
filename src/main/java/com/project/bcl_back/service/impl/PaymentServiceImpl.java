@@ -34,10 +34,16 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + userId))
                 .getMember();
 
+
         List<Payment> pendingPayments = paymentRepository.findByMemberAndStatus(member.getMemberId(), PaymentStatus.READY);
         for (Payment p : pendingPayments) {
-            paymentRepository.delete(p);
+            if (p.getSubscription() == null) {
+                p.getMember().setPayment(null);
+            }
+
         }
+        paymentRepository.deleteAll(pendingPayments);
+
 
         String orderId = "ORDER-" + UUID.randomUUID();
 

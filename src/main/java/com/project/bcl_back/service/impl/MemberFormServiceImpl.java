@@ -24,12 +24,12 @@ public class MemberFormServiceImpl implements MemberFormService {
     private final MemberFormRepository memberFormRepository;
     private final UserRepository userRepository;
     @Override
-    public ResponseDto<Long> createMemberForm(Long memberId, MemberFormCreateRequestDto dto) {
-        User user = userRepository.findById(memberId).
-                orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
+    public ResponseDto<Long> createMemberForm(Long userId, MemberFormCreateRequestDto dto) {
+        User user = userRepository.findById(userId).
+                orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND +  userId));
 
         Member member = memberRepository.findById(user.getMember().getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + user.getMember().getMemberId()));
 
         MemberForm memberForm = new MemberForm(
               null,
@@ -59,14 +59,14 @@ public class MemberFormServiceImpl implements MemberFormService {
     }
 
     @Override
-    public ResponseDto<MemberFormResponseDto> findByFromIdMemberForm(Long memberId) {
+    public ResponseDto<MemberFormResponseDto> findByFromIdMemberForm(Long userId) {
         MemberFormResponseDto response = null;
 
-        User user = userRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + userId));
 
         MemberForm memberForm = memberFormRepository.findById(user.getMember().getMemberForm().getFormId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FAILED + memberId));
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FAILED + user.getMember().getMemberForm().getFormId()));
 
         response = new MemberFormResponseDto(
                 memberForm.getMember().getMemberId(),

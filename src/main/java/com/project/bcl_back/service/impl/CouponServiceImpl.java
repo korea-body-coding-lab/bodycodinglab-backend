@@ -75,10 +75,10 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<Long> createCoupon(Long memberId) {
+    public ResponseDto<Long> createCoupon(Long userId) {
 
-      User member = userRepository.findById(memberId)
-              .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + memberId));
+      User member = userRepository.findById(userId)
+              .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND + userId));
 
 
         OneDayTicket ticket = member.getMemberOneDayTickets().stream()
@@ -103,7 +103,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<List<TrainerCouponResponseDto>> findNotUsedOrExpiredCoupon(Long memberId, CouponStatus status) {
+    public ResponseDto<List<TrainerCouponResponseDto>> findNotUsedOrExpiredCoupon(Long userId, CouponStatus status) {
         List<TrainerCouponResponseDto> responseCoupons = null;
 
         List<Coupon> notUsedOrExpiredCoupons = couponRepository.findByStatus(status)
@@ -112,7 +112,7 @@ public class CouponServiceImpl implements CouponService {
         List<Coupon> memberCoupons = null;
 
         memberCoupons = notUsedOrExpiredCoupons.stream()
-                .filter(coupon -> memberId.equals(coupon.getMember().getId()))
+                .filter(coupon -> userId.equals(coupon.getMember().getId()))
                 .toList();
 
 
@@ -129,7 +129,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<List<MemberCouponResponseDto>> findApplicationOrCompleteCoupon(Long trainerId, CouponStatus status) {
+    public ResponseDto<List<MemberCouponResponseDto>> findApplicationOrCompleteCoupon(Long userId, CouponStatus status) {
         List<MemberCouponResponseDto> responseCoupons = null;
 
         if (status != CouponStatus.APPLICATION && status != CouponStatus.COMPLETE) {
@@ -143,7 +143,7 @@ public class CouponServiceImpl implements CouponService {
         List<Coupon> trainerCoupons = null;
 
         trainerCoupons = applicationOrExpiredCoupons.stream()
-                .filter(coupon -> trainerId.equals(coupon.getTrainer().getId()))
+                .filter(coupon -> userId.equals(coupon.getTrainer().getId()))
                 .toList();
 
         if(status == CouponStatus.APPLICATION){
@@ -171,7 +171,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public ResponseDto<Void> memberPutCoupon(Long couponId) {
+    public ResponseDto<Void> memberPutCoupon(Long userId, Long couponId) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
 
@@ -184,7 +184,7 @@ public class CouponServiceImpl implements CouponService {
 
 
     @Override
-    public ResponseDto<Void> trainerPutCoupon(Long couponId, PutCouponRequestDto dto) {
+    public ResponseDto<Void> trainerPutCoupon(Long userId, Long couponId, PutCouponRequestDto dto) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND + couponId));
 
