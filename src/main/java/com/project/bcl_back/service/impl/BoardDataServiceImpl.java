@@ -1,6 +1,7 @@
 package com.project.bcl_back.service.impl;
 
 import com.project.bcl_back.common.constants.ResponseMessage;
+import com.project.bcl_back.dto.FileResponseDto;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.board.request.BoardRequestDto;
 import com.project.bcl_back.dto.board.response.BoardResponseDto;
@@ -45,7 +46,7 @@ public class BoardDataServiceImpl implements BoardDataService {
 
     @Override
     @Transactional
-    public ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, Long matchId, MultipartFile file) throws IOException {
+    public ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, Long matchId, List<MultipartFile> files) throws IOException {
         if (!dto.getMatchId().equals(matchId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
@@ -66,8 +67,8 @@ public class BoardDataServiceImpl implements BoardDataService {
         board = boardRepo.findById(board.getId())
                 .orElseThrow(() -> new RuntimeException("게시글 조회 실패"));
         // 첨부파일 저장
-        if (file != null && !file.isEmpty()) {
-            saveFile(file, board.getId(), "Board");
+        if (files != null && !files.isEmpty()) {
+            saveFiles(files, board.getId(), "BOARD");;
         }
 
         BoardResponseDto data = toDto(board);
@@ -98,7 +99,7 @@ public class BoardDataServiceImpl implements BoardDataService {
 
     @Override
     @Transactional
-    public ResponseDto<BoardResponseDto> updatePost(Long id, Long matchId, BoardRequestDto dto, MultipartFile file) throws IOException {
+    public ResponseDto<BoardResponseDto> updatePost(Long id, Long matchId, BoardRequestDto dto, List<MultipartFile> files) throws IOException {
 
         Board board = boardRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
@@ -118,8 +119,8 @@ public class BoardDataServiceImpl implements BoardDataService {
         }
 
         //Error
-        if(file != null && !file.isEmpty()) {
-            saveFile(file, id, "BOARD");
+        if(files != null && !files.isEmpty()) {
+            saveFiles(files, board.getId(), "BOARD");
         }
 
         return ResponseDto.success(ResponseMessage.SUCCESS, "", toDto(board));
@@ -157,6 +158,10 @@ public class BoardDataServiceImpl implements BoardDataService {
                 profileImageUrl = profileImage.getFullUrl();
             }
         }
+        List<UploadFile> uploadFiles = fileRepo.findByTargetTypeAndTargetId(TargetType.BOARD, board.getId());
+        List<FileResponseDto> imageDtos = uploadFiles.stream()
+                .map(FileResponseDto::fromEntity)
+                .collect(Collectors.toList());
         return BoardResponseDto.builder()
                 .id(board.getId())
                 .writerId(board.getWriterId())
@@ -165,6 +170,7 @@ public class BoardDataServiceImpl implements BoardDataService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt().format(FORMAT))
+                .images(imageDtos)
                 .build();
     }
 
@@ -190,6 +196,12 @@ public class BoardDataServiceImpl implements BoardDataService {
                 .targetId(targetId)
                 .build();
         fileRepo.save(uploadFile);
+    }
+    private void saveFiles(List<MultipartFile> files, Long targetId, String type) throws IOException {
+        if (files == null || files.isEmpty()) return;
+        for (MultipartFile file : files) {
+            saveFile(file, targetId, type);
+        }
     }
     @Override
     public boolean isPostWriter(Long userId, Long postId) {

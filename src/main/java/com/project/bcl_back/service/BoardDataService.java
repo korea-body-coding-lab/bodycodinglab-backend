@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface BoardDataService {
     // 게시글 등록
-    ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, Long matchId, MultipartFile file)throws IOException;
+    ResponseDto<BoardResponseDto> createPost(BoardRequestDto dto, Long matchId, List<MultipartFile> files)throws IOException;
 
     // 전체 게시글 조회
     ResponseDto<Page<BoardResponseDto>> getPostByCategoryAndMatchId(int categoryId, Long matchId, Pageable pageable);
@@ -21,7 +21,7 @@ public interface BoardDataService {
     ResponseDto<BoardResponseDto> getPostById(Long id, Long matchId);
 
     // 게시글 수정
-    ResponseDto<BoardResponseDto> updatePost(Long id, Long matchId, BoardRequestDto dto, MultipartFile file) throws IOException;
+    ResponseDto<BoardResponseDto> updatePost(Long id, Long matchId, BoardRequestDto dto, List<MultipartFile> files) throws IOException;
 
     // 게시글 삭제
     ResponseDto<?> deletePost(Long id, Long matchId);
