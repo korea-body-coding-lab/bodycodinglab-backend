@@ -56,7 +56,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/files/**").permitAll()
                         .requestMatchers("/api/v1/files/**").permitAll()
-                        .requestMatchers("/api/v1/trainers/**").permitAll()
+                        .requestMatchers("/api/v1/common/**").permitAll()
                         .requestMatchers("/api/v1/members/**").permitAll()
                         .requestMatchers("/api/v1/users/members/**").hasRole("MEMBER")
                         .requestMatchers("/api/v1/users/trainers/**").hasRole("TRAINER")
