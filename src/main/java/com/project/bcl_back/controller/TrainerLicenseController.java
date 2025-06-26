@@ -17,17 +17,17 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.USER_API)
+@RequestMapping(ApiMappingPattern.TRAINER_API)
 @RequiredArgsConstructor
 public class TrainerLicenseController {
     private final TrainerLicenseService trainerLicenseService;
 
-    private static final String POST_TRAINER_LICENSE = "/trainers/me/information/license";
-    private static final String PUT_TRAINER_LICENSE = "/trainers/me/information/license";
-    private static final String DELETE_TRAINER_LICENSE = "/trainers/me/information/license/{licenseId}";
-    private static final String DELETE_ALL_TRAINER_LICENSE = "/trainers/me/information/license/all";
-    private static final String GET_RECENT_TRAINER_LICENSE = "/trainers/me/information/license/recent";
-    private static final String GET_TRAINER_LICENSE_LIST = "/trainers/me/information/license";
+    private static final String POST_TRAINER_LICENSE = "/me/information/license";
+    private static final String PUT_TRAINER_LICENSE = "/me/information/license";
+    private static final String DELETE_TRAINER_LICENSE = "/me/information/license/{licenseId}";
+    private static final String DELETE_ALL_TRAINER_LICENSE = "/me/information/license/all";
+    private static final String GET_RECENT_TRAINER_LICENSE = "/me/information/license/recent";
+    private static final String GET_TRAINER_LICENSE_LIST = "/me/information/license";
 
     // 트레이너 자격증 생성
     @PreAuthorize("hasRole('TRAINER')")

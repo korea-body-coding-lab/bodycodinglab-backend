@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.TRAINER_API)
+@RequestMapping(ApiMappingPattern.COMMON_API)
 @RequiredArgsConstructor
 public class TrainerSearchController {
     private final TrainerSearchService trainerSearchService;

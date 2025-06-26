@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.USER_API)
+@RequestMapping(ApiMappingPattern.TRAINER_API)
 @RequiredArgsConstructor
 public class TrainerCareerController {
     private final TrainerCareerService trainerCareerService;
 
-    private static final String POST_TRAINER_CAREER = "/trainers/me/information/career";
-    private static final String PUT_TRAINER_CAREER = "/trainers/me/information/career";
-    private static final String DELETE_TRAINER_CAREER = "/trainers/me/information/career/{careerId}";
-    private static final String DELETE_ALL_TRAINER_CAREER = "/trainers/me/information/career/all";
-    private static final String GET_TRAINER_CAREER_LIST = "/trainers/me/information/career";
-    private static final String GET_RECENT_TRAINER_CAREER = "/trainers/me/information/career/recent";
+    private static final String POST_TRAINER_CAREER = "/me/information/career";
+    private static final String PUT_TRAINER_CAREER = "/me/information/career";
+    private static final String DELETE_TRAINER_CAREER = "/me/information/career/{careerId}";
+    private static final String DELETE_ALL_TRAINER_CAREER = "/me/information/career/all";
+    private static final String GET_TRAINER_CAREER_LIST = "/me/information/career";
+    private static final String GET_RECENT_TRAINER_CAREER = "/me/information/career/recent";
 
     // 트레이너 경력 생성
     @PreAuthorize("hasRole('TRAINER')")
