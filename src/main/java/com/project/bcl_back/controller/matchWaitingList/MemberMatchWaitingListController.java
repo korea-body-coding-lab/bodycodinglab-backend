@@ -20,7 +20,7 @@ public class MemberMatchWaitingListController {
     private static final String CANCEL = "/cancels";
 
     @PreAuthorize("hasRole('MEMBER')")
-    @PostMapping("/api/v1/users/members/trainers/{trainerId}/match-waiting-lists") // 보류
+    @PostMapping("/api/v1/users/members/trainer/{trainerId}/match-waiting-lists") // 보류
     public ResponseEntity<ResponseDto<Long>> createMatchWaitingList(
             @PathVariable Long trainerId,
             @AuthenticationPrincipal Long userId

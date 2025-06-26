@@ -38,7 +38,7 @@ public class BoardController {
             @PathVariable Long matchId,
             @PathVariable Long categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
             HttpServletRequest request
     )throws IOException {
         String authHeader = request.getHeader("Authorization");
@@ -53,7 +53,7 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, matchId, file);
+        ResponseDto<BoardResponseDto> response = boardDataService.createPost(dto, matchId, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -111,7 +111,7 @@ public class BoardController {
             @PathVariable Long id,
             @PathVariable("categoryId") int categoryId,
             @RequestPart("data") @Valid BoardRequestDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
             HttpServletRequest request
     )throws IOException {
         String token = request.getHeader("Authorization").substring(7);
@@ -120,7 +120,7 @@ public class BoardController {
         if (!boardDataService.isPostWriter(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(boardDataService.updatePost(id,matchId, dto, file));
+        return ResponseEntity.ok(boardDataService.updatePost(id,matchId, dto, files));
     }
 
     // 게시글 삭제
