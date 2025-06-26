@@ -23,7 +23,7 @@ public class OneDayTicketController {
     private final OneDayTicketService oneDayTicketService;
 
     private static final String MEMBER_ONE_DAY_TICKET = ApiMappingPattern.USER_API + "/members/me/one-day-tickets";
-    private static final String TRAINER_ONE_DAY_TICKET = ApiMappingPattern.TRAINER_API + "/me/one-day-tickets";
+    private static final String TRAINER_ONE_DAY_TICKET = ApiMappingPattern.USER_API + "/trainers/me/one-day-tickets";
 
     @PreAuthorize("hasRole('MEMBER')")
     @GetMapping(MEMBER_ONE_DAY_TICKET)

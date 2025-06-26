@@ -4,7 +4,7 @@ public interface ApiMappingPattern {
     String AUTH_API = "/api/v1/auth";
     String ADMIN_API = "/api/v1/admin";
     String USER_API = "/api/v1/users";
-    String TRAINER_API = "/api/v1/trainer";
+//    String TRAINER_API = "/api/v1/trainer";
     String MEMBER_API = "/api/v1/members";
     String COMMON_API = "/api/v1/common";
 
