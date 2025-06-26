@@ -1,9 +1,12 @@
 package com.project.bcl_back.dto.board.response;
 
+import com.project.bcl_back.dto.FileResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +20,5 @@ public class BoardResponseDto {
     private String content;
     private String createdAt;
     private String profileImageUrl;
+    private List<FileResponseDto> images;
 }

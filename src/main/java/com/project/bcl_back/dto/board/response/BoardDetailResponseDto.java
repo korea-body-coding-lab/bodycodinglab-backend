@@ -1,5 +1,6 @@
 package com.project.bcl_back.dto.board.response;
 
+import com.project.bcl_back.dto.FileResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +20,5 @@ public class BoardDetailResponseDto {
     private List<CommentResponseDto> comments;
     private Long matchId;
 
-    //private List<FileResponseDto> images;
+    private List<FileResponseDto> images;
 }
