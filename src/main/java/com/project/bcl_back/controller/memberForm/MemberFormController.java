@@ -31,7 +31,7 @@ public class MemberFormController {
     }
 
     @PreAuthorize("hasRole('MEMBER')")
-    @GetMapping(ApiMappingPattern.MEMBER_FORM_API)
+    @GetMapping(ApiMappingPattern.MEMBER_FORM_API + "/find")
     public ResponseEntity<ResponseDto<MemberFormResponseDto>> findByFormIdMemberForm(@AuthenticationPrincipal Long userId){
         ResponseDto<MemberFormResponseDto> response = memberFormService.findByFromIdMemberForm(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
