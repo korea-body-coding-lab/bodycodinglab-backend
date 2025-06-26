@@ -21,7 +21,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,7 +42,7 @@ public class UploadFileController {
 
         Path path = Paths.get(uploadFile.getFilePath(), uploadFile.getFileName());
         Resource resource = new FileSystemResource(path);
-
+        if (!resource.exists()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(uploadFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
@@ -123,5 +125,26 @@ public class UploadFileController {
         uploadFileService.deleteFile(fileId);
         return ResponseDto.toResponseEntity(HttpStatus.OK, ResponseDto.success("SU", "파일 삭제 성공", null));
     }
+    @GetMapping("/profile/urls")
+    public ResponseEntity<Map<Long, String>> getProfileImageUrls(@RequestParam List<Long> userIds) {
+        Map<Long, String> result = new HashMap<>();
+
+        for (Long userId : userIds) {
+            try {
+                UploadFile uploadFile = uploadFileService.findByTargetIdAndTargetType(userId, TargetType.PROFILE);
+                if (uploadFile != null) {
+                    String url = "/api/v1/files/profile/" + userId + "/PROFILE";
+                    result.put(userId, url);
+                } else {
+                    result.put(userId, "/default-profile.png");
+                }
+            } catch (Exception e) {
+                result.put(userId, "/default-profile.png");
+            }
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
 
 }
