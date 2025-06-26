@@ -115,7 +115,7 @@ public class MailServiceImpl implements MailService {
         String body = """
                 <p>안녕하세요, Fit-Mate 입니다.</p>
                 <p>아래 비밀번호 재설정 링크에 접속하여 인증을 완료해 주세요.</p>
-                <a href="http://localhost:5173/auth/reset-password/setting?token=%s">여기를 클릭하여 설정 페이지에 접속해 주세요.</a>
+                <a href="http://localhost:5173/password/reset?token=%s">여기를 클릭하여 설정 페이지에 접속해 주세요.</a>
                 <p>감사합니다.</p>
                 """.formatted(token);
 

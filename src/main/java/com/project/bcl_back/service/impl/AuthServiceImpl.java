@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseDto<SignUpMemberResponseDto> memberSignup(SignUpMemberRequestDto dto, MultipartFile profile) throws IOException {
+    public ResponseDto<SignUpMemberResponseDto> signupMember(SignUpMemberRequestDto dto, MultipartFile profile) throws IOException {
         SignUpMemberResponseDto data = null;
 
         if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ResponseDto<SignUpTrainerResponseDto> trainerSignup(SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException {
+    public ResponseDto<SignUpTrainerResponseDto> signupTrainer(SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException {
         SignUpTrainerResponseDto data = null;
 
         if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
@@ -204,8 +204,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDto<FindUsernameResponseDto> findUserId(FindUsernameRequestDto dto) {
-        FindUsernameResponseDto data = null;
+    public ResponseDto<RecoverUsernameResponseDto> recoverUsername(RecoverUsernameRequestDto dto) {
+        RecoverUsernameResponseDto data = null;
 
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElse(null);
@@ -218,14 +218,14 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.fail(ResponseCode.NOT_MATCH_INFORMATION, ResponseMessage.NOT_MATCH_INFORMATION);
         }
 
-        data = new FindUsernameResponseDto(user.getUsername());
+        data = new RecoverUsernameResponseDto(user.getUsername());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data);
     }
 
     @Override
-    public ResponseDto<GetUserInformationToResetPasswordResponseDto> findUserToResetPassword(GetUserInformationToResetPasswordRequestDto dto) {
-        GetUserInformationToResetPasswordResponseDto data = null;
+    public ResponseDto<GetResetPasswordUserResponseDto> getResetPasswordUser(GetResetPasswordUserRequestDto dto) {
+        GetResetPasswordUserResponseDto data = null;
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElse(null);
 
@@ -237,7 +237,7 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.fail(ResponseCode.NOT_MATCH_INFORMATION, ResponseMessage.NOT_MATCH_INFORMATION);
         }
 
-        data = GetUserInformationToResetPasswordResponseDto.builder()
+        data = GetResetPasswordUserResponseDto.builder()
                 .userId(user.getId())
                 .email(dto.getEmail())
                 .build();

@@ -49,10 +49,4 @@ public class TrainerInfoController {
     ) throws IOException {
         return ResponseDto.toResponseEntity(HttpStatus.OK, trainerInfoService.reapplyTrainer(id, dto, attachmentFile));
     }
-
-//    @PreAuthorize("hasRole('TRAINER')")
-//    @GetMapping(UPDATE_TRAINER_INFO)
-//    public ResponseEntity<ResponseDto<TrainerStatus>> getTrainerStatus (@AuthenticationPrincipal Long id) {
-//        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
-//    }
 }

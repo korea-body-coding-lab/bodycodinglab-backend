@@ -5,18 +5,16 @@ import com.project.bcl_back.dto.auth.request.*;
 import com.project.bcl_back.dto.auth.response.*;
 import com.project.bcl_back.entity.User;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
 public interface AuthService {
-    ResponseDto<SignUpMemberResponseDto> memberSignup(@Valid SignUpMemberRequestDto dto, MultipartFile profile) throws IOException;
-    ResponseDto<SignUpTrainerResponseDto> trainerSignup(@Valid SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException;
+    ResponseDto<SignUpMemberResponseDto> signupMember(@Valid SignUpMemberRequestDto dto, MultipartFile profile) throws IOException;
+    ResponseDto<SignUpTrainerResponseDto> signupTrainer(@Valid SignUpTrainerRequestDto dto, MultipartFile attachmentFile, MultipartFile profile) throws IOException;
     ResponseDto<? extends LoginUserResponseDto> login(@Valid LoginUserRequestDto dto) throws IOException;
-    ResponseDto<FindUsernameResponseDto> findUserId(@Valid FindUsernameRequestDto dto);
-    ResponseDto<GetUserInformationToResetPasswordResponseDto> findUserToResetPassword(@Valid GetUserInformationToResetPasswordRequestDto dto);
+    ResponseDto<RecoverUsernameResponseDto> recoverUsername(@Valid RecoverUsernameRequestDto dto);
+    ResponseDto<GetResetPasswordUserResponseDto> getResetPasswordUser(@Valid GetResetPasswordUserRequestDto dto);
     ResponseDto<String> resetPassword(String token, @Valid ResetPasswordRequestDto dto);
     boolean checkPassword(User user, String password);
     boolean checkEmail(String email);
