@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final AdminService adminService;
 
-    private static final String GET_TRAINERS = "/trainers";
+    private static final String GET_ALL_TRAINERS = "/trainers";
+    private static final String GET_TRAINER_DETAIL = GET_ALL_TRAINERS + "/{trainerId}";
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(GET_TRAINERS)
+    @GetMapping(GET_ALL_TRAINERS)
     public ResponseEntity<ResponseDto<Page<GetAllTrainersResponseDto>>> getAllTrainers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -35,13 +36,13 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(GET_TRAINERS + "/{trainerId}")
-    public ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>> getTrainer(@PathVariable Long trainerId) {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, adminService.getTrainer(trainerId));
+    @GetMapping(GET_TRAINER_DETAIL)
+    public ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>> getTrainerDetail(@PathVariable Long trainerId) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, adminService.getTrainerDetail(trainerId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(GET_TRAINERS + "/{trainerId}")
+    @PostMapping(GET_TRAINER_DETAIL)
     public ResponseEntity<ResponseDto<GetTrainerDetailResponseDto>> updateTrainerStatus(
             @AuthenticationPrincipal Long id,
             @PathVariable Long trainerId,

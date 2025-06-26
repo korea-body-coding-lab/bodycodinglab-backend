@@ -10,6 +10,6 @@ import org.springframework.data.domain.Page;
 
 public interface AdminService {
     ResponseDto<Page<GetAllTrainersResponseDto>> getAllTrainers(int page, int size, TrainerStatus status);
-    ResponseDto<GetTrainerDetailResponseDto> getTrainer(Long trainerId);
+    ResponseDto<GetTrainerDetailResponseDto> getTrainerDetail(Long trainerId);
     ResponseDto<GetTrainerDetailResponseDto> updateTrainerStatus(Long id, Long trainerId, @Valid UpdateTrainerStatusRequestDto dto);
 }

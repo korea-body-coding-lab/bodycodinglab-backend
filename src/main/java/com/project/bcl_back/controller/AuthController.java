@@ -23,30 +23,31 @@ public class AuthController {
     private final AuthService authService;
     private final MailService mailService;
 
-    private static final String SIGN_UP = "/sign-up";
+    private static final String SIGNUP_MEMBER = "/signup/member";
+    private static final String SIGNUP_TRAINER = "/signup/trainer";
     private static final String LOGIN = "/login";
-    private static final String FIND_USERNAME = "/finding-id";
-    private static final String SEND_EMAIL = "/send-reset-password-email";
-    private static final String VERIFY_EMAIL = "/verify";
-    private static final String RESET_PASSWORD = "/reset-password";
+    private static final String USERNAME_RECOVERY = "/username/recovery";
+    private static final String PASSWORD_RESET_USER = "/password/reset-user";
+    private static final String PASSWORD_RESET = "/password/reset";
+    private static final String PASSWORD_RESET_EMAIL = "/password/reset-email";
+    private static final String EMAIL_VERIFY = "/email/verify";
 
 
-
-    @PostMapping(SIGN_UP + "/member")
-    public ResponseEntity<ResponseDto<SignUpMemberResponseDto>> memberSignup(
+    @PostMapping(SIGNUP_MEMBER)
+    public ResponseEntity<ResponseDto<SignUpMemberResponseDto>> signupMember(
             @Valid @RequestPart(value = "dto") SignUpMemberRequestDto dto,
             @RequestPart(value = "profile", required = false) MultipartFile profile
     ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.memberSignup(dto, profile));
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.signupMember(dto, profile));
     }
 
-    @PostMapping(SIGN_UP + "/trainer")
-    public ResponseEntity<ResponseDto<SignUpTrainerResponseDto>> trainerSignup(
+    @PostMapping(SIGNUP_TRAINER)
+    public ResponseEntity<ResponseDto<SignUpTrainerResponseDto>> signupTrainer(
             @Valid @RequestPart(value = "dto") SignUpTrainerRequestDto dto,
             @RequestPart(value = "attachmentFile") MultipartFile attachmentFile,
             @RequestPart(value = "profile", required = false) MultipartFile profile
     ) throws IOException {
-        return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.trainerSignup(dto, attachmentFile, profile));
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, authService.signupTrainer(dto, attachmentFile, profile));
     }
 
     @PostMapping(LOGIN)
@@ -54,28 +55,29 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(dto));
     }
 
-    @PostMapping(FIND_USERNAME)
-    public ResponseEntity<ResponseDto<FindUsernameResponseDto>> findUserId(@Valid @RequestBody FindUsernameRequestDto dto) {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.findUserId(dto));
+    @PostMapping(USERNAME_RECOVERY)
+    public ResponseEntity<ResponseDto<RecoverUsernameResponseDto>> recoverUsername(@Valid @RequestBody RecoverUsernameRequestDto dto) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.recoverUsername(dto));
     }
 
-    @PostMapping(SEND_EMAIL)
+    @PostMapping(PASSWORD_RESET_USER)
+    public ResponseEntity<ResponseDto<GetResetPasswordUserResponseDto>> getResetPasswordUser(@Valid @RequestBody GetResetPasswordUserRequestDto dto) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.getResetPasswordUser(dto));
+    }
+
+    @PostMapping(PASSWORD_RESET)
+    public ResponseEntity<ResponseDto<String>> resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordRequestDto dto) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.resetPassword(token, dto));
+    }
+
+    @PostMapping(PASSWORD_RESET_EMAIL)
     public Mono<ResponseEntity<ResponseDto<String>>> sendResetPasswordEmail(@Valid @RequestBody SendEmailRequestDto dto) {
         return mailService.sendResetPasswordEmail(dto);
     }
 
-    @GetMapping(VERIFY_EMAIL)
+    @GetMapping(EMAIL_VERIFY)
     public Mono<ResponseEntity<ResponseDto<String>>> verifyEmail(@RequestParam String token) {
         return mailService.verifyEmail(token);
     }
 
-    @PostMapping(RESET_PASSWORD)
-    public ResponseEntity<ResponseDto<GetUserInformationToResetPasswordResponseDto>> findUserToResetPassword(@Valid @RequestBody GetUserInformationToResetPasswordRequestDto dto) {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.findUserToResetPassword(dto));
-    }
-
-    @PostMapping(RESET_PASSWORD + "/setting")
-    public ResponseEntity<ResponseDto<String>> resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordRequestDto dto) {
-        return ResponseDto.toResponseEntity(HttpStatus.OK, authService.resetPassword(token, dto));
-    }
 }

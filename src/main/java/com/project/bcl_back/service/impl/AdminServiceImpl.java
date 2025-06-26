@@ -51,7 +51,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseDto<GetTrainerDetailResponseDto> getTrainer(Long trainerId) {
+    public ResponseDto<GetTrainerDetailResponseDto> getTrainerDetail(Long trainerId) {
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
 

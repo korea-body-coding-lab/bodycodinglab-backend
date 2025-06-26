@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class GetUserInformationToResetPasswordRequestDto {
+public class GetResetPasswordUserRequestDto {
     @NotBlank(message = "아이디는 필수 항목입니다.")
     private String username;
 
