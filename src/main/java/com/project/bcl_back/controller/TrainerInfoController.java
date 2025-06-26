@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.USER_API)
+@RequestMapping(ApiMappingPattern.TRAINER_API)
 @RequiredArgsConstructor
 public class TrainerInfoController {
     private final TrainerInfoService trainerInfoService;
 
-    private static final String UPDATE_TRAINER_INFO = "/trainers/me/information";
-    private static final String TRAINER_REAPPLY = "/trainers/me/reapply";
+    private static final String UPDATE_TRAINER_INFO = "/me/information";
+    private static final String TRAINER_REAPPLY = "/me/reapply";
 
     // 트래이너 정보 수정
     @PreAuthorize("hasRole('TRAINER')")
