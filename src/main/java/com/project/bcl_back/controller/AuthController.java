@@ -6,13 +6,13 @@ import com.project.bcl_back.dto.auth.request.*;
 import com.project.bcl_back.dto.auth.response.*;
 import com.project.bcl_back.service.AuthService;
 import com.project.bcl_back.service.MailService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -71,13 +71,13 @@ public class AuthController {
     }
 
     @PostMapping(PASSWORD_RESET_EMAIL)
-    public Mono<ResponseEntity<ResponseDto<String>>> sendResetPasswordEmail(@Valid @RequestBody SendEmailRequestDto dto) {
-        return mailService.sendResetPasswordEmail(dto);
+    public ResponseEntity<ResponseDto<Void>> sendResetPasswordEmail(@Valid @RequestBody SendResetPasswordEmailRequestDto dto) throws MessagingException {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, mailService.sendResetPasswordEmail(dto));
     }
 
     @GetMapping(EMAIL_VERIFY)
-    public Mono<ResponseEntity<ResponseDto<String>>> verifyEmail(@RequestParam String token) {
-        return mailService.verifyEmail(token);
+    public ResponseEntity<ResponseDto<Void>> verifyEmail(@RequestParam String token) {
+        return ResponseDto.toResponseEntity(HttpStatus.OK, mailService.verifyEmail(token));
     }
 
 }
