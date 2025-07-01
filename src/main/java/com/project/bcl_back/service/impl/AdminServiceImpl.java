@@ -16,6 +16,7 @@ import com.project.bcl_back.repository.*;
 import com.project.bcl_back.service.AdminService;
 import com.project.bcl_back.service.MailService;
 import com.project.bcl_back.service.UploadFileService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -76,7 +77,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public ResponseDto<GetTrainerDetailResponseDto> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) {
+    public ResponseDto<GetTrainerDetailResponseDto> updateTrainerStatus(Long id, Long trainerId, UpdateTrainerStatusRequestDto dto) throws MessagingException {
         TrainerInfo trainer = trainerInfoRepository.findById(trainerId)
                 .orElse(null);
 
@@ -112,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
         createLog(id, savedTrainer,prevStatus,dto.getChangeReason());
 
         SendTrainerApprovalResultEmailRequestDto sendEmailDto = new SendTrainerApprovalResultEmailRequestDto(savedTrainer.getUser().getEmail(), dto.getNewStatus(), dto.getChangeReason());
-        mailService.sendTrainerApprovalResultEmail(sendEmailDto).subscribe();
+        mailService.sendTrainerApprovalResultEmail(sendEmailDto);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, toGetTrainerResDto(savedTrainer, attachmentFileUrl, profileImageUrl));
     }

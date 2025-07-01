@@ -7,6 +7,7 @@ import com.project.bcl_back.dto.admin.request.UpdateTrainerStatusRequestDto;
 import com.project.bcl_back.dto.admin.response.GetAllTrainersResponseDto;
 import com.project.bcl_back.dto.admin.response.GetTrainerDetailResponseDto;
 import com.project.bcl_back.service.AdminService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,7 +48,7 @@ public class AdminController {
             @AuthenticationPrincipal Long id,
             @PathVariable Long trainerId,
             @Valid @RequestBody UpdateTrainerStatusRequestDto dto
-    ) {
+    ) throws MessagingException {
         return ResponseDto.toResponseEntity(HttpStatus.OK, adminService.updateTrainerStatus(id, trainerId, dto));
     }
 

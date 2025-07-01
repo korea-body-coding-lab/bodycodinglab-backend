@@ -5,7 +5,7 @@ import com.project.bcl_back.common.constants.ResponseMessage;
 import com.project.bcl_back.common.enums.trainerInfo.TrainerStatus;
 import com.project.bcl_back.dto.ResponseDto;
 import com.project.bcl_back.dto.admin.request.SendTrainerApprovalResultEmailRequestDto;
-import com.project.bcl_back.dto.auth.request.SendEmailRequestDto;
+import com.project.bcl_back.dto.auth.request.SendResetPasswordEmailRequestDto;
 import com.project.bcl_back.provider.JwtProvider;
 import com.project.bcl_back.service.AuthService;
 import com.project.bcl_back.service.MailService;
@@ -13,12 +13,8 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Service
 @RequiredArgsConstructor
@@ -31,79 +27,54 @@ public class MailServiceImpl implements MailService {
     private String senderEmail;
 
     @Override
-    public Mono<ResponseEntity<ResponseDto<String>>> sendResetPasswordEmail(SendEmailRequestDto dto) {
+    public ResponseDto<Void> sendResetPasswordEmail(SendResetPasswordEmailRequestDto dto) throws MessagingException {
         boolean isEmailVerified = authService.checkEmail(dto.getEmail());
 
         if (!isEmailVerified) {
-            return Mono.just(
-                    ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body(ResponseDto.fail(ResponseCode.NO_EXIST_EMAIL, ResponseMessage.NO_EXIST_EMAIL))
-            );
+            return ResponseDto.fail(ResponseCode.NO_EXIST_EMAIL, ResponseMessage.NO_EXIST_EMAIL);
         }
 
-        return Mono.fromCallable(() -> {
-            String token = jwtProvider.generateResetPasswordJwtToken(dto.getEmail());
-            MimeMessage message = createVerifyMail(dto.getEmail(), token);
-            javaMailSender.send(message);
+        String token = jwtProvider.generateResetPasswordJwtToken(dto.getEmail());
+        MimeMessage message = createVerifyMail(dto.getEmail(), token);
+        javaMailSender.send(message);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (인증 메일 발송)"));
-        }).onErrorResume(e -> Mono.just(
-                ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(ResponseDto.fail(ResponseCode.MAIL_SEND_FAIL, ResponseMessage.MAIL_SEND_FAIL)))
-        ).subscribeOn(Schedulers.boundedElastic());
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (인증 메일 발송)");
     }
 
     @Override
-    public Mono<ResponseEntity<ResponseDto<String>>> verifyEmail(String token) {
+    public ResponseDto<Void> verifyEmail(String token) {
         if (token == null) {
-            return Mono.just(
-                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseDto.fail(ResponseCode.INVALID_TOKEN, ResponseMessage.INVALID_TOKEN))
-            );
+            return ResponseDto.fail(ResponseCode.MISSING_TOKEN, ResponseMessage.MISSING_TOKEN);
         }
-        return Mono.fromCallable(() -> {
-            String email = jwtProvider.getEmailFromJwt(token);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (메일 인증 성공)"));
-        }).onErrorResume(e -> Mono.just(
-                ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(ResponseDto.fail(ResponseCode.MAIL_AUTH_FAIL, ResponseMessage.MAIL_AUTH_FAIL)))
-        ).subscribeOn(Schedulers.boundedElastic());
+
+        String email = jwtProvider.getEmailFromJwt(token);
+        boolean isEmailVerified = authService.checkEmail(email);
+
+        if (!isEmailVerified) {
+            return ResponseDto.fail(ResponseCode.NO_EXIST_EMAIL, ResponseMessage.NO_EXIST_EMAIL);
+        }
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (메일 인증 성공)");
     }
 
     @Override
-    public Mono<ResponseEntity<ResponseDto<String>>> sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailRequestDto dto) {
+    public void sendTrainerApprovalResultEmail(SendTrainerApprovalResultEmailRequestDto dto) throws MessagingException {
         boolean isEmailVerified = authService.checkEmail(dto.getEmail());
 
         if (!isEmailVerified) {
-            return Mono.just(
-                    ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body(ResponseDto.fail(ResponseCode.NO_EXIST_EMAIL, ResponseMessage.NO_EXIST_EMAIL))
-            );
+            throw new IllegalStateException(ResponseMessage.NO_EXIST_EMAIL);
         }
 
-        return Mono.fromCallable(() -> {
-
-            if (dto.getStatus().equals(TrainerStatus.APPROVE)) {
-                MimeMessage message = createTrainerApproveMail(dto.getEmail());
-                javaMailSender.send(message);
-
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (승인 메일 발송)"));
-            } else if (dto.getStatus().equals(TrainerStatus.REJECT)) {
-                MimeMessage message = createTrainerReapplyMail(dto.getEmail(), dto.getChangeReason());
-                javaMailSender.send(message);
-
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS + " (재신청 메일 발송)"));
-            } else {
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(ResponseDto.<String>success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS));
-            }
-        }).onErrorResume(e -> Mono.just(
-                ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(ResponseDto.fail(ResponseCode.MAIL_SEND_FAIL, ResponseMessage.MAIL_SEND_FAIL)))
-        ).subscribeOn(Schedulers.boundedElastic());
+        if (dto.getStatus().equals(TrainerStatus.APPROVE)) {
+            MimeMessage message = createTrainerApproveMail(dto.getEmail());
+            javaMailSender.send(message);
+        } else if (dto.getStatus().equals(TrainerStatus.REJECT)) {
+            MimeMessage message = createTrainerReapplyMail(dto.getEmail(), dto.getChangeReason());
+            javaMailSender.send(message);
+        } else {
+            MimeMessage message = createTrainerPendingMail(dto.getEmail());
+            javaMailSender.send(message);
+        }
     }
 
     private MimeMessage createVerifyMail(String email, String token) throws MessagingException {
@@ -152,6 +123,7 @@ public class MailServiceImpl implements MailService {
         message.setText(body, "utf-8", "html");
         return message;
     }
+
     private MimeMessage createTrainerApproveMail(String email) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.setFrom(senderEmail);
@@ -164,6 +136,27 @@ public class MailServiceImpl implements MailService {
                 <p>
                     트레이너 가입이 승인되었습니다.<br />
                     홈페이지에 방문하시면, 서비스 이용이 가능합니다. <br />
+                </p>
+                <p>감사합니다.</p>
+                """;
+
+        message.setText(body, "utf-8", "html");
+        return message;
+    }
+
+    private MimeMessage createTrainerPendingMail(String email) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.setFrom(senderEmail);
+        message.setRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject("[Fit-Mate] 트레이너 서비스 안내");
+
+        String body = """
+                <p>안녕하세요, Fit-Mate 입니다.</p>
+                <p>저희 서비스를 이용해 주셔서 감사드립니다.</p>
+                <p>
+                    트레이너 신청이 완료되었습니다.<br />
+                    현재 관리자 승인 검토 단계입니다.<br />
+                    관리자의 승인 이후, 서비스 이용이 가능하오니 참고 바랍니다.<br />
                 </p>
                 <p>감사합니다.</p>
                 """;
